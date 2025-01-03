@@ -67,37 +67,37 @@
       </a>
 	  <ul class="nav nav-treeview">
 	<li class="nav-item">
-		<a  class="nav-link no-outline left-aligned" href="data1.php">
+		<a  class="nav-link no-outline left-aligned" href="a&f_equipment.php">
 		<i class="fas fa-toolbox nav-icon"></i>
 		Agricultural & Forestry<br>Equipment
 		</a>
 	</li>
 	<li class="nav-item">
-		<a  class="nav-link no-outline left-aligned" href="data2.php">
+		<a  class="nav-link no-outline left-aligned" href="ict_equipment.php">
 		<i class="fas fa-toolbox nav-icon"></i>
 		ICT Equipment
 		</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link no-outline left-aligned" href="data3.php">
+		<a class="nav-link no-outline left-aligned" href="machinery.php">
 		<i class="fas fa-toolbox nav-icon"></i>
 		Machinery
 		</a>
 	</li>
 <li class="nav-item">
-		<a id="" class="nav-link no-outline left-aligned" href="data.php">
+		<a id="" class="nav-link no-outline left-aligned" href="office_equipment.php">
 		<i class="fas fa-toolbox nav-icon"></i>
 		Office Equipment
 		</a>							
 	</li>
 <li class="nav-item">
-		<a  class="nav-link no-outline left-aligned" href="data4.php">
+		<a  class="nav-link no-outline left-aligned" href="sports_equipment.php">
 		<i class="fas fa-toolbox nav-icon"></i>
 		School Sports<br>Equipment
 		</a>
 	</li>
 <li class="nav-item">
-		<a  class="nav-link no-outline left-aligned" href="data5.php">
+		<a  class="nav-link no-outline left-aligned" href="technical_equipment.php">
 		<i class="fas fa-toolbox nav-icon"></i>
 		Technical & Scientific<br>Equipment
 		</a>

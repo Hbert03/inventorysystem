@@ -119,7 +119,7 @@
         <div class="row">
           <div class="col-12 col-md-6">
           <label for="" class="form-label">Accountable Officer</label>
-          <select  class="form-control accountable_edit"></select>
+          <select  class="form-control accountable_edit" id="account_officer"></select>
           </div>
           <div class="col-12 col-md-6">
           <label for="modal-input10" class="form-label">Remarks</label>

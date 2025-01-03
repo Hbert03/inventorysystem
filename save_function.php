@@ -71,7 +71,7 @@
 
   $select1 = $_POST['select1'];
   $select2 = $_POST['select2'];
-  $quantity = $_POST['quantity'];
+  $quantity = $_POST['quantity']?? null;
   $article = $_POST['article'];
   $type = $_POST['type'];
   $brand = $_POST['brand'];
@@ -92,7 +92,7 @@
   $account_off = $_POST['account_off'];
   $fund_source = $_POST['fund_source'];
   $account_id = $account_id ?? $_SESSION['account_id'] ?? null; 
-  $supplier =  $_POST['supplier']; 
+  $supplier =  $_POST['supplier'] ?? null; 
 
   $check_query = "SELECT * FROM asset WHERE description = '$description' AND unit_val = '$unit_value' AND property_no = '$property_no' AND remarks = '$remarks'";
   $result = mysqli_query($fconn, $check_query);

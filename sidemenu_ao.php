@@ -19,7 +19,7 @@
       </a>
     </li>
 	<li class="nav-item ">
-     <select class="form-control schools"></select>
+     <select class="form-control schools" id="school"></select>
     </li>
 	<li class="nav-item">
 	<a href="list.php" class="nav-link ">

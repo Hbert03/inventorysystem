@@ -3749,6 +3749,87 @@ $('#showTable_others').on('click', '.update-btn', function() {
 //     }
 // });
 
+$("select.asset_type_school").select2({
+    theme: "bootstrap4",
+    placeholder: "Asset Type",
+    ajax: {
+        url: '../fetch1.php',
+        dataType: 'json',
+        type: 'POST',
+        delay: 250,
+        data: function(params) {
+            return {
+                term: params.term,
+                asset1: true,
+                category_id: params.term 
+            };
+        },
+        processResults: function(returnedData) {
+            var mappedData = $.map(returnedData.data, function(fetch) {
+                return {
+                    id: fetch.id,
+                    text: fetch.category
+                };
+            });
+            return {
+                results: mappedData
+            };
+        },
+        cache: true
+    },
+    minimumInputLength: 0,
+    templateResult: formatCategory,
+    templateSelection: formatCategorySelection
+});
+
+
+$("select.sub_asset_type_school").select2({
+    placeholder: "Sub Asset",
+    theme: "bootstrap4",
+    ajax: {
+        url: '../fetch1.php',
+        dataType: 'json',
+        type: 'POST',
+        delay: 250,
+        data: function(params) {
+            var selectedCategoryId = $('select.asset_type_school').val(); 
+            return {
+                term: params.term,
+                asset2: true,
+                category_id: selectedCategoryId 
+            };
+        },
+        processResults: function(returnedData) {
+            var mappedData = $.map(returnedData.data, function(fetch) {
+                return {
+                    id: fetch.id,
+                    text: fetch.sub_category
+                };
+            });
+            return {
+                results: mappedData
+            };
+        },
+        cache: true
+    },
+    minimumInputLength: 0,
+    templateResult: formatCategory,
+    templateSelection: formatCategorySelection
+});
+
+function formatCategory(category) {
+    if (!category.id) {
+        return category.text;
+    }
+    var $category = $(
+        '<span>' + category.text + '</span>'
+    );
+    return $category;
+}
+
+function formatCategorySelection(category) {
+    return category.text;
+}
 
 $("select.asset_type").select2({
     theme: "bootstrap4",
@@ -4448,6 +4529,61 @@ $(document).ready(function() {
 
 
 
+$(document).ready(function() {
+    $("button.save_asset_school").on("click", function(event) {
+        event.preventDefault();
+  
+        var requiredFilled = true;
+        $("#save_asset input, #save_asset select").each(function() {
+            if ($(this).prop("required")) {
+                if ($(this).is('select') && $(this).val() === null) {
+                    requiredFilled = false;
+                    $(this).addClass("is-invalid");
+                } else if ($(this).val() === "") {
+                    requiredFilled = false;
+                    $(this).addClass("is-invalid");
+                } else {
+                    $(this).removeClass("is-invalid");
+                }
+            }
+        });
+  
+        if (requiredFilled) {
+            $.ajax({
+                url: "../save_function.php",
+                type: "POST",
+                data: $("#save_asset").serialize() + "&save_asset=true",
+                success: function(response) {
+                    try {
+                        response = JSON.parse(response);
+                        if (response.success = 1) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Asset Successfully Saved!",
+                                showConfirmButton: true
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Error!",
+                                text: response.error || "An unknown error occurred."
+                            });
+                        }
+                    } catch (e) {
+                        Swal.fire({
+                            title: "Error!",
+                            text: "Failed to parse JSON response: " + e,
+                            icon: "error"
+                        });
+                    }
+                },
+            });
+        }
+    });
+});
+
 
 $(document).ready(function() {
     $("button.save_asset1").on("click", function(event) {
@@ -4538,6 +4674,7 @@ $("select.schools").select2({
 }).on('select2:select', function(e) {
     var selectedOfficeId = e.params.data.id;
     var selectedOfficeName = e.params.data.text;
+    var selectedOfficeName4 = e.params.data.text;
     var selectedOfficeName1 = e.params.data.text;
     var selectedOfficeName2 = e.params.data.text;
     var selectedOfficeName3 = e.params.data.text;
@@ -4553,6 +4690,7 @@ $("select.schools").select2({
     $("#selected_school1").text("School Name: "+"("+ selectedOfficeNameL +")");
     $("#school_name1").text("of " + selectedOfficeName2);
     $("#school_name2").text("of " + selectedOfficeName3);
+    $("#school_name3").text("of " + selectedOfficeName4);
     $("#graph_school_name").text("Data of " + selectedOfficeNameg);
 });
 
@@ -4852,7 +4990,7 @@ $("select.select_account").select2({
         data: function(params) {
             return {
                 term: params.term,
-                accountable_personnel: true,
+                accountable_Employee: true,
             };
         },
         processResults: function(returned) {
@@ -4871,6 +5009,37 @@ $("select.select_account").select2({
     minimumInputLength: 0
 });
 
+
+$("select.select_account_school").select2({
+    placeholder: "Select Accountable",
+    theme: "bootstrap4",
+    dropdownParent: $("#exampleModal1"),
+    ajax: {
+        url: '../fetch1.php',
+        dataType: 'json',
+        type: 'POST',
+        delay: 250,
+        data: function(params) {
+            return {
+                term: params.term,
+                accountable_Employee: true,
+            };
+        },
+        processResults: function(returned) {
+            var mappedData = $.map(returned.result, function(fetch) {
+                return {
+                    id: fetch.hris_code,
+                    text: fetch.employee
+                };
+            });
+            return {
+                results: mappedData
+            };
+        },
+        cache: true
+    },
+    minimumInputLength: 0
+});
 
 
 $("select.edit_personnel").select2({
@@ -4906,6 +5075,39 @@ $("select.edit_personnel").select2({
 });
 
 
+
+
+$("select.edit_personnel_school").select2({
+    placeholder: "Select Accountable",
+    theme: "bootstrap4",
+    dropdownParent: $("#editModal"),
+    ajax: {
+        url: '../fetch1.php',
+        dataType: 'json',
+        type: 'POST',
+        delay: 250,
+        data: function(params) {
+            return {
+                term: params.term, 
+                accountable_Employee: true, 
+            };
+        },
+        processResults: function(returnedData) {
+   
+            var mappedData = $.map(returnedData.result, function(fetch) {
+                return {
+                    id: fetch.hris_code, 
+                    text: fetch.employee 
+                };
+            });
+       
+            return {
+                results: mappedData
+            };
+        },
+        cache: true
+    }
+});
 
 
 $(document).ready(function () {
@@ -5007,83 +5209,6 @@ $(document).ready(function () {
 });
 
 
-// function fetchAssetChartData() {
-//     var xhr = new XMLHttpRequest();
-//     xhr.open('POST', 'chartfunction.php', true);
-//     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-//     xhr.onload = function () {
-//         if (xhr.status >= 200 && xhr.status < 300) {
-//             var data = JSON.parse(xhr.responseText);
-//             updateAssetChart(data);
-//         } else {
-//             console.error('Failed to fetch asset chart data');
-//         }
-//     };
-//     xhr.onerror = function () {
-//         console.error('Error fetching asset chart data');
-//     };
-//     xhr.send('chartType=assetchart');
-// }
-
-// function updateAssetChart(data) {
-//     var labels = data.labels;
-//     var values = data.values;
-
-//     var ctx = document.getElementById('assetchart').getContext('2d');
-
-//     if (window.assetChart instanceof Chart) {
-//         window.assetChart.data.labels = labels;
-//         window.assetChart.data.datasets[0].data = values;
-//         window.assetChart.update();
-//     } else {
-//         window.assetChart = new Chart(ctx, {
-//             type: 'bar',
-//             data: {
-//                 labels: labels,
-//                 datasets: [{
-//                     label: 'ASSET LDN',
-//                     data: values,
-//                     backgroundColor: [
-//                                                 'rgba(255, 99, 132, 0.2)',
-//                                                 'rgba(54, 162, 235, 0.2)',
-//                                                 'rgba(255, 206, 86, 0.2)',
-//                                                 'rgba(75, 192, 192, 0.2)',
-//                                                 'rgba(153, 102, 255, 0.2)',
-//                                                 'rgba(255, 159, 64, 0.2)',
-//                                                   'rgba(255, 99, 132, 0.2)',
-//                                                 'rgba(54, 162, 235, 0.2)',
-//                                                 'rgba(255, 206, 86, 0.2)',
-//                                                 'rgba(255, 99, 132, 0.2)'
-//                                             ],
-//                                             borderColor: [
-//                                                 'rgba(255, 99, 132, 1)',
-//                                                 'rgba(54, 162, 235, 1)',
-//                                                 'rgba(255, 206, 86, 1)',
-//                                                 'rgba(75, 192, 192, 1)',
-//                                                 'rgba(153, 102, 255, 1)',
-//                                                 'rgba(255, 159, 64, 1)',
-//                                                 'rgba(255, 99, 132, 1)',
-//                                                 'rgba(153, 102, 255, 1)',
-//                                                 'rgba(255, 159, 64, 1)',
-//                                                 'rgba(255, 99, 132, 1)'
-//                                             ],
-//                                             borderWidth: 1
-//                 }],
-//             },
-//             options: {
-//                 scales: {
-//                     y: {
-//                         beginAtZero: true,
-//                     },
-//                 },
-//             },
-//         });
-//     }
-// }
-
-
-// fetchAssetChartData();
-// setInterval(fetchAssetChartData, 30000); 
 
 
 $("select.packages").select2({
@@ -5299,6 +5424,202 @@ $(document).ready(function() {
 
 
           $(document).ready(function() {
+            var table = $('#show_ao_land').DataTable({
+                dropdownParent: $("#editModalAo"),
+                serverSide: true,
+                responsive: true,
+                lengthChange: false,
+                autoWidth: true,
+                dom: 'lBfrtip',
+                buttons: [
+                "copy",
+                "csv",
+                "excel", {
+                    extend: 'print',
+                    customize: function(win) {
+                        $(win.document.body).css('font-size', '10pt');
+                        $(win.document.body).find('table')
+                            .before('<h1 style="text-align:center;">REPORT ON THE LAND/h1>'+
+                                     '<p style="text-align:center;">___________________________________</p>'+
+                                     '<p style="text-align:center; margin-top:-1em">(Type of Property, Plant and Equipment)</p>'+
+                                     '<p><b>Fund Cluster:</b> <span>_________________</span></p>'+
+                                     '<p><b>For which ________________________,_________________________,_______________________is accountable, having assumed such accountability on (_____________________)</b></p>');
+                        $(win.document.body).find('table')
+                            .after('<table style="margin-top:80px; width:100%; text-align:center;">' +
+                                '<tr>' +
+                                '<td style=" ">Certified Corrected by:____________________<br><span style="font-weight:bold; font-size:14px;  text-align:center;  "><b>Signature over Printed Name of Inventory <span style="margin-left:.5em; font-size:14px;"> Commitee Chair and Members</b></span></span></td>' +
+                                '<td style="text-align:center;">Approved by:_____________________________<br><span style="font-weight:bold; font-size:14px; text-align:center;  align-items:center;"><b>Signature over Printed Name of Head of <span style="margin-left:.5em; font-size:14px;">Agency/Entity or Authorized Representative</span></b></span></td>' +
+                                '<td style="justify-content:center;">Verified by:_______________________<br><span style="font-weight:bold; font-size:14px; justify-content:center; text-align:center"><b>Signature over Printed Name of COA <span  style="margin-left:.5em; font-size:14px;">Representative</span></b></span></td>' +
+                                '</tr>' +
+                                '</table>');
+                    },
+                    orientation: 'landscape',
+               
+                    //    exportOptions: {
+                    //  columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10]  
+                    // }
+        
+               
+                     }
+            ],
+                ajax: {
+                    url: "getdata.php",
+                    type: "post",
+                    data: function (d) {
+                        d.ao_land = true;
+                        d.selectedOfficeId = $("#school").val(); 
+                    },
+                   
+                    error: function(thrown) {
+                        console.log("Ajax request failed: " + thrown);
+                    }
+                },
+                columns: [
+                    {
+                        "data": "description",
+                    },
+                    {"data": "property_no"},
+                    {"data": "remarks"},
+                    { "data": "unit_val", 
+                  "render": function(data, type, row) {
+                      return '₱' + data;
+                  } },
+                    {"data": "date_titled"},
+                    {"data": "date_acquired"},
+                ],
+                // lengthMenu: [
+                //     [10, 25, 50, 100000000],
+                //     [10, 25, 50, 'ALL']
+                // ],
+                drawCallback: function () {
+                    var api = this.api();
+                    var total = api.column(3, { page: 'current' }).data().reduce(function (a, b) {
+                        return a + parseFloat(b);
+                    }, 0);
+                    $('#totalUnitMeas1').html('Total: ₱' + total.toFixed(2));
+                },
+                
+            });
+            $("#school").change(function() {
+                table.ajax.reload();
+            });
+
+
+            $('#show_ao_land').on('click', '.update-btn', function() {
+                var id = $(this).data('update');
+                $.ajax({
+                    url: 'getdata.php',
+                    type: 'POST',
+                    data: {
+                        getdata_ao: true,
+                        id: id
+                    },
+                     success: function(response) {
+                            if (response.trim() !== "") {
+                                var data = JSON.parse(response);
+    
+                                $('#modal-input1').val(data[0].description);
+                                $('#modal-input2').val(data[0].property_no);
+                                $('#modal-input3').val(data[0].unit_meas);
+                                $('#modal-input4').val(data[0].unit_val);
+                                $('#modal-input5').val(data[0].qty_property_card);
+                                $('#modal-input6').val(data[0].qty_physical_count);
+                                $('#modal-input7').val(data[0].shortage_qty);
+                                $('#modal-input8').val(data[0].shortage_value);
+                                $('select.accountable_edit').val(data[0].fullname).trigger('change');
+                                $('#modal-input10').val(data[0].remarks);
+                
+                               
+                                $('#editModalAo').modal('show');
+                               
+                                $('#saveChanges').off('click').on('click', function() {
+                                    $.ajax({
+                                        url: 'function.php',
+                                        type: 'POST',
+                                        data: {
+                                            update_ao: true,
+                                            id: id,
+                                            description: $('#modal-input1').val(),
+                                            property_no: $('#modal-input2').val(),
+                                            unit_meas: $('#modal-input3').val(),
+                                            unit_val: $('#modal-input4').val().replace('₱', ''), 
+                                            qty_property_card: $('#modal-input5').val(),
+                                            qty_physical_count: $('#modal-input6').val(),
+                                            shortage_qty: $('#modal-input7').val(),
+                                            shortage_value: $('#modal-input8').val(),
+                                            account_officer: $('select.accountable_edit').val(),
+                                            remarks: $('#modal-input10').val(),
+                                        },
+                                        success: function(response) {
+                                            if (response.trim() === "Updated Successfully") {
+                                                $('#editModalAo').modal('hide');
+                                                Swal.fire(
+                                                    'Updated!',
+                                                    'File has been updated successfully.',
+                                                    'success'
+                                                );
+                                                table.ajax.reload();
+                                            } else {
+                                                Swal.fire(
+                                                    'Failed!',
+                                                    'Select Accountable Officer First! Failed to update file.',
+                                                    'error'
+                                                );
+                                            }
+                                        },
+                                    });
+                                });
+                            }
+                        },
+                    });
+                });
+                
+            
+                $('#show_ao_land').on('click', '.delete-btn', function() {
+                    var id = $(this).data('delete');
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You want to delete it?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: 'function.php',
+                                type: 'POST',
+                                data: {
+                                    delete: true,
+                                    id: id
+                                },
+                                success: function(response) {
+                                    if (response.trim() === "Deleted Successfully") {
+                                        Swal.fire(
+                                            'Deleted!',
+                                            'File has been deleted successfully.',
+                                            'success'
+                                        );
+                                        table.ajax.reload();
+                                    } else {
+                                        Swal.fire(
+                                            'Failed!',
+                                            'Failed to delete file.',
+                                            'error'
+                                        );
+                                    }
+                                },
+                            });
+                        }
+                    });
+                });
+            
+            });
+
+
+
+          $(document).ready(function() {
             var table = $('#show_ao_entry').DataTable({
                 dropdownParent: $("#editModalAo"),
                 serverSide: true,
@@ -5416,8 +5737,7 @@ $(document).ready(function() {
                  success: function(response) {
                         if (response.trim() !== "") {
                             var data = JSON.parse(response);
-                            
-                            // Populate the modal with the data
+
                             $('#modal-input1').val(data[0].description);
                             $('#modal-input2').val(data[0].property_no);
                             $('#modal-input3').val(data[0].unit_meas);
@@ -5426,7 +5746,7 @@ $(document).ready(function() {
                             $('#modal-input6').val(data[0].qty_physical_count);
                             $('#modal-input7').val(data[0].shortage_qty);
                             $('#modal-input8').val(data[0].shortage_value);
-                            $('select.accountable_edit').val(data[0].fullname);
+                            $('select.accountable_edit').val(data[0].fullname).trigger('change');
                             $('#modal-input10').val(data[0].remarks);
             
                            
@@ -5519,39 +5839,39 @@ $(document).ready(function() {
         
 
         
-
-$("select.accountable_edit").select2({
-    placeholder: "Select Accountable",
-    theme: "bootstrap4",
-    dropdownParent: $("#editModalAo"),
-    ajax: {
-        url: 'fetch1.php',
-        dataType: 'json',
-        type: 'POST',
-        delay: 250,
-        data: function(params) {
-            var selectedOfficeId = $("select.accountable").data("selectedOfficeId");  
-            return {
-                term: params.term,
-                accountable_personnel: true,
-                selectedOfficeId: selectedOfficeId  
-            };
-        },
-        processResults: function(returnedData) {
-            var mappedData = $.map(returnedData.results, function(fetch) {
-                return {
-                    id: fetch.hris_code,
-                    text: fetch.employee
-                };
+        $(document).ready(function() {
+            $("select.accountable_edit").select2({
+                placeholder: "Select Accountable",
+                theme: "bootstrap4",
+                dropdownParent: $("#editModalAo"),
+                ajax: {
+                    url: 'fetch1.php',
+                    dataType: 'json',
+                    type: 'POST',
+                    delay: 250,
+                    data: function(params) {
+                        var selectedOfficeId = $("select.accountable").data("selectedOfficeId");  
+                        return {
+                            term: params.term,
+                            accountable_personnel: true,
+                            selectedOfficeId: selectedOfficeId  
+                        };
+                    },
+                    processResults: function(returnedData) {
+                        var mappedData = $.map(returnedData.results, function(fetch) {
+                            return {
+                                id: fetch.hris_code,
+                                text: fetch.employee
+                            };
+                        });
+                        return {
+                            results: mappedData
+                        };
+                    },
+                    cache: true
+                }
             });
-            return {
-                results: mappedData
-            };
-        },
-        cache: true
-    }
-});
-
+        });
 
 
 $(document).ready(function() {
@@ -6021,7 +6341,7 @@ $('#showLand_sch').on('click', '.update-btn', function() {
     var id = $(this).data('update');
     console.log(id);    
     $.ajax({
-        url: 'getdata.php',
+        url: '../getdata.php',
         type: 'POST',
         data: {
             getdata: true,
@@ -6111,7 +6431,7 @@ $('#showLand_sch').on('click', '.delete-btn', function() {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: 'function.php',
+                url: '../function.php',
                 type: 'POST',
                 data: {
                     deleteland: true,
@@ -6247,7 +6567,7 @@ $('#school_building').on('click', '.update-btn', function() {
             if (response.trim() !== "") {
                 var data = JSON.parse(response);
                 
-                // Populate the modal with the data
+               
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -6256,7 +6576,7 @@ $('#school_building').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('#modal-input9').val(data[0].fullname);
+                $('select.edit_personnel_school').val(data[0].fullname);
                 $('#modal-input10').val(data[0].remarks);
 
                
@@ -6264,7 +6584,7 @@ $('#school_building').on('click', '.update-btn', function() {
 
                 $('#saveChanges').off('click').on('click', function() {
                     $.ajax({
-                        url: 'function.php',
+                        url: '../function.php',
                         type: 'POST',
                         data: {
                             updatebuild2: true,
@@ -6277,7 +6597,7 @@ $('#school_building').on('click', '.update-btn', function() {
                             qty_physical_count: $('#modal-input6').val(),
                             shortage_qty: $('#modal-input7').val(),
                             shortage_value: $('#modal-input8').val(),
-                            fullname: $('#modal-input9').val(),
+                            account_officer: $('select.edit_personnel_school').val(),
                             remarks: $('#modal-input10').val(),
                         },
                         success: function(response) {
@@ -6318,7 +6638,7 @@ $('#school_building').on('click', '.update-btn', function() {
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: 'function.php',
+                    url: '../function.php',
                     type: 'POST',
                     data: {
                         deletebuild2: true,
@@ -6389,7 +6709,7 @@ $(document).ready(function() {
         ajax: {
             url: "../getdata.php",
             type: "post",
-            data: {school_building: true},
+            data: {office_building: true},
             error: function(thrown) {
                 console.log("Ajax request failed: " + thrown);
             }
@@ -6453,7 +6773,7 @@ $('#office_building').on('click', '.update-btn', function() {
             if (response.trim() !== "") {
                 var data = JSON.parse(response);
                 
-                // Populate the modal with the data
+               
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -6462,7 +6782,7 @@ $('#office_building').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('#modal-input9').val(data[0].fullname);
+                $('select.edit_personnel_school').val(data[0].fullname);
                 $('#modal-input10').val(data[0].remarks);
 
                
@@ -6470,7 +6790,7 @@ $('#office_building').on('click', '.update-btn', function() {
 
                 $('#saveChanges').off('click').on('click', function() {
                     $.ajax({
-                        url: 'function.php',
+                        url: '../function.php',
                         type: 'POST',
                         data: {
                             updatebuild2: true,
@@ -6483,7 +6803,7 @@ $('#office_building').on('click', '.update-btn', function() {
                             qty_physical_count: $('#modal-input6').val(),
                             shortage_qty: $('#modal-input7').val(),
                             shortage_value: $('#modal-input8').val(),
-                            fullname: $('#modal-input9').val(),
+                            account_officer: $('select.edit_personnel_school').val(),
                             remarks: $('#modal-input10').val(),
                         },
                         success: function(response) {
@@ -6524,7 +6844,7 @@ $('#office_building').on('click', '.update-btn', function() {
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: 'function.php',
+                    url: '../function.php',
                     type: 'POST',
                     data: {
                         deletebuild2: true,
@@ -6660,7 +6980,7 @@ $('#others_structure').on('click', '.update-btn', function() {
             if (response.trim() !== "") {
                 var data = JSON.parse(response);
                 
-                // Populate the modal with the data
+              
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -6669,7 +6989,7 @@ $('#others_structure').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('#modal-input9').val(data[0].fullname);
+                $('select.edit_personnel_school').val(data[0].fullname);
                 $('#modal-input10').val(data[0].remarks);
 
                
@@ -6677,7 +6997,7 @@ $('#others_structure').on('click', '.update-btn', function() {
 
                 $('#saveChanges').off('click').on('click', function() {
                     $.ajax({
-                        url: 'function.php',
+                        url: '../function.php',
                         type: 'POST',
                         data: {
                             updatebuild2: true,
@@ -6690,7 +7010,7 @@ $('#others_structure').on('click', '.update-btn', function() {
                             qty_physical_count: $('#modal-input6').val(),
                             shortage_qty: $('#modal-input7').val(),
                             shortage_value: $('#modal-input8').val(),
-                            fullname: $('#modal-input9').val(),
+                            account_officer: $('select.edit_personnel_school').val(),
                             remarks: $('#modal-input10').val(),
                         },
                         success: function(response) {
@@ -6731,7 +7051,7 @@ $('#others_structure').on('click', '.update-btn', function() {
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: 'function.php',
+                    url: '../function.php',
                     type: 'POST',
                     data: {
                         deletebuild2: true,
@@ -6868,7 +7188,7 @@ $('#historical_building').on('click', '.update-btn', function() {
             if (response.trim() !== "") {
                 var data = JSON.parse(response);
                 
-                // Populate the modal with the data
+                
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -6877,7 +7197,7 @@ $('#historical_building').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('#modal-input9').val(data[0].fullname);
+                $('select.edit_personnel_school').val(data[0].fullname);
                 $('#modal-input10').val(data[0].remarks);
 
                
@@ -6885,7 +7205,7 @@ $('#historical_building').on('click', '.update-btn', function() {
 
                 $('#saveChanges').off('click').on('click', function() {
                     $.ajax({
-                        url: 'function.php',
+                        url: '../function.php',
                         type: 'POST',
                         data: {
                             updatebuild2: true,
@@ -6898,7 +7218,7 @@ $('#historical_building').on('click', '.update-btn', function() {
                             qty_physical_count: $('#modal-input6').val(),
                             shortage_qty: $('#modal-input7').val(),
                             shortage_value: $('#modal-input8').val(),
-                            fullname: $('#modal-input9').val(),
+                            account_officer: $('select.edit_personnel_school').val(),
                             remarks: $('#modal-input10').val(),
                         },
                         success: function(response) {
@@ -6939,7 +7259,2079 @@ $('#historical_building').on('click', '.update-btn', function() {
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: 'function.php',
+                    url: '../function.php',
+                    type: 'POST',
+                    data: {
+                        deletebuild2: true,
+                        id: id
+                    },
+                    success: function(response) {
+                        if (response.trim() === "Deleted Successfully") {
+                            Swal.fire(
+                                'Deleted!',
+                                'File has been deleted successfully.',
+                                'success'
+                            );
+                            table.ajax.reload();
+                        } else {
+                            Swal.fire(
+                                'Failed!',
+                                'Failed to delete file.',
+                                'error'
+                            );
+                        }
+                    },
+                });
+            }
+        });
+    });
+});
+
+
+
+
+$(document).ready(function() {
+    var table = $('#agricultural_equipment').DataTable({
+        serverSide: true,
+        responsive: true,
+        lengthChange: false,
+        autoWidth: true,
+        dom: 'lBfrtip',
+        buttons: [
+        "copy",
+        "csv",
+        "excel", {
+            extend: 'print',
+            customize: function(win) {
+                $(win.document.body).css('font-size', '10pt');
+                $(win.document.body).find('table')
+                    .before('<h1 style="text-align:center;">Report on School Buildings</h1>'+
+                             '<p style="text-align:center;">___________________________________</p>'+
+                             '<p style="text-align:center; margin-top:-1em">(Type of Property, Plant and Equipment)</p>'+
+                             '<p><b>Fund Cluster:</b> <span>_________________</span></p>'+
+                             '<p><b>For which ________________________,_________________________,_______________________is accountable, having assumed such accountability on (_____________________)</b></p>');
+                $(win.document.body).find('table')
+                    .after('<table style="margin-top:80px; width:100%; text-align:center;">' +
+                        '<tr>' +
+                        '<td style=" ">Certified Corrected by:____________________<br><span style="font-weight:bold; font-size:14px;  text-align:center;  "><b>Signature over Printed Name of Inventory <span style="margin-left:.5em; font-size:14px;"> Commitee Chair and Members</b></span></span></td>' +
+                        '<td style="text-align:center;">Approved by:_____________________________<br><span style="font-weight:bold; font-size:14px; text-align:center;  align-items:center;"><b>Signature over Printed Name of Head of <span style="margin-left:.5em; font-size:14px;">Agency/Entity or Authorized Representative</span></b></span></td>' +
+                        '<td style="justify-content:center;">Verified by:_______________________<br><span style="font-weight:bold; font-size:14px; justify-content:center; text-align:center"><b>Signature over Printed Name of COA <span  style="margin-left:.5em; font-size:14px;">Representative</span></b></span></td>' +
+                        '</tr>' +
+                        '</table>');
+            },
+            orientation: 'landscape',
+       
+               exportOptions: {
+             columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10]  
+            }
+
+       
+             }
+    ],
+        ajax: {
+            url: "../getdata.php",
+            type: "post",
+            data: {agircultural_equipment: true},
+            error: function(thrown) {
+                console.log("Ajax request failed: " + thrown);
+            }
+        },
+        columns: [
+            {
+                "data": null,
+                "render": function(data, type, row) {
+                    return '<div class="row">' + 
+                               '<div class="col">' + row.description +
+                                   '<strong>Model:</strong> ' + row.model +
+                               '</div>' +
+                               '<div class="col">' +
+                                   '<strong>SN:</strong> ' + row.asset_sn +
+                               '</div>' +
+                           '</div>';
+                }
+            },
+            {"data": "property_no"},
+            {"data": "unit_meas"},
+            { "data": "unit_val", 
+          "render": function(data, type, row) {
+              return '₱' + data;
+          } },
+            {"data": "qty_property_card"},
+            {"data": "qty_physical_count"},
+            {"data": "shortage_qty"},
+            {"data": "shortage_value"},
+            {"data": "date_acquired"},
+            {"data": "remarks"},
+            {"data": "fullname"},
+                    {
+                        "data": null,
+                        "render": function(data, type, row) {
+                            return '<button class="btn btn-primary btn-sm ml-2 ms-1 update-btn" name="update" data-update="' + row.id + '"><span>Edit<i class="fa fa-pen" style="color:yellow"></i></span></button>'+ 
+                    '<button class="btn btn-danger btn-sm ml-2 ms-1 delete-btn" name="delete" data-delete="' + row.id + '"><span>Delete <i class="fa fa-trash" style="color:skyblue"></i></span></button>';
+                }   
+            },
+        ],
+        drawCallback: function () {
+            var api = this.api();
+            var total = api.column(3, { page: 'current' }).data().reduce(function (a, b) {
+                return a + parseFloat(b);
+            }, 0);
+            $('#totalUnitMeas').html('Total: ₱' + total.toFixed(2));
+        }
+    });
+
+
+$('#agricultural_equipment').on('click', '.update-btn', function() {
+    var id = $(this).data('update');
+    console.log(id);    
+    $.ajax({
+        url: '../getdata.php',
+        type: 'POST',
+        data: {
+            getdata: true,
+            id: id
+        },
+        success: function(response) {
+            if (response.trim() !== "") {
+                var data = JSON.parse(response);
+                
+               
+                $('#modal-input1').val(data[0].description);
+                $('#modal-input2').val(data[0].property_no);
+                $('#modal-input3').val(data[0].unit_meas);
+                $('#modal-input4').val(data[0].unit_val);
+                $('#modal-input5').val(data[0].qty_property_card);
+                $('#modal-input6').val(data[0].qty_physical_count);
+                $('#modal-input7').val(data[0].shortage_qty);
+                $('#modal-input8').val(data[0].shortage_value);
+                $('select.edit_personnel_school').val(data[0].fullname);
+                $('#modal-input10').val(data[0].remarks);
+
+               
+                $('#editModal').modal('show');
+
+                $('#saveChanges').off('click').on('click', function() {
+                    $.ajax({
+                        url: '../function.php',
+                        type: 'POST',
+                        data: {
+                            updatebuild2: true,
+                            id: id,
+                            description: $('#modal-input1').val(),
+                            property_no: $('#modal-input2').val(),
+                            unit_meas: $('#modal-input3').val(),
+                            unit_val: $('#modal-input4').val().replace('₱', ''), 
+                            qty_property_card: $('#modal-input5').val(),
+                            qty_physical_count: $('#modal-input6').val(),
+                            shortage_qty: $('#modal-input7').val(),
+                            shortage_value: $('#modal-input8').val(),
+                            account_officer: $('select.edit_personnel_school').val(),
+                            remarks: $('#modal-input10').val(),
+                        },
+                        success: function(response) {
+                            if (response.trim() === "Updated Successfully") {
+                                $('#editModal').modal('hide');
+                                Swal.fire(
+                                    'Updated!',
+                                    'File has been updated successfully.',
+                                    'success'
+                                );
+                                table.ajax.reload();
+                            } else {
+                                Swal.fire(
+                                    'Failed!',
+                                    'Failed to update file.',
+                                    'error'
+                                );
+                            }
+                        },
+                    });
+                });
+            }
+        },
+    });
+});
+
+
+    $('#agricultural_equipment').on('click', '.delete-btn', function() {
+        var id = $(this).data('delete');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to delete it?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '../function.php',
+                    type: 'POST',
+                    data: {
+                        deletebuild2: true,
+                        id: id
+                    },
+                    success: function(response) {
+                        if (response.trim() === "Deleted Successfully") {
+                            Swal.fire(
+                                'Deleted!',
+                                'File has been deleted successfully.',
+                                'success'
+                            );
+                            table.ajax.reload();
+                        } else {
+                            Swal.fire(
+                                'Failed!',
+                                'Failed to delete file.',
+                                'error'
+                            );
+                        }
+                    },
+                });
+            }
+        });
+    });
+});
+
+
+
+
+
+$(document).ready(function() {
+    var table = $('#ict_equipment').DataTable({
+        serverSide: true,
+        responsive: true,
+        lengthChange: false,
+        autoWidth: true,
+        dom: 'lBfrtip',
+        buttons: [
+        "copy",
+        "csv",
+        "excel", {
+            extend: 'print',
+            customize: function(win) {
+                $(win.document.body).css('font-size', '10pt');
+                $(win.document.body).find('table')
+                    .before('<h1 style="text-align:center;">Report on School Buildings</h1>'+
+                             '<p style="text-align:center;">___________________________________</p>'+
+                             '<p style="text-align:center; margin-top:-1em">(Type of Property, Plant and Equipment)</p>'+
+                             '<p><b>Fund Cluster:</b> <span>_________________</span></p>'+
+                             '<p><b>For which ________________________,_________________________,_______________________is accountable, having assumed such accountability on (_____________________)</b></p>');
+                $(win.document.body).find('table')
+                    .after('<table style="margin-top:80px; width:100%; text-align:center;">' +
+                        '<tr>' +
+                        '<td style=" ">Certified Corrected by:____________________<br><span style="font-weight:bold; font-size:14px;  text-align:center;  "><b>Signature over Printed Name of Inventory <span style="margin-left:.5em; font-size:14px;"> Commitee Chair and Members</b></span></span></td>' +
+                        '<td style="text-align:center;">Approved by:_____________________________<br><span style="font-weight:bold; font-size:14px; text-align:center;  align-items:center;"><b>Signature over Printed Name of Head of <span style="margin-left:.5em; font-size:14px;">Agency/Entity or Authorized Representative</span></b></span></td>' +
+                        '<td style="justify-content:center;">Verified by:_______________________<br><span style="font-weight:bold; font-size:14px; justify-content:center; text-align:center"><b>Signature over Printed Name of COA <span  style="margin-left:.5em; font-size:14px;">Representative</span></b></span></td>' +
+                        '</tr>' +
+                        '</table>');
+            },
+            orientation: 'landscape',
+       
+               exportOptions: {
+             columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10]  
+            }
+
+       
+             }
+    ],
+        ajax: {
+            url: "../getdata.php",
+            type: "post",
+            data: {ict_equipment: true},
+            error: function(thrown) {
+                console.log("Ajax request failed: " + thrown);
+            }
+        },
+        columns: [
+            {
+                "data": null,
+                "render": function(data, type, row) {
+                    return '<div class="row">' + 
+                               '<div class="col">' + row.description +
+                                   '<strong>Model:</strong> ' + row.model +
+                               '</div>' +
+                               '<div class="col">' +
+                                   '<strong>SN:</strong> ' + row.asset_sn +
+                               '</div>' +
+                           '</div>';
+                }
+            },
+            {"data": "property_no"},
+            {"data": "unit_meas"},
+            { "data": "unit_val", 
+          "render": function(data, type, row) {
+              return '₱' + data;
+          } },
+            {"data": "qty_property_card"},
+            {"data": "qty_physical_count"},
+            {"data": "shortage_qty"},
+            {"data": "shortage_value"},
+            {"data": "date_acquired"},
+            {"data": "remarks"},
+            {"data": "fullname"},
+                    {
+                        "data": null,
+                        "render": function(data, type, row) {
+                            return '<button class="btn btn-primary btn-sm ml-2 ms-1 update-btn" name="update" data-update="' + row.id + '"><span>Edit<i class="fa fa-pen" style="color:yellow"></i></span></button>'+ 
+                    '<button class="btn btn-danger btn-sm ml-2 ms-1 delete-btn" name="delete" data-delete="' + row.id + '"><span>Delete <i class="fa fa-trash" style="color:skyblue"></i></span></button>';
+                }   
+            },
+        ],
+        drawCallback: function () {
+            var api = this.api();
+            var total = api.column(3, { page: 'current' }).data().reduce(function (a, b) {
+                return a + parseFloat(b);
+            }, 0);
+            $('#totalUnitMeas').html('Total: ₱' + total.toFixed(2));
+        }
+    });
+
+
+$('#ict_equipment').on('click', '.update-btn', function() {
+    var id = $(this).data('update');
+    console.log(id);    
+    $.ajax({
+        url: '../getdata.php',
+        type: 'POST',
+        data: {
+            getdata: true,
+            id: id
+        },
+        success: function(response) {
+            if (response.trim() !== "") {
+                var data = JSON.parse(response);
+                
+             
+                $('#modal-input1').val(data[0].description);
+                $('#modal-input2').val(data[0].property_no);
+                $('#modal-input3').val(data[0].unit_meas);
+                $('#modal-input4').val(data[0].unit_val);
+                $('#modal-input5').val(data[0].qty_property_card);
+                $('#modal-input6').val(data[0].qty_physical_count);
+                $('#modal-input7').val(data[0].shortage_qty);
+                $('#modal-input8').val(data[0].shortage_value);
+                $('select.edit_personnel_school').val(data[0].fullname);
+                $('#modal-input10').val(data[0].remarks);
+
+               
+                $('#editModal').modal('show');
+
+                $('#saveChanges').off('click').on('click', function() {
+                    $.ajax({
+                        url: '../function.php',
+                        type: 'POST',
+                        data: {
+                            updatebuild2: true,
+                            id: id,
+                            description: $('#modal-input1').val(),
+                            property_no: $('#modal-input2').val(),
+                            unit_meas: $('#modal-input3').val(),
+                            unit_val: $('#modal-input4').val().replace('₱', ''), 
+                            qty_property_card: $('#modal-input5').val(),
+                            qty_physical_count: $('#modal-input6').val(),
+                            shortage_qty: $('#modal-input7').val(),
+                            shortage_value: $('#modal-input8').val(),
+                            account_officer: $('select.edit_personnel_school').val(),
+                            remarks: $('#modal-input10').val(),
+                        },
+                        success: function(response) {
+                            if (response.trim() === "Updated Successfully") {
+                                $('#editModal').modal('hide');
+                                Swal.fire(
+                                    'Updated!',
+                                    'File has been updated successfully.',
+                                    'success'
+                                );
+                                table.ajax.reload();
+                            } else {
+                                Swal.fire(
+                                    'Failed!',
+                                    'Failed to update file.',
+                                    'error'
+                                );
+                            }
+                        },
+                    });
+                });
+            }
+        },
+    });
+});
+
+
+    $('#ict_equipment').on('click', '.delete-btn', function() {
+        var id = $(this).data('delete');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to delete it?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '../function.php',
+                    type: 'POST',
+                    data: {
+                        deletebuild2: true,
+                        id: id
+                    },
+                    success: function(response) {
+                        if (response.trim() === "Deleted Successfully") {
+                            Swal.fire(
+                                'Deleted!',
+                                'File has been deleted successfully.',
+                                'success'
+                            );
+                            table.ajax.reload();
+                        } else {
+                            Swal.fire(
+                                'Failed!',
+                                'Failed to delete file.',
+                                'error'
+                            );
+                        }
+                    },
+                });
+            }
+        });
+    });
+});
+
+
+
+
+
+$(document).ready(function() {
+    var table = $('#machinery').DataTable({
+        serverSide: true,
+        responsive: true,
+        lengthChange: false,
+        autoWidth: true,
+        dom: 'lBfrtip',
+        buttons: [
+        "copy",
+        "csv",
+        "excel", {
+            extend: 'print',
+            customize: function(win) {
+                $(win.document.body).css('font-size', '10pt');
+                $(win.document.body).find('table')
+                    .before('<h1 style="text-align:center;">Report on School Buildings</h1>'+
+                             '<p style="text-align:center;">___________________________________</p>'+
+                             '<p style="text-align:center; margin-top:-1em">(Type of Property, Plant and Equipment)</p>'+
+                             '<p><b>Fund Cluster:</b> <span>_________________</span></p>'+
+                             '<p><b>For which ________________________,_________________________,_______________________is accountable, having assumed such accountability on (_____________________)</b></p>');
+                $(win.document.body).find('table')
+                    .after('<table style="margin-top:80px; width:100%; text-align:center;">' +
+                        '<tr>' +
+                        '<td style=" ">Certified Corrected by:____________________<br><span style="font-weight:bold; font-size:14px;  text-align:center;  "><b>Signature over Printed Name of Inventory <span style="margin-left:.5em; font-size:14px;"> Commitee Chair and Members</b></span></span></td>' +
+                        '<td style="text-align:center;">Approved by:_____________________________<br><span style="font-weight:bold; font-size:14px; text-align:center;  align-items:center;"><b>Signature over Printed Name of Head of <span style="margin-left:.5em; font-size:14px;">Agency/Entity or Authorized Representative</span></b></span></td>' +
+                        '<td style="justify-content:center;">Verified by:_______________________<br><span style="font-weight:bold; font-size:14px; justify-content:center; text-align:center"><b>Signature over Printed Name of COA <span  style="margin-left:.5em; font-size:14px;">Representative</span></b></span></td>' +
+                        '</tr>' +
+                        '</table>');
+            },
+            orientation: 'landscape',
+       
+               exportOptions: {
+             columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10]  
+            }
+
+       
+             }
+    ],
+        ajax: {
+            url: "../getdata.php",
+            type: "post",
+            data: {machinery: true},
+            error: function(thrown) {
+                console.log("Ajax request failed: " + thrown);
+            }
+        },
+        columns: [
+            {
+                "data": null,
+                "render": function(data, type, row) {
+                    return '<div class="row">' + 
+                               '<div class="col">' + row.description +
+                                   '<strong>Model:</strong> ' + row.model +
+                               '</div>' +
+                               '<div class="col">' +
+                                   '<strong>SN:</strong> ' + row.asset_sn +
+                               '</div>' +
+                           '</div>';
+                }
+            },
+            {"data": "property_no"},
+            {"data": "unit_meas"},
+            { "data": "unit_val", 
+          "render": function(data, type, row) {
+              return '₱' + data;
+          } },
+            {"data": "qty_property_card"},
+            {"data": "qty_physical_count"},
+            {"data": "shortage_qty"},
+            {"data": "shortage_value"},
+            {"data": "date_acquired"},
+            {"data": "remarks"},
+            {"data": "fullname"},
+                    {
+                        "data": null,
+                        "render": function(data, type, row) {
+                            return '<button class="btn btn-primary btn-sm ml-2 ms-1 update-btn" name="update" data-update="' + row.id + '"><span>Edit<i class="fa fa-pen" style="color:yellow"></i></span></button>'+ 
+                    '<button class="btn btn-danger btn-sm ml-2 ms-1 delete-btn" name="delete" data-delete="' + row.id + '"><span>Delete <i class="fa fa-trash" style="color:skyblue"></i></span></button>';
+                }   
+            },
+        ],
+        drawCallback: function () {
+            var api = this.api();
+            var total = api.column(3, { page: 'current' }).data().reduce(function (a, b) {
+                return a + parseFloat(b);
+            }, 0);
+            $('#totalUnitMeas').html('Total: ₱' + total.toFixed(2));
+        }
+    });
+
+
+$('#machinery').on('click', '.update-btn', function() {
+    var id = $(this).data('update');
+    console.log(id);    
+    $.ajax({
+        url: '../getdata.php',
+        type: 'POST',
+        data: {
+            getdata: true,
+            id: id
+        },
+        success: function(response) {
+            if (response.trim() !== "") {
+                var data = JSON.parse(response);
+                
+              
+                $('#modal-input1').val(data[0].description);
+                $('#modal-input2').val(data[0].property_no);
+                $('#modal-input3').val(data[0].unit_meas);
+                $('#modal-input4').val(data[0].unit_val);
+                $('#modal-input5').val(data[0].qty_property_card);
+                $('#modal-input6').val(data[0].qty_physical_count);
+                $('#modal-input7').val(data[0].shortage_qty);
+                $('#modal-input8').val(data[0].shortage_value);
+                $('select.edit_personnel_school').val(data[0].fullname);
+                $('#modal-input10').val(data[0].remarks);
+
+               
+                $('#editModal').modal('show');
+
+                $('#saveChanges').off('click').on('click', function() {
+                    $.ajax({
+                        url: '../function.php',
+                        type: 'POST',
+                        data: {
+                            updatebuild2: true,
+                            id: id,
+                            description: $('#modal-input1').val(),
+                            property_no: $('#modal-input2').val(),
+                            unit_meas: $('#modal-input3').val(),
+                            unit_val: $('#modal-input4').val().replace('₱', ''), 
+                            qty_property_card: $('#modal-input5').val(),
+                            qty_physical_count: $('#modal-input6').val(),
+                            shortage_qty: $('#modal-input7').val(),
+                            shortage_value: $('#modal-input8').val(),
+                            account_officer: $('select.edit_personnel_school').val(),
+                            remarks: $('#modal-input10').val(),
+                        },
+                        success: function(response) {
+                            if (response.trim() === "Updated Successfully") {
+                                $('#editModal').modal('hide');
+                                Swal.fire(
+                                    'Updated!',
+                                    'File has been updated successfully.',
+                                    'success'
+                                );
+                                table.ajax.reload();
+                            } else {
+                                Swal.fire(
+                                    'Failed!',
+                                    'Failed to update file.',
+                                    'error'
+                                );
+                            }
+                        },
+                    });
+                });
+            }
+        },
+    });
+});
+
+
+    $('#machinery').on('click', '.delete-btn', function() {
+        var id = $(this).data('delete');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to delete it?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '../function.php',
+                    type: 'POST',
+                    data: {
+                        deletebuild2: true,
+                        id: id
+                    },
+                    success: function(response) {
+                        if (response.trim() === "Deleted Successfully") {
+                            Swal.fire(
+                                'Deleted!',
+                                'File has been deleted successfully.',
+                                'success'
+                            );
+                            table.ajax.reload();
+                        } else {
+                            Swal.fire(
+                                'Failed!',
+                                'Failed to delete file.',
+                                'error'
+                            );
+                        }
+                    },
+                });
+            }
+        });
+    });
+});
+
+
+
+$(document).ready(function() {
+    var table = $('#office_equipment').DataTable({
+        serverSide: true,
+        responsive: true,
+        lengthChange: false,
+        autoWidth: true,
+        dom: 'lBfrtip',
+        buttons: [
+        "copy",
+        "csv",
+        "excel", {
+            extend: 'print',
+            customize: function(win) {
+                $(win.document.body).css('font-size', '10pt');
+                $(win.document.body).find('table')
+                    .before('<h1 style="text-align:center;">Report on School Buildings</h1>'+
+                             '<p style="text-align:center;">___________________________________</p>'+
+                             '<p style="text-align:center; margin-top:-1em">(Type of Property, Plant and Equipment)</p>'+
+                             '<p><b>Fund Cluster:</b> <span>_________________</span></p>'+
+                             '<p><b>For which ________________________,_________________________,_______________________is accountable, having assumed such accountability on (_____________________)</b></p>');
+                $(win.document.body).find('table')
+                    .after('<table style="margin-top:80px; width:100%; text-align:center;">' +
+                        '<tr>' +
+                        '<td style=" ">Certified Corrected by:____________________<br><span style="font-weight:bold; font-size:14px;  text-align:center;  "><b>Signature over Printed Name of Inventory <span style="margin-left:.5em; font-size:14px;"> Commitee Chair and Members</b></span></span></td>' +
+                        '<td style="text-align:center;">Approved by:_____________________________<br><span style="font-weight:bold; font-size:14px; text-align:center;  align-items:center;"><b>Signature over Printed Name of Head of <span style="margin-left:.5em; font-size:14px;">Agency/Entity or Authorized Representative</span></b></span></td>' +
+                        '<td style="justify-content:center;">Verified by:_______________________<br><span style="font-weight:bold; font-size:14px; justify-content:center; text-align:center"><b>Signature over Printed Name of COA <span  style="margin-left:.5em; font-size:14px;">Representative</span></b></span></td>' +
+                        '</tr>' +
+                        '</table>');
+            },
+            orientation: 'landscape',
+       
+               exportOptions: {
+             columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10]  
+            }
+
+       
+             }
+    ],
+        ajax: {
+            url: "../getdata.php",
+            type: "post",
+            data: {office_equipment: true},
+            error: function(thrown) {
+                console.log("Ajax request failed: " + thrown);
+            }
+        },
+        columns: [
+            {
+                "data": null,
+                "render": function(data, type, row) {
+                    return '<div class="row">' + 
+                               '<div class="col">' + row.description +
+                                   '<strong>Model:</strong> ' + row.model +
+                               '</div>' +
+                               '<div class="col">' +
+                                   '<strong>SN:</strong> ' + row.asset_sn +
+                               '</div>' +
+                           '</div>';
+                }
+            },
+            {"data": "property_no"},
+            {"data": "unit_meas"},
+            { "data": "unit_val", 
+          "render": function(data, type, row) {
+              return '₱' + data;
+          } },
+            {"data": "qty_property_card"},
+            {"data": "qty_physical_count"},
+            {"data": "shortage_qty"},
+            {"data": "shortage_value"},
+            {"data": "date_acquired"},
+            {"data": "remarks"},
+            {"data": "fullname"},
+                    {
+                        "data": null,
+                        "render": function(data, type, row) {
+                            return '<button class="btn btn-primary btn-sm ml-2 ms-1 update-btn" name="update" data-update="' + row.id + '"><span>Edit<i class="fa fa-pen" style="color:yellow"></i></span></button>'+ 
+                    '<button class="btn btn-danger btn-sm ml-2 ms-1 delete-btn" name="delete" data-delete="' + row.id + '"><span>Delete <i class="fa fa-trash" style="color:skyblue"></i></span></button>';
+                }   
+            },
+        ],
+        drawCallback: function () {
+            var api = this.api();
+            var total = api.column(3, { page: 'current' }).data().reduce(function (a, b) {
+                return a + parseFloat(b);
+            }, 0);
+            $('#totalUnitMeas').html('Total: ₱' + total.toFixed(2));
+        }
+    });
+
+
+$('#office_equipment').on('click', '.update-btn', function() {
+    var id = $(this).data('update');
+    console.log(id);    
+    $.ajax({
+        url: '../getdata.php',
+        type: 'POST',
+        data: {
+            getdata: true,
+            id: id
+        },
+        success: function(response) {
+            if (response.trim() !== "") {
+                var data = JSON.parse(response);
+                
+              
+                $('#modal-input1').val(data[0].description);
+                $('#modal-input2').val(data[0].property_no);
+                $('#modal-input3').val(data[0].unit_meas);
+                $('#modal-input4').val(data[0].unit_val);
+                $('#modal-input5').val(data[0].qty_property_card);
+                $('#modal-input6').val(data[0].qty_physical_count);
+                $('#modal-input7').val(data[0].shortage_qty);
+                $('#modal-input8').val(data[0].shortage_value);
+                $('select.edit_personnel_school').val(data[0].fullname);
+                $('#modal-input10').val(data[0].remarks);
+
+               
+                $('#editModal').modal('show');
+
+                $('#saveChanges').off('click').on('click', function() {
+                    $.ajax({
+                        url: '../function.php',
+                        type: 'POST',
+                        data: {
+                            updatebuild2: true,
+                            id: id,
+                            description: $('#modal-input1').val(),
+                            property_no: $('#modal-input2').val(),
+                            unit_meas: $('#modal-input3').val(),
+                            unit_val: $('#modal-input4').val().replace('₱', ''), 
+                            qty_property_card: $('#modal-input5').val(),
+                            qty_physical_count: $('#modal-input6').val(),
+                            shortage_qty: $('#modal-input7').val(),
+                            shortage_value: $('#modal-input8').val(),
+                            account_officer: $('select.edit_personnel_school').val(),
+                            remarks: $('#modal-input10').val(),
+                        },
+                        success: function(response) {
+                            if (response.trim() === "Updated Successfully") {
+                                $('#editModal').modal('hide');
+                                Swal.fire(
+                                    'Updated!',
+                                    'File has been updated successfully.',
+                                    'success'
+                                );
+                                table.ajax.reload();
+                            } else {
+                                Swal.fire(
+                                    'Failed!',
+                                    'Failed to update file.',
+                                    'error'
+                                );
+                            }
+                        },
+                    });
+                });
+            }
+        },
+    });
+});
+
+
+    $('#office_equipment').on('click', '.delete-btn', function() {
+        var id = $(this).data('delete');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to delete it?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '../function.php',
+                    type: 'POST',
+                    data: {
+                        deletebuild2: true,
+                        id: id
+                    },
+                    success: function(response) {
+                        if (response.trim() === "Deleted Successfully") {
+                            Swal.fire(
+                                'Deleted!',
+                                'File has been deleted successfully.',
+                                'success'
+                            );
+                            table.ajax.reload();
+                        } else {
+                            Swal.fire(
+                                'Failed!',
+                                'Failed to delete file.',
+                                'error'
+                            );
+                        }
+                    },
+                });
+            }
+        });
+    });
+});
+
+
+
+
+$(document).ready(function() {
+    var table = $('#sports_equipment').DataTable({
+        serverSide: true,
+        responsive: true,
+        lengthChange: false,
+        autoWidth: true,
+        dom: 'lBfrtip',
+        buttons: [
+        "copy",
+        "csv",
+        "excel", {
+            extend: 'print',
+            customize: function(win) {
+                $(win.document.body).css('font-size', '10pt');
+                $(win.document.body).find('table')
+                    .before('<h1 style="text-align:center;">Report on School Buildings</h1>'+
+                             '<p style="text-align:center;">___________________________________</p>'+
+                             '<p style="text-align:center; margin-top:-1em">(Type of Property, Plant and Equipment)</p>'+
+                             '<p><b>Fund Cluster:</b> <span>_________________</span></p>'+
+                             '<p><b>For which ________________________,_________________________,_______________________is accountable, having assumed such accountability on (_____________________)</b></p>');
+                $(win.document.body).find('table')
+                    .after('<table style="margin-top:80px; width:100%; text-align:center;">' +
+                        '<tr>' +
+                        '<td style=" ">Certified Corrected by:____________________<br><span style="font-weight:bold; font-size:14px;  text-align:center;  "><b>Signature over Printed Name of Inventory <span style="margin-left:.5em; font-size:14px;"> Commitee Chair and Members</b></span></span></td>' +
+                        '<td style="text-align:center;">Approved by:_____________________________<br><span style="font-weight:bold; font-size:14px; text-align:center;  align-items:center;"><b>Signature over Printed Name of Head of <span style="margin-left:.5em; font-size:14px;">Agency/Entity or Authorized Representative</span></b></span></td>' +
+                        '<td style="justify-content:center;">Verified by:_______________________<br><span style="font-weight:bold; font-size:14px; justify-content:center; text-align:center"><b>Signature over Printed Name of COA <span  style="margin-left:.5em; font-size:14px;">Representative</span></b></span></td>' +
+                        '</tr>' +
+                        '</table>');
+            },
+            orientation: 'landscape',
+       
+               exportOptions: {
+             columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10]  
+            }
+
+       
+             }
+    ],
+        ajax: {
+            url: "../getdata.php",
+            type: "post",
+            data: {sports_equipment: true},
+            error: function(thrown) {
+                console.log("Ajax request failed: " + thrown);
+            }
+        },
+        columns: [
+            {
+                "data": null,
+                "render": function(data, type, row) {
+                    return '<div class="row">' + 
+                               '<div class="col">' + row.description +
+                                   '<strong>Model:</strong> ' + row.model +
+                               '</div>' +
+                               '<div class="col">' +
+                                   '<strong>SN:</strong> ' + row.asset_sn +
+                               '</div>' +
+                           '</div>';
+                }
+            },
+            {"data": "property_no"},
+            {"data": "unit_meas"},
+            { "data": "unit_val", 
+          "render": function(data, type, row) {
+              return '₱' + data;
+          } },
+            {"data": "qty_property_card"},
+            {"data": "qty_physical_count"},
+            {"data": "shortage_qty"},
+            {"data": "shortage_value"},
+            {"data": "date_acquired"},
+            {"data": "remarks"},
+            {"data": "fullname"},
+                    {
+                        "data": null,
+                        "render": function(data, type, row) {
+                            return '<button class="btn btn-primary btn-sm ml-2 ms-1 update-btn" name="update" data-update="' + row.id + '"><span>Edit<i class="fa fa-pen" style="color:yellow"></i></span></button>'+ 
+                    '<button class="btn btn-danger btn-sm ml-2 ms-1 delete-btn" name="delete" data-delete="' + row.id + '"><span>Delete <i class="fa fa-trash" style="color:skyblue"></i></span></button>';
+                }   
+            },
+        ],
+        drawCallback: function () {
+            var api = this.api();
+            var total = api.column(3, { page: 'current' }).data().reduce(function (a, b) {
+                return a + parseFloat(b);
+            }, 0);
+            $('#totalUnitMeas').html('Total: ₱' + total.toFixed(2));
+        }
+    });
+
+
+$('#sports_equipment').on('click', '.update-btn', function() {
+    var id = $(this).data('update');
+    console.log(id);    
+    $.ajax({
+        url: '../getdata.php',
+        type: 'POST',
+        data: {
+            getdata: true,
+            id: id
+        },
+        success: function(response) {
+            if (response.trim() !== "") {
+                var data = JSON.parse(response);
+                
+              
+                $('#modal-input1').val(data[0].description);
+                $('#modal-input2').val(data[0].property_no);
+                $('#modal-input3').val(data[0].unit_meas);
+                $('#modal-input4').val(data[0].unit_val);
+                $('#modal-input5').val(data[0].qty_property_card);
+                $('#modal-input6').val(data[0].qty_physical_count);
+                $('#modal-input7').val(data[0].shortage_qty);
+                $('#modal-input8').val(data[0].shortage_value);
+                $('select.edit_personnel_school').val(data[0].fullname);
+                $('#modal-input10').val(data[0].remarks);
+
+               
+                $('#editModal').modal('show');
+
+                $('#saveChanges').off('click').on('click', function() {
+                    $.ajax({
+                        url: '../function.php',
+                        type: 'POST',
+                        data: {
+                            updatebuild2: true,
+                            id: id,
+                            description: $('#modal-input1').val(),
+                            property_no: $('#modal-input2').val(),
+                            unit_meas: $('#modal-input3').val(),
+                            unit_val: $('#modal-input4').val().replace('₱', ''), 
+                            qty_property_card: $('#modal-input5').val(),
+                            qty_physical_count: $('#modal-input6').val(),
+                            shortage_qty: $('#modal-input7').val(),
+                            shortage_value: $('#modal-input8').val(),
+                            account_officer: $('select.edit_personnel_school').val(),
+                            remarks: $('#modal-input10').val(),
+                        },
+                        success: function(response) {
+                            if (response.trim() === "Updated Successfully") {
+                                $('#editModal').modal('hide');
+                                Swal.fire(
+                                    'Updated!',
+                                    'File has been updated successfully.',
+                                    'success'
+                                );
+                                table.ajax.reload();
+                            } else {
+                                Swal.fire(
+                                    'Failed!',
+                                    'Failed to update file.',
+                                    'error'
+                                );
+                            }
+                        },
+                    });
+                });
+            }
+        },
+    });
+});
+
+
+    $('#sports_equipment').on('click', '.delete-btn', function() {
+        var id = $(this).data('delete');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to delete it?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '../function.php',
+                    type: 'POST',
+                    data: {
+                        deletebuild2: true,
+                        id: id
+                    },
+                    success: function(response) {
+                        if (response.trim() === "Deleted Successfully") {
+                            Swal.fire(
+                                'Deleted!',
+                                'File has been deleted successfully.',
+                                'success'
+                            );
+                            table.ajax.reload();
+                        } else {
+                            Swal.fire(
+                                'Failed!',
+                                'Failed to delete file.',
+                                'error'
+                            );
+                        }
+                    },
+                });
+            }
+        });
+    });
+});
+
+
+
+
+$(document).ready(function() {
+    var table = $('#technical_equipment').DataTable({
+        serverSide: true,
+        responsive: true,
+        lengthChange: false,
+        autoWidth: true,
+        dom: 'lBfrtip',
+        buttons: [
+        "copy",
+        "csv",
+        "excel", {
+            extend: 'print',
+            customize: function(win) {
+                $(win.document.body).css('font-size', '10pt');
+                $(win.document.body).find('table')
+                    .before('<h1 style="text-align:center;">Report on School Buildings</h1>'+
+                             '<p style="text-align:center;">___________________________________</p>'+
+                             '<p style="text-align:center; margin-top:-1em">(Type of Property, Plant and Equipment)</p>'+
+                             '<p><b>Fund Cluster:</b> <span>_________________</span></p>'+
+                             '<p><b>For which ________________________,_________________________,_______________________is accountable, having assumed such accountability on (_____________________)</b></p>');
+                $(win.document.body).find('table')
+                    .after('<table style="margin-top:80px; width:100%; text-align:center;">' +
+                        '<tr>' +
+                        '<td style=" ">Certified Corrected by:____________________<br><span style="font-weight:bold; font-size:14px;  text-align:center;  "><b>Signature over Printed Name of Inventory <span style="margin-left:.5em; font-size:14px;"> Commitee Chair and Members</b></span></span></td>' +
+                        '<td style="text-align:center;">Approved by:_____________________________<br><span style="font-weight:bold; font-size:14px; text-align:center;  align-items:center;"><b>Signature over Printed Name of Head of <span style="margin-left:.5em; font-size:14px;">Agency/Entity or Authorized Representative</span></b></span></td>' +
+                        '<td style="justify-content:center;">Verified by:_______________________<br><span style="font-weight:bold; font-size:14px; justify-content:center; text-align:center"><b>Signature over Printed Name of COA <span  style="margin-left:.5em; font-size:14px;">Representative</span></b></span></td>' +
+                        '</tr>' +
+                        '</table>');
+            },
+            orientation: 'landscape',
+       
+               exportOptions: {
+             columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10]  
+            }
+
+       
+             }
+    ],
+        ajax: {
+            url: "../getdata.php",
+            type: "post",
+            data: {technical_equipment: true},
+            error: function(thrown) {
+                console.log("Ajax request failed: " + thrown);
+            }
+        },
+        columns: [
+            {
+                "data": null,
+                "render": function(data, type, row) {
+                    return '<div class="row">' + 
+                               '<div class="col">' + row.description +
+                                   '<strong>Model:</strong> ' + row.model +
+                               '</div>' +
+                               '<div class="col">' +
+                                   '<strong>SN:</strong> ' + row.asset_sn +
+                               '</div>' +
+                           '</div>';
+                }
+            },
+            {"data": "property_no"},
+            {"data": "unit_meas"},
+            { "data": "unit_val", 
+          "render": function(data, type, row) {
+              return '₱' + data;
+          } },
+            {"data": "qty_property_card"},
+            {"data": "qty_physical_count"},
+            {"data": "shortage_qty"},
+            {"data": "shortage_value"},
+            {"data": "date_acquired"},
+            {"data": "remarks"},
+            {"data": "fullname"},
+                    {
+                        "data": null,
+                        "render": function(data, type, row) {
+                            return '<button class="btn btn-primary btn-sm ml-2 ms-1 update-btn" name="update" data-update="' + row.id + '"><span>Edit<i class="fa fa-pen" style="color:yellow"></i></span></button>'+ 
+                    '<button class="btn btn-danger btn-sm ml-2 ms-1 delete-btn" name="delete" data-delete="' + row.id + '"><span>Delete <i class="fa fa-trash" style="color:skyblue"></i></span></button>';
+                }   
+            },
+        ],
+        drawCallback: function () {
+            var api = this.api();
+            var total = api.column(3, { page: 'current' }).data().reduce(function (a, b) {
+                return a + parseFloat(b);
+            }, 0);
+            $('#totalUnitMeas').html('Total: ₱' + total.toFixed(2));
+        }
+    });
+
+
+$('#technical_equipment').on('click', '.update-btn', function() {
+    var id = $(this).data('update');
+    console.log(id);    
+    $.ajax({
+        url: '../getdata.php',
+        type: 'POST',
+        data: {
+            getdata: true,
+            id: id
+        },
+        success: function(response) {
+            if (response.trim() !== "") {
+                var data = JSON.parse(response);
+                
+              
+                $('#modal-input1').val(data[0].description);
+                $('#modal-input2').val(data[0].property_no);
+                $('#modal-input3').val(data[0].unit_meas);
+                $('#modal-input4').val(data[0].unit_val);
+                $('#modal-input5').val(data[0].qty_property_card);
+                $('#modal-input6').val(data[0].qty_physical_count);
+                $('#modal-input7').val(data[0].shortage_qty);
+                $('#modal-input8').val(data[0].shortage_value);
+                $('select.edit_personnel_school').val(data[0].fullname);
+                $('#modal-input10').val(data[0].remarks);
+
+               
+                $('#editModal').modal('show');
+
+                $('#saveChanges').off('click').on('click', function() {
+                    $.ajax({
+                        url: '../function.php',
+                        type: 'POST',
+                        data: {
+                            updatebuild2: true,
+                            id: id,
+                            description: $('#modal-input1').val(),
+                            property_no: $('#modal-input2').val(),
+                            unit_meas: $('#modal-input3').val(),
+                            unit_val: $('#modal-input4').val().replace('₱', ''), 
+                            qty_property_card: $('#modal-input5').val(),
+                            qty_physical_count: $('#modal-input6').val(),
+                            shortage_qty: $('#modal-input7').val(),
+                            shortage_value: $('#modal-input8').val(),
+                            account_officer: $('select.edit_personnel_school').val(),
+                            remarks: $('#modal-input10').val(),
+                        },
+                        success: function(response) {
+                            if (response.trim() === "Updated Successfully") {
+                                $('#editModal').modal('hide');
+                                Swal.fire(
+                                    'Updated!',
+                                    'File has been updated successfully.',
+                                    'success'
+                                );
+                                table.ajax.reload();
+                            } else {
+                                Swal.fire(
+                                    'Failed!',
+                                    'Failed to update file.',
+                                    'error'
+                                );
+                            }
+                        },
+                    });
+                });
+            }
+        },
+    });
+});
+
+
+    $('#technical_equipment').on('click', '.delete-btn', function() {
+        var id = $(this).data('delete');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to delete it?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '../function.php',
+                    type: 'POST',
+                    data: {
+                        deletebuild2: true,
+                        id: id
+                    },
+                    success: function(response) {
+                        if (response.trim() === "Deleted Successfully") {
+                            Swal.fire(
+                                'Deleted!',
+                                'File has been deleted successfully.',
+                                'success'
+                            );
+                            table.ajax.reload();
+                        } else {
+                            Swal.fire(
+                                'Failed!',
+                                'Failed to delete file.',
+                                'error'
+                            );
+                        }
+                    },
+                });
+            }
+        });
+    });
+});
+
+
+
+
+$(document).ready(function() {
+    var table = $('#transportation').DataTable({
+        serverSide: true,
+        responsive: true,
+        lengthChange: false,
+        autoWidth: true,
+        dom: 'lBfrtip',
+        buttons: [
+        "copy",
+        "csv",
+        "excel", {
+            extend: 'print',
+            customize: function(win) {
+                $(win.document.body).css('font-size', '10pt');
+                $(win.document.body).find('table')
+                    .before('<h1 style="text-align:center;">Report on School Buildings</h1>'+
+                             '<p style="text-align:center;">___________________________________</p>'+
+                             '<p style="text-align:center; margin-top:-1em">(Type of Property, Plant and Equipment)</p>'+
+                             '<p><b>Fund Cluster:</b> <span>_________________</span></p>'+
+                             '<p><b>For which ________________________,_________________________,_______________________is accountable, having assumed such accountability on (_____________________)</b></p>');
+                $(win.document.body).find('table')
+                    .after('<table style="margin-top:80px; width:100%; text-align:center;">' +
+                        '<tr>' +
+                        '<td style=" ">Certified Corrected by:____________________<br><span style="font-weight:bold; font-size:14px;  text-align:center;  "><b>Signature over Printed Name of Inventory <span style="margin-left:.5em; font-size:14px;"> Commitee Chair and Members</b></span></span></td>' +
+                        '<td style="text-align:center;">Approved by:_____________________________<br><span style="font-weight:bold; font-size:14px; text-align:center;  align-items:center;"><b>Signature over Printed Name of Head of <span style="margin-left:.5em; font-size:14px;">Agency/Entity or Authorized Representative</span></b></span></td>' +
+                        '<td style="justify-content:center;">Verified by:_______________________<br><span style="font-weight:bold; font-size:14px; justify-content:center; text-align:center"><b>Signature over Printed Name of COA <span  style="margin-left:.5em; font-size:14px;">Representative</span></b></span></td>' +
+                        '</tr>' +
+                        '</table>');
+            },
+            orientation: 'landscape',
+       
+               exportOptions: {
+             columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10]  
+            }
+
+       
+             }
+    ],
+        ajax: {
+            url: "../getdata.php",
+            type: "post",
+            data: {transportation: true},
+            error: function(thrown) {
+                console.log("Ajax request failed: " + thrown);
+            }
+        },
+        columns: [
+            {
+                "data": null,
+                "render": function(data, type, row) {
+                    return '<div class="row">' + 
+                               '<div class="col">' + row.description +
+                                   '<strong>Model:</strong> ' + row.model +
+                               '</div>' +
+                               '<div class="col">' +
+                                   '<strong>SN:</strong> ' + row.asset_sn +
+                               '</div>' +
+                           '</div>';
+                }
+            },
+            {"data": "property_no"},
+            {"data": "unit_meas"},
+            { "data": "unit_val", 
+          "render": function(data, type, row) {
+              return '₱' + data;
+          } },
+            {"data": "qty_property_card"},
+            {"data": "qty_physical_count"},
+            {"data": "shortage_qty"},
+            {"data": "shortage_value"},
+            {"data": "date_acquired"},
+            {"data": "remarks"},
+            {"data": "fullname"},
+                    {
+                        "data": null,
+                        "render": function(data, type, row) {
+                            return '<button class="btn btn-primary btn-sm ml-2 ms-1 update-btn" name="update" data-update="' + row.id + '"><span>Edit<i class="fa fa-pen" style="color:yellow"></i></span></button>'+ 
+                    '<button class="btn btn-danger btn-sm ml-2 ms-1 delete-btn" name="delete" data-delete="' + row.id + '"><span>Delete <i class="fa fa-trash" style="color:skyblue"></i></span></button>';
+                }   
+            },
+        ],
+        drawCallback: function () {
+            var api = this.api();
+            var total = api.column(3, { page: 'current' }).data().reduce(function (a, b) {
+                return a + parseFloat(b);
+            }, 0);
+            $('#totalUnitMeas').html('Total: ₱' + total.toFixed(2));
+        }
+    });
+
+
+$('#transportation').on('click', '.update-btn', function() {
+    var id = $(this).data('update');
+    console.log(id);    
+    $.ajax({
+        url: '../getdata.php',
+        type: 'POST',
+        data: {
+            getdata: true,
+            id: id
+        },
+        success: function(response) {
+            if (response.trim() !== "") {
+                var data = JSON.parse(response);
+                
+              
+                $('#modal-input1').val(data[0].description);
+                $('#modal-input2').val(data[0].property_no);
+                $('#modal-input3').val(data[0].unit_meas);
+                $('#modal-input4').val(data[0].unit_val);
+                $('#modal-input5').val(data[0].qty_property_card);
+                $('#modal-input6').val(data[0].qty_physical_count);
+                $('#modal-input7').val(data[0].shortage_qty);
+                $('#modal-input8').val(data[0].shortage_value);
+                $('select.edit_personnel_school').val(data[0].fullname);
+                $('#modal-input10').val(data[0].remarks);
+
+               
+                $('#editModal').modal('show');
+
+                $('#saveChanges').off('click').on('click', function() {
+                    $.ajax({
+                        url: '../function.php',
+                        type: 'POST',
+                        data: {
+                            updatebuild2: true,
+                            id: id,
+                            description: $('#modal-input1').val(),
+                            property_no: $('#modal-input2').val(),
+                            unit_meas: $('#modal-input3').val(),
+                            unit_val: $('#modal-input4').val().replace('₱', ''), 
+                            qty_property_card: $('#modal-input5').val(),
+                            qty_physical_count: $('#modal-input6').val(),
+                            shortage_qty: $('#modal-input7').val(),
+                            shortage_value: $('#modal-input8').val(),
+                            account_officer: $('select.edit_personnel_school').val(),
+                            remarks: $('#modal-input10').val(),
+                        },
+                        success: function(response) {
+                            if (response.trim() === "Updated Successfully") {
+                                $('#editModal').modal('hide');
+                                Swal.fire(
+                                    'Updated!',
+                                    'File has been updated successfully.',
+                                    'success'
+                                );
+                                table.ajax.reload();
+                            } else {
+                                Swal.fire(
+                                    'Failed!',
+                                    'Failed to update file.',
+                                    'error'
+                                );
+                            }
+                        },
+                    });
+                });
+            }
+        },
+    });
+});
+
+
+    $('#transportation').on('click', '.delete-btn', function() {
+        var id = $(this).data('delete');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to delete it?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '../function.php',
+                    type: 'POST',
+                    data: {
+                        deletebuild2: true,
+                        id: id
+                    },
+                    success: function(response) {
+                        if (response.trim() === "Deleted Successfully") {
+                            Swal.fire(
+                                'Deleted!',
+                                'File has been deleted successfully.',
+                                'success'
+                            );
+                            table.ajax.reload();
+                        } else {
+                            Swal.fire(
+                                'Failed!',
+                                'Failed to delete file.',
+                                'error'
+                            );
+                        }
+                    },
+                });
+            }
+        });
+    });
+});
+
+
+
+
+
+$(document).ready(function() {
+    var table = $('#Book').DataTable({
+        serverSide: true,
+        responsive: true,
+        lengthChange: false,
+        autoWidth: true,
+        dom: 'lBfrtip',
+        buttons: [
+        "copy",
+        "csv",
+        "excel", {
+            extend: 'print',
+            customize: function(win) {
+                $(win.document.body).css('font-size', '10pt');
+                $(win.document.body).find('table')
+                    .before('<h1 style="text-align:center;">Report on School Buildings</h1>'+
+                             '<p style="text-align:center;">___________________________________</p>'+
+                             '<p style="text-align:center; margin-top:-1em">(Type of Property, Plant and Equipment)</p>'+
+                             '<p><b>Fund Cluster:</b> <span>_________________</span></p>'+
+                             '<p><b>For which ________________________,_________________________,_______________________is accountable, having assumed such accountability on (_____________________)</b></p>');
+                $(win.document.body).find('table')
+                    .after('<table style="margin-top:80px; width:100%; text-align:center;">' +
+                        '<tr>' +
+                        '<td style=" ">Certified Corrected by:____________________<br><span style="font-weight:bold; font-size:14px;  text-align:center;  "><b>Signature over Printed Name of Inventory <span style="margin-left:.5em; font-size:14px;"> Commitee Chair and Members</b></span></span></td>' +
+                        '<td style="text-align:center;">Approved by:_____________________________<br><span style="font-weight:bold; font-size:14px; text-align:center;  align-items:center;"><b>Signature over Printed Name of Head of <span style="margin-left:.5em; font-size:14px;">Agency/Entity or Authorized Representative</span></b></span></td>' +
+                        '<td style="justify-content:center;">Verified by:_______________________<br><span style="font-weight:bold; font-size:14px; justify-content:center; text-align:center"><b>Signature over Printed Name of COA <span  style="margin-left:.5em; font-size:14px;">Representative</span></b></span></td>' +
+                        '</tr>' +
+                        '</table>');
+            },
+            orientation: 'landscape',
+       
+               exportOptions: {
+             columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10]  
+            }
+
+       
+             }
+    ],
+        ajax: {
+            url: "../getdata.php",
+            type: "post",
+            data: {books1: true},
+            error: function(thrown) {
+                console.log("Ajax request failed: " + thrown);
+            }
+        },
+        columns: [
+            {
+                "data": null,
+                "render": function(data, type, row) {
+                    return '<div class="row">' + 
+                               '<div class="col">' + row.description +
+                                   '<strong>Model:</strong> ' + row.model +
+                               '</div>' +
+                               '<div class="col">' +
+                                   '<strong>SN:</strong> ' + row.asset_sn +
+                               '</div>' +
+                           '</div>';
+                }
+            },
+            {"data": "property_no"},
+            {"data": "unit_meas"},
+            { "data": "unit_val", 
+          "render": function(data, type, row) {
+              return '₱' + data;
+          } },
+            {"data": "qty_property_card"},
+            {"data": "qty_physical_count"},
+            {"data": "shortage_qty"},
+            {"data": "shortage_value"},
+            {"data": "date_acquired"},
+            {"data": "remarks"},
+            {"data": "fullname"},
+                    {
+                        "data": null,
+                        "render": function(data, type, row) {
+                            return '<button class="btn btn-primary btn-sm ml-2 ms-1 update-btn" name="update" data-update="' + row.id + '"><span>Edit<i class="fa fa-pen" style="color:yellow"></i></span></button>'+ 
+                    '<button class="btn btn-danger btn-sm ml-2 ms-1 delete-btn" name="delete" data-delete="' + row.id + '"><span>Delete <i class="fa fa-trash" style="color:skyblue"></i></span></button>';
+                }   
+            },
+        ],
+        drawCallback: function () {
+            var api = this.api();
+            var total = api.column(3, { page: 'current' }).data().reduce(function (a, b) {
+                return a + parseFloat(b);
+            }, 0);
+            $('#totalUnitMeas').html('Total: ₱' + total.toFixed(2));
+        }
+    });
+
+
+$('#Book').on('click', '.update-btn', function() {
+    var id = $(this).data('update');
+    console.log(id);    
+    $.ajax({
+        url: '../getdata.php',
+        type: 'POST',
+        data: {
+            getdata: true,
+            id: id
+        },
+        success: function(response) {
+            if (response.trim() !== "") {
+                var data = JSON.parse(response);
+                
+              
+                $('#modal-input1').val(data[0].description);
+                $('#modal-input2').val(data[0].property_no);
+                $('#modal-input3').val(data[0].unit_meas);
+                $('#modal-input4').val(data[0].unit_val);
+                $('#modal-input5').val(data[0].qty_property_card);
+                $('#modal-input6').val(data[0].qty_physical_count);
+                $('#modal-input7').val(data[0].shortage_qty);
+                $('#modal-input8').val(data[0].shortage_value);
+                $('select.edit_personnel_school').val(data[0].fullname);
+                $('#modal-input10').val(data[0].remarks);
+
+               
+                $('#editModal').modal('show');
+
+                $('#saveChanges').off('click').on('click', function() {
+                    $.ajax({
+                        url: '../function.php',
+                        type: 'POST',
+                        data: {
+                            updatebuild2: true,
+                            id: id,
+                            description: $('#modal-input1').val(),
+                            property_no: $('#modal-input2').val(),
+                            unit_meas: $('#modal-input3').val(),
+                            unit_val: $('#modal-input4').val().replace('₱', ''), 
+                            qty_property_card: $('#modal-input5').val(),
+                            qty_physical_count: $('#modal-input6').val(),
+                            shortage_qty: $('#modal-input7').val(),
+                            shortage_value: $('#modal-input8').val(),
+                            account_officer: $('select.edit_personnel_school').val(),
+                            remarks: $('#modal-input10').val(),
+                        },
+                        success: function(response) {
+                            if (response.trim() === "Updated Successfully") {
+                                $('#editModal').modal('hide');
+                                Swal.fire(
+                                    'Updated!',
+                                    'File has been updated successfully.',
+                                    'success'
+                                );
+                                table.ajax.reload();
+                            } else {
+                                Swal.fire(
+                                    'Failed!',
+                                    'Failed to update file.',
+                                    'error'
+                                );
+                            }
+                        },
+                    });
+                });
+            }
+        },
+    });
+});
+
+
+    $('#Book').on('click', '.delete-btn', function() {
+        var id = $(this).data('delete');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to delete it?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '../function.php',
+                    type: 'POST',
+                    data: {
+                        deletebuild2: true,
+                        id: id
+                    },
+                    success: function(response) {
+                        if (response.trim() === "Deleted Successfully") {
+                            Swal.fire(
+                                'Deleted!',
+                                'File has been deleted successfully.',
+                                'success'
+                            );
+                            table.ajax.reload();
+                        } else {
+                            Swal.fire(
+                                'Failed!',
+                                'Failed to delete file.',
+                                'error'
+                            );
+                        }
+                    },
+                });
+            }
+        });
+    });
+});
+
+
+
+
+
+$(document).ready(function() {
+    var table = $('#furniture').DataTable({
+        serverSide: true,
+        responsive: true,
+        lengthChange: false,
+        autoWidth: true,
+        dom: 'lBfrtip',
+        buttons: [
+        "copy",
+        "csv",
+        "excel", {
+            extend: 'print',
+            customize: function(win) {
+                $(win.document.body).css('font-size', '10pt');
+                $(win.document.body).find('table')
+                    .before('<h1 style="text-align:center;">Report on School Buildings</h1>'+
+                             '<p style="text-align:center;">___________________________________</p>'+
+                             '<p style="text-align:center; margin-top:-1em">(Type of Property, Plant and Equipment)</p>'+
+                             '<p><b>Fund Cluster:</b> <span>_________________</span></p>'+
+                             '<p><b>For which ________________________,_________________________,_______________________is accountable, having assumed such accountability on (_____________________)</b></p>');
+                $(win.document.body).find('table')
+                    .after('<table style="margin-top:80px; width:100%; text-align:center;">' +
+                        '<tr>' +
+                        '<td style=" ">Certified Corrected by:____________________<br><span style="font-weight:bold; font-size:14px;  text-align:center;  "><b>Signature over Printed Name of Inventory <span style="margin-left:.5em; font-size:14px;"> Commitee Chair and Members</b></span></span></td>' +
+                        '<td style="text-align:center;">Approved by:_____________________________<br><span style="font-weight:bold; font-size:14px; text-align:center;  align-items:center;"><b>Signature over Printed Name of Head of <span style="margin-left:.5em; font-size:14px;">Agency/Entity or Authorized Representative</span></b></span></td>' +
+                        '<td style="justify-content:center;">Verified by:_______________________<br><span style="font-weight:bold; font-size:14px; justify-content:center; text-align:center"><b>Signature over Printed Name of COA <span  style="margin-left:.5em; font-size:14px;">Representative</span></b></span></td>' +
+                        '</tr>' +
+                        '</table>');
+            },
+            orientation: 'landscape',
+       
+               exportOptions: {
+             columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10]  
+            }
+
+       
+             }
+    ],
+        ajax: {
+            url: "../getdata.php",
+            type: "post",
+            data: {furniture1: true},
+            error: function(thrown) {
+                console.log("Ajax request failed: " + thrown);
+            }
+        },
+        columns: [
+            {
+                "data": null,
+                "render": function(data, type, row) {
+                    return '<div class="row">' + 
+                               '<div class="col">' + row.description +
+                                   '<strong>Model:</strong> ' + row.model +
+                               '</div>' +
+                               '<div class="col">' +
+                                   '<strong>SN:</strong> ' + row.asset_sn +
+                               '</div>' +
+                           '</div>';
+                }
+            },
+            {"data": "property_no"},
+            {"data": "unit_meas"},
+            { "data": "unit_val", 
+          "render": function(data, type, row) {
+              return '₱' + data;
+          } },
+            {"data": "qty_property_card"},
+            {"data": "qty_physical_count"},
+            {"data": "shortage_qty"},
+            {"data": "shortage_value"},
+            {"data": "date_acquired"},
+            {"data": "remarks"},
+            {"data": "fullname"},
+                    {
+                        "data": null,
+                        "render": function(data, type, row) {
+                            return '<button class="btn btn-primary btn-sm ml-2 ms-1 update-btn" name="update" data-update="' + row.id + '"><span>Edit<i class="fa fa-pen" style="color:yellow"></i></span></button>'+ 
+                    '<button class="btn btn-danger btn-sm ml-2 ms-1 delete-btn" name="delete" data-delete="' + row.id + '"><span>Delete <i class="fa fa-trash" style="color:skyblue"></i></span></button>';
+                }   
+            },
+        ],
+        drawCallback: function () {
+            var api = this.api();
+            var total = api.column(3, { page: 'current' }).data().reduce(function (a, b) {
+                return a + parseFloat(b);
+            }, 0);
+            $('#totalUnitMeas').html('Total: ₱' + total.toFixed(2));
+        }
+    });
+
+
+$('#furniture').on('click', '.update-btn', function() {
+    var id = $(this).data('update');
+    console.log(id);    
+    $.ajax({
+        url: '../getdata.php',
+        type: 'POST',
+        data: {
+            getdata: true,
+            id: id
+        },
+        success: function(response) {
+            if (response.trim() !== "") {
+                var data = JSON.parse(response);
+                
+              
+                $('#modal-input1').val(data[0].description);
+                $('#modal-input2').val(data[0].property_no);
+                $('#modal-input3').val(data[0].unit_meas);
+                $('#modal-input4').val(data[0].unit_val);
+                $('#modal-input5').val(data[0].qty_property_card);
+                $('#modal-input6').val(data[0].qty_physical_count);
+                $('#modal-input7').val(data[0].shortage_qty);
+                $('#modal-input8').val(data[0].shortage_value);
+                $('select.edit_personnel_school').val(data[0].fullname);
+                $('#modal-input10').val(data[0].remarks);
+
+               
+                $('#editModal').modal('show');
+
+                $('#saveChanges').off('click').on('click', function() {
+                    $.ajax({
+                        url: '../function.php',
+                        type: 'POST',
+                        data: {
+                            updatebuild2: true,
+                            id: id,
+                            description: $('#modal-input1').val(),
+                            property_no: $('#modal-input2').val(),
+                            unit_meas: $('#modal-input3').val(),
+                            unit_val: $('#modal-input4').val().replace('₱', ''), 
+                            qty_property_card: $('#modal-input5').val(),
+                            qty_physical_count: $('#modal-input6').val(),
+                            shortage_qty: $('#modal-input7').val(),
+                            shortage_value: $('#modal-input8').val(),
+                            account_officer: $('select.edit_personnel_school').val(),
+                            remarks: $('#modal-input10').val(),
+                        },
+                        success: function(response) {
+                            if (response.trim() === "Updated Successfully") {
+                                $('#editModal').modal('hide');
+                                Swal.fire(
+                                    'Updated!',
+                                    'File has been updated successfully.',
+                                    'success'
+                                );
+                                table.ajax.reload();
+                            } else {
+                                Swal.fire(
+                                    'Failed!',
+                                    'Failed to update file.',
+                                    'error'
+                                );
+                            }
+                        },
+                    });
+                });
+            }
+        },
+    });
+});
+
+
+    $('#furniture').on('click', '.delete-btn', function() {
+        var id = $(this).data('delete');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to delete it?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '../function.php',
+                    type: 'POST',
+                    data: {
+                        deletebuild2: true,
+                        id: id
+                    },
+                    success: function(response) {
+                        if (response.trim() === "Deleted Successfully") {
+                            Swal.fire(
+                                'Deleted!',
+                                'File has been deleted successfully.',
+                                'success'
+                            );
+                            table.ajax.reload();
+                        } else {
+                            Swal.fire(
+                                'Failed!',
+                                'Failed to delete file.',
+                                'error'
+                            );
+                        }
+                    },
+                });
+            }
+        });
+    });
+});
+
+
+
+$(document).ready(function() {
+    var table = $('#others').DataTable({
+        serverSide: true,
+        responsive: true,
+        lengthChange: false,
+        autoWidth: true,
+        dom: 'lBfrtip',
+        buttons: [
+        "copy",
+        "csv",
+        "excel", {
+            extend: 'print',
+            customize: function(win) {
+                $(win.document.body).css('font-size', '10pt');
+                $(win.document.body).find('table')
+                    .before('<h1 style="text-align:center;">Report on School Buildings</h1>'+
+                             '<p style="text-align:center;">___________________________________</p>'+
+                             '<p style="text-align:center; margin-top:-1em">(Type of Property, Plant and Equipment)</p>'+
+                             '<p><b>Fund Cluster:</b> <span>_________________</span></p>'+
+                             '<p><b>For which ________________________,_________________________,_______________________is accountable, having assumed such accountability on (_____________________)</b></p>');
+                $(win.document.body).find('table')
+                    .after('<table style="margin-top:80px; width:100%; text-align:center;">' +
+                        '<tr>' +
+                        '<td style=" ">Certified Corrected by:____________________<br><span style="font-weight:bold; font-size:14px;  text-align:center;  "><b>Signature over Printed Name of Inventory <span style="margin-left:.5em; font-size:14px;"> Commitee Chair and Members</b></span></span></td>' +
+                        '<td style="text-align:center;">Approved by:_____________________________<br><span style="font-weight:bold; font-size:14px; text-align:center;  align-items:center;"><b>Signature over Printed Name of Head of <span style="margin-left:.5em; font-size:14px;">Agency/Entity or Authorized Representative</span></b></span></td>' +
+                        '<td style="justify-content:center;">Verified by:_______________________<br><span style="font-weight:bold; font-size:14px; justify-content:center; text-align:center"><b>Signature over Printed Name of COA <span  style="margin-left:.5em; font-size:14px;">Representative</span></b></span></td>' +
+                        '</tr>' +
+                        '</table>');
+            },
+            orientation: 'landscape',
+       
+               exportOptions: {
+             columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10]  
+            }
+
+       
+             }
+    ],
+        ajax: {
+            url: "../getdata.php",
+            type: "post",
+            data: {others1: true},
+            error: function(thrown) {
+                console.log("Ajax request failed: " + thrown);
+            }
+        },
+        columns: [
+            {
+                "data": null,
+                "render": function(data, type, row) {
+                    return '<div class="row">' + 
+                               '<div class="col">' + row.description +
+                                   '<strong>Model:</strong> ' + row.model +
+                               '</div>' +
+                               '<div class="col">' +
+                                   '<strong>SN:</strong> ' + row.asset_sn +
+                               '</div>' +
+                           '</div>';
+                }
+            },
+            {"data": "property_no"},
+            {"data": "unit_meas"},
+            { "data": "unit_val", 
+          "render": function(data, type, row) {
+              return '₱' + data;
+          } },
+            {"data": "qty_property_card"},
+            {"data": "qty_physical_count"},
+            {"data": "shortage_qty"},
+            {"data": "shortage_value"},
+            {"data": "date_acquired"},
+            {"data": "remarks"},
+            {"data": "fullname"},
+                    {
+                        "data": null,
+                        "render": function(data, type, row) {
+                            return '<button class="btn btn-primary btn-sm ml-2 ms-1 update-btn" name="update" data-update="' + row.id + '"><span>Edit<i class="fa fa-pen" style="color:yellow"></i></span></button>'+ 
+                    '<button class="btn btn-danger btn-sm ml-2 ms-1 delete-btn" name="delete" data-delete="' + row.id + '"><span>Delete <i class="fa fa-trash" style="color:skyblue"></i></span></button>';
+                }   
+            },
+        ],
+        drawCallback: function () {
+            var api = this.api();
+            var total = api.column(3, { page: 'current' }).data().reduce(function (a, b) {
+                return a + parseFloat(b);
+            }, 0);
+            $('#totalUnitMeas').html('Total: ₱' + total.toFixed(2));
+        }
+    });
+
+
+$('#others').on('click', '.update-btn', function() {
+    var id = $(this).data('update');
+    console.log(id);    
+    $.ajax({
+        url: '../getdata.php',
+        type: 'POST',
+        data: {
+            getdata: true,
+            id: id
+        },
+        success: function(response) {
+            if (response.trim() !== "") {
+                var data = JSON.parse(response);
+                
+              
+                $('#modal-input1').val(data[0].description);
+                $('#modal-input2').val(data[0].property_no);
+                $('#modal-input3').val(data[0].unit_meas);
+                $('#modal-input4').val(data[0].unit_val);
+                $('#modal-input5').val(data[0].qty_property_card);
+                $('#modal-input6').val(data[0].qty_physical_count);
+                $('#modal-input7').val(data[0].shortage_qty);
+                $('#modal-input8').val(data[0].shortage_value);
+                $('select.edit_personnel_school').val(data[0].fullname);
+                $('#modal-input10').val(data[0].remarks);
+
+               
+                $('#editModal').modal('show');
+
+                $('#saveChanges').off('click').on('click', function() {
+                    $.ajax({
+                        url: '../function.php',
+                        type: 'POST',
+                        data: {
+                            updatebuild2: true,
+                            id: id,
+                            description: $('#modal-input1').val(),
+                            property_no: $('#modal-input2').val(),
+                            unit_meas: $('#modal-input3').val(),
+                            unit_val: $('#modal-input4').val().replace('₱', ''), 
+                            qty_property_card: $('#modal-input5').val(),
+                            qty_physical_count: $('#modal-input6').val(),
+                            shortage_qty: $('#modal-input7').val(),
+                            shortage_value: $('#modal-input8').val(),
+                            account_officer: $('select.edit_personnel_school').val(),
+                            remarks: $('#modal-input10').val(),
+                        },
+                        success: function(response) {
+                            if (response.trim() === "Updated Successfully") {
+                                $('#editModal').modal('hide');
+                                Swal.fire(
+                                    'Updated!',
+                                    'File has been updated successfully.',
+                                    'success'
+                                );
+                                table.ajax.reload();
+                            } else {
+                                Swal.fire(
+                                    'Failed!',
+                                    'Failed to update file.',
+                                    'error'
+                                );
+                            }
+                        },
+                    });
+                });
+            }
+        },
+    });
+});
+
+
+    $('#others').on('click', '.delete-btn', function() {
+        var id = $(this).data('delete');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to delete it?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '../function.php',
                     type: 'POST',
                     data: {
                         deletebuild2: true,

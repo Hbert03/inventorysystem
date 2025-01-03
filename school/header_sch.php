@@ -35,19 +35,19 @@
       <!-- Notifications Dropdown Menu -->
        <li class="nav-item" style="margin-right:.5em">
            <button type="button" class="btn btn-primary btn-sm float-right" style="border-radius:10px;  background-color:transparent; color:blue"  data-toggle="modal" data-target="#exampleModal1">
-                    ADD ASSET <i class="fa fa-plus"></i>
+                    ADD INVENTORY <i class="fa fa-plus"></i>
                   </button>
        </li>
        <li class="nav-item" style="margin-right:1em">
        <button type="button" class="btn btn-primary btn-sm float-right" style="border-radius:10px; margin-right:5em; background-color:transparent; color:blue" data-toggle="modal" data-target="#exampleModal">
-                    ADD LAND ASSET <i class="fa fa-plus"></i>
+                    ADD LAND INVENTORY <i class="fa fa-plus"></i>
                   </button>
        </li>
-       <li style="margin-right:3em">
+       <!-- <li style="margin-right:3em">
       <button id="notificationButton" style="background-color:transparent; border:none; color:blue" class="btn btn-primary btn-sm">
         <span><i class="fa fa-bell"></i></span>New
       </button>
-    </li>
+    </li> -->
 
     <li class="nav-item">
       <a class="nav-link" data-widget="navbar-logout" role="button"  onclick="confirmLogout()">
@@ -113,7 +113,7 @@
         <div class="row">
           <div class="col-12 col-md-6">
           <label for="" class="form-label">Accountable Officer</label>
-          <select  class="form-control accountable_edit"></select>
+          <select  class="form-control edit_personnel_school"></select>
           </div>
           <div class="col-12 col-md-6">
           <label for="modal-input10" class="form-label">Remarks</label>
@@ -134,14 +134,14 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title" id="exampleModalLabel"><b>ADD ASSETS</b></h2>
+        <h5 class="modal-title" id="exampleModalLabel"><b>ADD INVENTORY</b></h5>
       </div>
       <div class="modal-body">
         <form id="save_asset" action="" method="POST"  enctype="multipart/form-data">
           <div class="row">
             <div class="col-md-6">
             <input type="hidden" id="selectedOfficeId" name="selectedOfficeId">
-              <select class="form-control asset_type" name="select1" required></select>
+              <select class="form-control asset_type_school" name="select1" required></select>
               <input type="text" class="form-control mb-1 mt-2" name="type" id="type" placeholder="Type" required>
 						<input type="text" class="form-control mb-1" name="brand" id="brand" placeholder="Brand">
 						<input type="text" class="form-control mb-1" name="model" id="model" placeholder="Model">
@@ -173,7 +173,7 @@
             </select>
             </div>
             <div class="col-md-6">
-              <select class="form-control sub_asset_type mb-1" name="select2" required></select>
+              <select class="form-control sub_asset_type_school mb-1" name="select2" required></select>
               <input type="text" class="form-control mt-2 mb-1" name="qty_card" id="qty_card" placeholder="Qty Card" required>
 						<input type="text" class="form-control mb-1" name="qty_count" id="qty_count" placeholder="Qty Count" required>
 						<input type="text" class="form-control mb-1" name="useful_life" id="useful_life" placeholder="Usefull Life" required>
@@ -183,10 +183,10 @@
             
             <label>Acquisition Date</label>
 						<input type="date" class="form-control mb-1" name="date_acq" id="date_acq" placeholder=""  required>  
-            <select  class="form-control mb-1 select_account" name="account_off" id="account_off"  required></select>
+            <select  class="form-control mb-1 select_account_school" name="account_off" id="account_off"  required></select>
             </div>
           </div>
-          <button type="button" class="btn btn-primary btn-sm btn-block mt-2 save_asset">SAVE</button>
+          <button type="button" class="btn btn-primary btn-sm btn-block mt-2 save_asset_school">SAVE</button>
           <button type="button" class="btn btn-secondary btn-sm btn-block" data-dismiss="modal">CANCEL</button>
         </form> 
       </div>
@@ -202,7 +202,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title" id="exampleModalLabel"><b>ADD ASSETS/LAND</b></h2>
+        <h5 class="modal-title" id="exampleModalLabel"><b>ADD INVENTORY LAND</b></h5>
       </div>
       <div class="modal-body">
         <form id="addland" action="" method="POST"  enctype="multipart/form-data">

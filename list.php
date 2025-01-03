@@ -72,8 +72,10 @@ if (isset($_SESSION['personnel']) || isset($_SESSION['admin']) || isset($_SESSIO
       <div class="container-fluid">
         <div class="row">
           <div class="col-12">
+ 
             <div class="card">
               <div class="card-header">
+                
                 <h3 class="card-title"  style="margin-right:6px">
                 LIST OF ENTRY            
               </h3>
@@ -85,6 +87,7 @@ if (isset($_SESSION['personnel']) || isset($_SESSION['admin']) || isset($_SESSIO
               </div>
               <!-- /.card-header -->
               <div class="card-body w-100">
+          
                 <table id="show_ao_entry" class="table table-bordered table-striped">
                   <thead>
                     <tr>
@@ -100,6 +103,50 @@ if (isset($_SESSION['personnel']) || isset($_SESSION['admin']) || isset($_SESSIO
                       <th>remarks</th>
                       <th>Accountable Officer</th>
                       <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody  style="font-family: 'Oswald', sans-serif; font-optical-sizing: auto; font-weight: <weight>; font-style: normal;">
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title"  style="margin-right:6px">
+                LIST OF LAND ENTRY            
+              </h3>
+              <h3 class="card-title" id="school_name3" style="color:red">(No Schools Selected)</h3>
+              <button class="btn btn-info float-right" id="totalUnitMeas1"></button>
+              <!-- <button type="button" class="btn btn-primary btn-sm float-right " data-toggle="modal" data-target="#exampleModal">
+                    ADD ASSET <i class="fa fa-plus"></i>
+                  </button> -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body w-100">
+                <table id="show_ao_land" class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                    <th>Description </th>
+                      <th>Property Number</th>
+                      <th>Remarks</th>
+                      <th>Unit Value</th>
+                      <th>Date Titled</th>
+                      <th>Date Acquired</th>
+             
+              
                     </tr>
                   </thead>
                   <tbody  style="font-family: 'Oswald', sans-serif; font-optical-sizing: auto; font-weight: <weight>; font-style: normal;">

@@ -53,7 +53,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>DepEd LDN - Asset Management System</h1>
+          <h1>DepEd LDN - Inventory Management System</h1>
           </div>
         </div>
       </div><!-- /.container-fluid -->

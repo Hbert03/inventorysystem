@@ -31,9 +31,10 @@
   <link rel="stylesheet" href="../plugins/daterangepicker/daterangepicker.css">
   <!-- summernote -->
   <link rel="stylesheet" href="../plugins/summernote/summernote-bs4.min.css">
-  <link rel="stylesheet" href="../plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
   <link  rel="stylesheet" href="../plugins/select2/css/select2.css"></link>
  <link  rel="stylesheet" href="../plugins/select2-bootstrap4-theme/select2-bootstrap4.css"></link>
+ <link  rel="stylesheet" href="../plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css"></link>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -53,20 +54,22 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-          <h1>DepEd LDN - Inventory Management System</h1>
+            <h1>DepEd LDN - Inventory Management System</h1>
           </div>
         </div>
       </div><!-- /.container-fluid -->
     </section>
+
+  
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
         <div class="row">
           <div class="col-12">
-          <div class="card">
+            <div class="card">
               <div class="card-header">
                 <h3 class="card-title">
-                 Office Buildings
+                   Furniture and Fixtures Equipment
                 </h3>
                 <button class="btn btn-info float-right" id="totalUnitMeas"></button>
                 <!-- <button type="button" class="btn btn-primary btn-sm float-right " data-toggle="modal" data-target="#exampleModal">
@@ -75,7 +78,7 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body w-100">
-                <table id="office_building" class="table table-bordered table-striped">
+                <table id="furniture" class="table table-bordered table-striped">
                   <thead>
                     <tr>
                     <th>Description </th>
@@ -114,7 +117,7 @@
 <?php
     include $_SERVER['DOCUMENT_ROOT'] . AMS_PATH . 'invent_footer.php';
  ?>
-<script src="../plugins/jquery/jquery.min.js"></script>
+<script src="plugins/jquery/jquery.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="../plugins/jquery-ui/jquery-ui.min.js"></script>
 <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -135,6 +138,7 @@
 <!-- AdminLTE App -->
 <script src="../plugins/select2/js/select2.min.js"></script>
 <script src="../plugins/select2/js/select2.full.min.js"></script>
+</head>
 <script src="../dist/js/adminlte.min.js"></script>
 <script src="../script1.js"></script>  
 </body>

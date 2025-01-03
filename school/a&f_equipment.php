@@ -66,7 +66,7 @@
           <div class="card">
               <div class="card-header">
                 <h3 class="card-title">
-                 Office Buildings
+                 Agricultural & Forestry Equipment
                 </h3>
                 <button class="btn btn-info float-right" id="totalUnitMeas"></button>
                 <!-- <button type="button" class="btn btn-primary btn-sm float-right " data-toggle="modal" data-target="#exampleModal">
@@ -75,7 +75,7 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body w-100">
-                <table id="office_building" class="table table-bordered table-striped">
+                <table id="agricultural_equipment" class="table table-bordered table-striped">
                   <thead>
                     <tr>
                     <th>Description </th>
