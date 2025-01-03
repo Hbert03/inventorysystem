@@ -125,6 +125,9 @@ if (isset($_SESSION['personnel']) || isset($_SESSION['admin']) || isset($_SESSIO
 <?php
     include $_SERVER['DOCUMENT_ROOT'] . AMS_PATH . 'invent_footer.php';
  ?>
+ <script>
+    var userId = "<?php echo $_SESSION['account_id'] ?? ''; ?>";
+</script>
 <script src="plugins/jquery/jquery.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="plugins/jquery-ui/jquery-ui.min.js"></script>

@@ -4618,10 +4618,8 @@ $(document).ready(function() {
                                 title: "Asset Successfully Saved!",
                                 showConfirmButton: true
                             }).then(() => {
-                                // Reset the form
-                                $("#save_asset")[0].reset(); // Reset the form fields
-                                // Optionally, you can fetch updated data here
-                                // $.ajax({ ... }); // Another AJAX call to get updated data
+                                $("#save_asset")[0].reset(); 
+
                             });
                         } else {
                             Swal.fire({
@@ -4644,56 +4642,82 @@ $(document).ready(function() {
 });
 
 
-$("select.schools").select2({
-    placeholder: "Select Schools",
-    theme: "bootstrap4",
-    ajax: {
-        url: 'fetch1.php',
-        dataType: 'json',
-        type: 'POST',
-        delay: 250,
-        data: function(params) {
-            return {
-                term: params.term,
-                select_Schools: true,
-            };
-        },
-        processResults: function(returnedData) {
-            var mappedData = $.map(returnedData.results, function(fetch) {
+$(document).ready(function() {
+    // Initialize Select2
+    $("select.schools").select2({
+        placeholder: "Select Schools",
+        theme: "bootstrap4",
+        ajax: {
+            url: 'fetch1.php',
+            dataType: 'json',
+            type: 'POST',
+            delay: 250,
+            data: function(params) {
                 return {
-                    id: fetch.id,
-                    text: fetch.office_name
+                    term: params.term,
+                    select_Schools: true,
                 };
-            });
-            return {
-                results: mappedData
-            };
-        },
-        cache: true
-    }
-}).on('select2:select', function(e) {
-    var selectedOfficeId = e.params.data.id;
-    var selectedOfficeName = e.params.data.text;
-    var selectedOfficeName4 = e.params.data.text;
-    var selectedOfficeName1 = e.params.data.text;
-    var selectedOfficeName2 = e.params.data.text;
-    var selectedOfficeName3 = e.params.data.text;
-    var selectedOfficeNameL = e.params.data.text;
-    var selectedOfficeNameg = e.params.data.text;
-    $("#selectedOfficeId").val(selectedOfficeId); 
-    $("#selectedOfficeId1").val(selectedOfficeId); 
-    $("select.accountable").data("selectedOfficeId", selectedOfficeId);
-    fetchData(selectedOfficeId);
-    console.log(selectedOfficeId);
-    $("#school_name").text("of " + selectedOfficeName);
-    $("#selected_school").text("School Name: "+"("+ selectedOfficeName1 +")");
-    $("#selected_school1").text("School Name: "+"("+ selectedOfficeNameL +")");
-    $("#school_name1").text("of " + selectedOfficeName2);
-    $("#school_name2").text("of " + selectedOfficeName3);
-    $("#school_name3").text("of " + selectedOfficeName4);
-    $("#graph_school_name").text("Data of " + selectedOfficeNameg);
-});
+            },
+            processResults: function(returnedData) {
+                var mappedData = $.map(returnedData.results, function(fetch) {
+                    return {
+                        id: fetch.id,
+                        text: fetch.office_name
+                    };
+                });
+                return {
+                    results: mappedData
+                };
+            },
+            cache: true
+        }
+    }).on('select2:select', function(e) {
+        var selectedOfficeId = e.params.data.id;
+        var selectedOfficeName = e.params.data.text;
+        var selectedOfficeName4 = e.params.data.text;
+        var selectedOfficeName1 = e.params.data.text;
+        var selectedOfficeName2 = e.params.data.text;
+        var selectedOfficeName3 = e.params.data.text;
+        var selectedOfficeNameL = e.params.data.text;
+        var selectedOfficeNameg = e.params.data.text;
+        $("#selectedOfficeId").val(selectedOfficeId); 
+        $("#selectedOfficeId1").val(selectedOfficeId); 
+        $("select.accountable").data("selectedOfficeId", selectedOfficeId);
+        fetchData(selectedOfficeId);
+        console.log(selectedOfficeId);
+        $("#school_name").text("of " + selectedOfficeName);
+        $("#selected_school").text("School Name: "+"("+ selectedOfficeName1 +")");
+        $("#selected_school1").text("School Name: "+"("+ selectedOfficeNameL +")");
+        $("#school_name1").text("of " + selectedOfficeName2);
+        $("#school_name2").text("of " + selectedOfficeName3);
+        $("#school_name3").text("of " + selectedOfficeName4);
+        $("#graph_school_name").text("Data of " + selectedOfficeNameg);
 
+        // Store the selected school ID in localStorage, scoped by user ID
+        localStorage.setItem(`selectedSchoolId_${userId}`, selectedOfficeId);
+        localStorage.setItem(`selectedSchoolName_${userId}`, selectedOfficeName);
+    });
+
+    // Retrieve the selected school ID from localStorage, scoped by user ID
+    var selectedSchoolId = localStorage.getItem(`selectedSchoolId_${userId}`);
+    var selectedSchoolName = localStorage.getItem(`selectedSchoolName_${userId}`);
+
+    if (selectedSchoolId) {
+        // Pre-select the stored school in the dropdown
+        var option = new Option(selectedSchoolName, selectedSchoolId, true, true);
+        $("select.schools").append(option).trigger('change');
+
+        $("select.schools").trigger({
+            type: 'select2:select',
+            params: {
+                data: {
+                    id: selectedSchoolId,
+                    text: selectedSchoolName
+                }
+            }
+        });
+    }
+});
 
 
 

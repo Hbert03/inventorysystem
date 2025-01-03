@@ -101,4 +101,4 @@ function updateChart(canvasId, data) {
 }
 
 updateCharts();
-setInterval(updateCharts, 180000);
+setInterval(updateCharts, 18000);
