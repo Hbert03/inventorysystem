@@ -75,6 +75,16 @@
         <h5 class="modal-title" id="editModalLabel">Update Data</h5>
       </div>
       <div class="modal-body">
+      <div class="row">
+          <div class="col-12 col-md-6">
+            <label for="asset_id" class="form-label">Asset Type</label>
+            <select class="form-control select2" id="asset_id" ></select>
+          </div>
+          <div class="col-12 col-md-6">
+            <label for="sub_id" class="form-label">Sub Asset</label>
+            <select class="form-control select2" id="sub_id"></select>
+          </div>
+        </div>
         <div class="row">
           <div class="col-12 col-md-6">
           <label for="modal-input1" class="form-label">Description</label>

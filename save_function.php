@@ -32,10 +32,7 @@
    $date_acq = $_POST['date_acq'];
    $account_id = $account_id ?? $_SESSION['account_id'] ?? null; 
 
-   $check_query = "SELECT * FROM asset WHERE description = '$description'  AND property_no = '$property_no' AND remarks = '$remarks'";
-   $result = mysqli_query($fconn, $check_query);
- 
-   if (mysqli_num_rows($result) == 0) {
+
      $query = "INSERT INTO asset (asset_id, user_id, description, property_no, remarks, unit_val, titled, date_titled, land_area, account_id, date_acquired, date)
                VALUES ('$select1', '$user_id', '$description', '$property_no', '$remarks', '$acquisition_cost', '$titled', '$date_titled', '$land_area', '$account_id', '$date_acq', '$date')";  
      if(mysqli_query($fconn,$query)){
@@ -43,15 +40,12 @@
      } else {
        echo json_encode(['success' => 0, 'error' => 'Failed to insert data into database.']);
      }
-   } else {
-     echo json_encode(['success' => 0, 'error' => 'Asset already exists.']);
    }
- }
+
  
  
 
  
-
 
 
 
@@ -65,7 +59,7 @@
       $user_id = $_SESSION['personnel'];
       $account_id = null; 
   } else {
-      echo json_encode(['success' => 0, 'error' => 'User is not logged in or office is not selected.']);
+      echo json_encode(['success' => 0, 'error' => 'User  is not logged in or office is not selected.']);
       exit();
   }
 
@@ -94,12 +88,28 @@
   $account_id = $account_id ?? $_SESSION['account_id'] ?? null; 
   $supplier =  $_POST['supplier'] ?? null; 
 
+  $query = "INSERT INTO asset(asset_id, user_id, asset_subid, quantity, article_id, asset_type, brand, model, asset_sn, useful_life, description, property_no, stock_no, unit_meas, unit_val, qty_property_card, qty_physical_count, shortage_qty, shortage_value, account_officer,supplier, fund_source, account_id, remarks, date_acquired, date) 
+            VALUES ('$select1', '$user_id', '$select2','$quantity','$article', '$type', '$brand', '$model', '$sn', '$useful_life', '$description', '$property_no', '$stock', '$measurement', '$unit_value', '$qty_card', '$qty_count', '$qty_short', '$value_short', '$account_off', '$supplier', '$fund_source', '$account_id', '$remarks', '$date_acq', '$nowDate')";
+
+  if (mysqli_query($fconn, $query)) {
+      echo json_encode(['success' => 1]);
+  } else {
+      echo json_encode(['success' => 0, 'error' => 'Failed to insert data into database.']);
+  }
+}
+
+
+
+if (isset($_POST['save_category'])) {
+  $select1 = $_POST['select1'];
+  $select2 = $_POST['select2'];
+
   $check_query = "SELECT * FROM asset WHERE description = '$description' AND unit_val = '$unit_value' AND property_no = '$property_no' AND remarks = '$remarks'";
   $result = mysqli_query($fconn, $check_query);
 
   if (mysqli_num_rows($result) == 0) {
-      $query = "INSERT INTO asset(asset_id, user_id, asset_subid, quantity, article_id, asset_type, brand, model, asset_sn, useful_life, description, property_no, stock_no, unit_meas, unit_val, qty_property_card, qty_physical_count, shortage_qty, shortage_value, account_officer,supplier, fund_source, account_id, remarks, date_acquired, date) 
-                VALUES ('$select1', '$user_id', '$select2','$quantity','$article', '$type', '$brand', '$model', '$sn', '$useful_life', '$description', '$property_no', '$stock', '$measurement', '$unit_value', '$qty_card', '$qty_count', '$qty_short', '$value_short', '$account_off', '$supplier', '$fund_source', '$account_id', '$remarks', '$date_acq', '$nowDate')";
+      $query = "INSERT INTO asset(asset_id, user_id) 
+                VALUES ('$select1', '$user_id',)";
 
       if (mysqli_query($fconn, $query)) {
           echo json_encode(['success' => 1]);
@@ -110,7 +120,6 @@
       echo json_encode(['success' => 0, 'error' => 'Asset already exists.']);
   }
 }
-
 
 
 ?>

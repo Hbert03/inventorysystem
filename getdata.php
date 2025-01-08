@@ -20,8 +20,8 @@ function getDataTable($draw, $start, $length, $search, $fconn)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 2 AND a.asset_subid=4";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 2 AND a.asset_subid=4";
     if (!empty($search)) {
         $baseQuery .= " AND (asset_id LIKE '%$search%' OR description LIKE '%$search%' OR property_no LIKE '%$search%')";
     }
@@ -72,7 +72,8 @@ if (isset($_POST['list'])) {
 
 if (isset($_POST['getdata'])) {
     $id = $_POST['id'];
-    $query = "SELECT * FROM asset WHERE id=?";
+    $query = "SELECT a.*, c.category, c.id as asset_id, sub.id, sub.sub_category, e.hris_code, CONCAT(e.firstname,' ', e.middlename, ' ', e.lastname) as fullname FROM depedldn_ams.asset a INNER JOIN depedldn.tbl_employee e ON a.account_officer = e.hris_code
+    INNER JOIN category c ON a.asset_id = c.id INNER JOIN sub_category sub ON a.asset_subid = sub.id WHERE a.id=?";
     $stmt = $fconn->prepare($query);
     $stmt->bind_param("i", $id); 
     $stmt->execute();
@@ -107,8 +108,8 @@ function getDataTable1($draw, $start, $length, $search, $fconn)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer  WHERE a.asset_id = 2 AND a.asset_subid=6";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 2 AND a.asset_subid=6";
     if (!empty($search)) {
         $baseQuery .= " AND (asset_id LIKE '%$search%' OR description LIKE '%$search%' OR property_no LIKE '%$search%')";
     }
@@ -174,8 +175,8 @@ function getDataTable2($draw, $start, $length, $search, $fconn)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer  WHERE a.asset_id = 2 AND a.asset_subid=5";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 2 AND a.asset_subid=5";
     if (!empty($search)) {
         $baseQuery .= " AND (asset_id LIKE '%$search%' OR description LIKE '%$search%' OR property_no LIKE '%$search%')";
     }
@@ -242,8 +243,8 @@ function getDataTable3($draw, $start, $length, $search, $fconn)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 2 AND a.asset_subid=3";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 2 AND a.asset_subid=3";
     if (!empty($search)) {
         $baseQuery .= " AND (asset_id LIKE '%$search%' OR description LIKE '%$search%' OR property_no LIKE '%$search%')";
     }
@@ -310,8 +311,8 @@ function getDataTable4($draw, $start, $length, $search, $fconn)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 2 AND a.asset_subid=7";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE WHERE a.asset_id = 2 AND a.asset_subid=7";
     if (!empty($search)) {
         $baseQuery .= " AND (asset_id LIKE '%$search%' OR description LIKE '%$search%' OR property_no LIKE '%$search%')";
     }
@@ -379,8 +380,8 @@ function getDataTable5($draw, $start, $length, $search, $fconn)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 2 AND a.asset_subid=8";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 2 AND a.asset_subid=8";
     if (!empty($search)) {
         $baseQuery .= " AND (asset_id LIKE '%$search%' OR description LIKE '%$search%' OR property_no LIKE '%$search%')";
     }
@@ -511,8 +512,8 @@ function getDataTable7($draw, $start, $length, $search, $fconn)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 1 AND a.asset_subid=13";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 1 AND a.asset_subid=13";
     if (!empty($search)) {
         $baseQuery .= " AND (asset_id LIKE '%$search%' OR description LIKE '%$search%' OR property_no LIKE '%$search%')";
     }
@@ -579,8 +580,8 @@ function getDataTable8($draw, $start, $length, $search, $fconn)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 1 AND a.asset_subid=1";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 1 AND a.asset_subid=1";
     if (!empty($search)) {
         $baseQuery .= " AND (asset_id LIKE '%$search%' OR description LIKE '%$search%' OR property_no LIKE '%$search%')";
     }
@@ -646,8 +647,8 @@ function getDataTable9($draw, $start, $length, $search, $fconn)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 1 AND a.asset_subid=2";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 1 AND a.asset_subid=2";
     if (!empty($search)) {
         $baseQuery .= " AND (asset_id LIKE '%$search%' OR description LIKE '%$search%' OR property_no LIKE '%$search%')";
     }
@@ -724,8 +725,8 @@ function getDataTable10($draw, $start, $length, $search, $fconn, $category, $val
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE 1=1";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id  WHERE 1=1";
     if (!empty($category)) {
         $baseQuery .= " AND a.asset_subid = $category"; 
     }
@@ -809,8 +810,8 @@ function getDataTable11($draw, $start, $length, $search, $fconn, $category)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.unit_val > 49999";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.unit_val > 49999";
     if (!empty($category)) {
         $baseQuery .= " AND a.asset_subid = $category"; 
     }
@@ -872,8 +873,8 @@ function getDataTable12($draw, $start, $length, $search, $fconn)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 3 AND a.asset_subid=9";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 3 AND a.asset_subid=9";
     if (!empty($search)) {
         $baseQuery .= " AND (a.asset_id LIKE '%$search%' OR description LIKE '%$search%' OR a.property_no LIKE '%$search%')";
     }
@@ -939,8 +940,8 @@ function getDataTable13($draw, $start, $length, $search, $fconn)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 4 AND a.asset_subid=11";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 4 AND a.asset_subid=11";
     if (!empty($search)) {
         $baseQuery .= " AND (a.asset_id LIKE '%$search%' OR description LIKE '%$search%' OR a.property_no LIKE '%$search%')";
     }
@@ -1006,8 +1007,8 @@ function getDataTable14($draw, $start, $length, $search, $fconn)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 4 AND a.asset_subid=10";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 4 AND a.asset_subid=10";
     if (!empty($search)) {
         $baseQuery .= " AND (a.asset_id LIKE '%$search%' OR description LIKE '%$search%' OR a.property_no LIKE '%$search%')";
     }
@@ -1072,8 +1073,8 @@ function getDataTable15($draw, $start, $length, $search, $fconn)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 5 AND a.asset_subid=12";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id  WHERE a.asset_id = 5 AND a.asset_subid=12";
     if (!empty($search)) {
         $baseQuery .= " AND (a.asset_id LIKE '%$search%' OR description LIKE '%$search%' OR a.property_no LIKE '%$search%')";
     }
@@ -1139,8 +1140,8 @@ function getDataTable16($draw, $start, $length, $search, $fconn)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 1 AND a.asset_subid=15";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 1 AND a.asset_subid=15";
     if (!empty($search)) {
         $baseQuery .= " AND (a.asset_id LIKE '%$search%' OR description LIKE '%$search%' OR a.property_no LIKE '%$search%')";
     }
@@ -1208,8 +1209,8 @@ function getDataTable17($draw, $start, $length, $search, $fconn, $selectedOffice
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.user_id = '$selectedOffice'";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.user_id = '$selectedOffice'";
     if (!empty($search)) {
         $baseQuery .= " AND (a.asset_id LIKE '%$search%' OR description LIKE '%$search%' OR a.property_no LIKE '%$search%')";
     }
@@ -1343,7 +1344,8 @@ if (isset($_POST['ao_land'])) {
 
 if (isset($_POST['getdata_ao'])) {
     $id = $_POST['id'];
-    $query = "SELECT a.*, e.hris_code, CONCAT(e.firstname,' ', e.middlename, ' ', e.lastname) as fullname FROM depedldn_ams.asset a INNER JOIN depedldn.tbl_employee e ON a.account_officer = e.hris_code WHERE id=?";
+    $query = "SELECT a.*, c.category, c.id as asset_id, sub.id, sub.sub_category, e.hris_code, CONCAT(e.firstname,' ', e.middlename, ' ', e.lastname) as fullname FROM depedldn_ams.asset a INNER JOIN depedldn.tbl_employee e ON a.account_officer = e.hris_code
+    INNER JOIN category c ON a.asset_id = c.id INNER JOIN sub_category sub ON a.asset_subid = sub.id WHERE a.id=?";
     $stmt = $fconn->prepare($query);
     $stmt->bind_param("i", $id); 
     $stmt->execute();
@@ -1392,8 +1394,8 @@ function getDataTable18($draw, $start, $length, $search, $fconn, $category, $sel
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.unit_val > 49999 and a.user_id='$selectedOffice'";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.unit_val > 49999 and a.user_id='$selectedOffice'";
     if (!empty($category)) {
         $baseQuery .= " AND a.asset_subid = $category"; 
     }
@@ -1455,8 +1457,8 @@ function getDataTable19($draw, $start, $length, $search, $fconn, $category, $val
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.user_id ='$selectedOffice' AND a.asset_id != 1";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.user_id ='$selectedOffice' AND a.asset_id != 1";
     if (!empty($category)) {
         $baseQuery .= " AND a.asset_subid = $category"; 
     }
@@ -1610,8 +1612,8 @@ function schoolbuilding($draw, $start, $length, $search, $fconn, $school_id)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 1 AND a.asset_subid=1 and a.user_id='$school_id'";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 1 AND a.asset_subid=1 and a.user_id='$school_id'";
     if (!empty($search)) {
         $baseQuery .= " AND (asset_id LIKE '%$search%' OR description LIKE '%$search%' OR property_no LIKE '%$search%')";
     }
@@ -1678,8 +1680,8 @@ function officebuilding($draw, $start, $length, $search, $fconn, $school_id)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 1 AND a.asset_subid=13 and a.user_id='$school_id'";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 1 AND a.asset_subid=13 and a.user_id='$school_id'";
     if (!empty($search)) {
         $baseQuery .= " AND (asset_id LIKE '%$search%' OR description LIKE '%$search%' OR property_no LIKE '%$search%')";
     }
@@ -1749,8 +1751,8 @@ function others_structure($draw, $start, $length, $search, $fconn, $school_id)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 1 AND a.asset_subid=2 and a.user_id='$school_id'";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 1 AND a.asset_subid=2 and a.user_id='$school_id'";
     if (!empty($search)) {
         $baseQuery .= " AND (asset_id LIKE '%$search%' OR description LIKE '%$search%' OR property_no LIKE '%$search%')";
     }
@@ -1819,8 +1821,8 @@ function historical_building($draw, $start, $length, $search, $fconn, $school_id
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 1 AND a.asset_subid=15 and a.user_id='$school_id'";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 1 AND a.asset_subid=15 and a.user_id='$school_id'";
     if (!empty($search)) {
         $baseQuery .= " AND (asset_id LIKE '%$search%' OR description LIKE '%$search%' OR property_no LIKE '%$search%')";
     }
@@ -1887,8 +1889,8 @@ function a_f_equipment($draw, $start, $length, $search, $fconn, $school_id)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 2 AND a.asset_subid=6 and a.user_id='$school_id'";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 2 AND a.asset_subid=6 and a.user_id='$school_id'";
     if (!empty($search)) {
         $baseQuery .= " AND (asset_id LIKE '%$search%' OR description LIKE '%$search%' OR property_no LIKE '%$search%')";
     }
@@ -1960,8 +1962,8 @@ function machinery($draw, $start, $length, $search, $fconn, $school_id)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 2 AND a.asset_subid=3 and a.user_id='$school_id'";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 2 AND a.asset_subid=3 and a.user_id='$school_id'";
     if (!empty($search)) {
         $baseQuery .= " AND (asset_id LIKE '%$search%' OR description LIKE '%$search%' OR property_no LIKE '%$search%')";
     }
@@ -2029,8 +2031,8 @@ function office_equipment($draw, $start, $length, $search, $fconn, $school_id)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 2 AND a.asset_subid=4 and a.user_id='$school_id'";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 2 AND a.asset_subid=4 and a.user_id='$school_id'";
     if (!empty($search)) {
         $baseQuery .= " AND (asset_id LIKE '%$search%' OR description LIKE '%$search%' OR property_no LIKE '%$search%')";
     }
@@ -2097,8 +2099,8 @@ function sports_equipment($draw, $start, $length, $search, $fconn, $school_id)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 2 AND a.asset_subid=7 and a.user_id='$school_id'";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 2 AND a.asset_subid=7 and a.user_id='$school_id'";
     if (!empty($search)) {
         $baseQuery .= " AND (asset_id LIKE '%$search%' OR description LIKE '%$search%' OR property_no LIKE '%$search%')";
     }
@@ -2167,8 +2169,8 @@ function technical_equipment($draw, $start, $length, $search, $fconn, $school_id
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 2 AND a.asset_subid=8 and a.user_id='$school_id'";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 2 AND a.asset_subid=8 and a.user_id='$school_id'";
     if (!empty($search)) {
         $baseQuery .= " AND (asset_id LIKE '%$search%' OR description LIKE '%$search%' OR property_no LIKE '%$search%')";
     }
@@ -2236,8 +2238,8 @@ function transportation($draw, $start, $length, $search, $fconn, $school_id)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 3 AND a.asset_subid=9 and a.user_id='$school_id'";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 3 AND a.asset_subid=9 and a.user_id='$school_id'";
     if (!empty($search)) {
         $baseQuery .= " AND (asset_id LIKE '%$search%' OR description LIKE '%$search%' OR property_no LIKE '%$search%')";
     }
@@ -2304,8 +2306,8 @@ function books($draw, $start, $length, $search, $fconn, $school_id)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 4 AND a.asset_subid=11 and a.user_id='$school_id'";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 4 AND a.asset_subid=11 and a.user_id='$school_id'";
     if (!empty($search)) {
         $baseQuery .= " AND (asset_id LIKE '%$search%' OR description LIKE '%$search%' OR property_no LIKE '%$search%')";
     }
@@ -2372,8 +2374,8 @@ function furniture1($draw, $start, $length, $search, $fconn, $school_id)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 4 AND a.asset_subid=10 and a.user_id='$school_id'";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 4 AND a.asset_subid=10 and a.user_id='$school_id'";
     if (!empty($search)) {
         $baseQuery .= " AND (asset_id LIKE '%$search%' OR description LIKE '%$search%' OR property_no LIKE '%$search%')";
     }
@@ -2440,8 +2442,8 @@ function others1($draw, $start, $length, $search, $fconn, $school_id)
         }
     }
 
-    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name) AS fullname FROM depedldn_ams.asset a INNER JOIN
-    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 4 AND a.asset_subid=10 and a.user_id='$school_id'";
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 4 AND a.asset_subid=10 and a.user_id='$school_id'";
     if (!empty($search)) {
         $baseQuery .= " AND (asset_id LIKE '%$search%' OR description LIKE '%$search%' OR property_no LIKE '%$search%')";
     }

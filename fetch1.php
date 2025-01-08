@@ -18,16 +18,45 @@ if(isset($_POST['asset1'])) {
 }
 
 
-if(isset($_POST['asset2'])) {
+if (isset($_POST['asset2'])) {
     $category_id = $_POST['category_id']; 
-    $query = "SELECT * FROM sub_category WHERE category_fk = '$category_id'";
-    $result = $fconn->query($query);
+    $terms = isset($_POST['term']) && !empty($_POST['term']) ? $_POST['term'] : null;
+
+    $query = "SELECT * FROM sub_category WHERE category_fk = ?";
+    if ($terms) {
+        $query .= " AND sub_category LIKE ?";
+    } else {
+        $query .= " LIMIT 10";
+    }
+
+    $stmt = $fconn->prepare($query);
+
+    // Bind parameters based on whether a search term is provided
+    if ($terms) {
+        $likeTerm = "%$terms%";
+        $stmt->bind_param("is", $category_id, $likeTerm); // 'i' for integer, 's' for string
+    } else {
+        $stmt->bind_param("i", $category_id); // Only bind the category_id
+    }
+
+    // Execute the statement
+    $stmt->execute();
+    $result = $stmt->get_result();
     $response = [];
+
+    // Fetch the data
     while ($row = $result->fetch_assoc()) {
         $response['data'][] = $row;
     }
+
+    // Close the statement and connection
+    $stmt->close();
+    $fconn->close();
+
+    // Return JSON response
     echo json_encode($response);
 }
+
 
 if(isset($_POST['land'])) {
     $query = "SELECT * FROM category WHERE id ='6' ";
@@ -143,7 +172,7 @@ if (isset($_POST['select_Schools'])) {
 
 
 if (isset($_POST['accountable_Employee'])) {
-    $query = "SELECT hris_code, CONCAT(firstname, ' ', middlename, ' ', lastname) as employee FROM tbl_employee WHERE active = 1";
+    $query = "SELECT e.hris_code, o.office_name, CONCAT(e.firstname, ' ', e.middlename, ' ', e.lastname) as employee FROM tbl_employee e INNER JOIN tbl_office o ON e.department_id = o.id WHERE active = 1";
 
     $terms = (isset($_POST['term']) && !empty($_POST['term'])) ? $_POST['term'] : null;
 
@@ -188,8 +217,8 @@ if(isset($_POST['packages'])){
 
 
 if (isset($_POST['accountable_personnel'])) {
-    $selected_officeID = $_POST['selectedOfficeId'];
-    $query = "SELECT hris_code, CONCAT(firstname, ' ', middlename, ' ', lastname) as employee FROM tbl_employee WHERE active = 1";
+    // $selected_officeID = $_POST['selectedOfficeId'];
+    $query = "SELECT e.hris_code, o.office_name, CONCAT(e.firstname, ' ', e.middlename, ' ', e.lastname) as employee FROM tbl_employee e INNER JOIN tbl_office o ON e.department_id = o.id WHERE active = 1";
 
     $terms = (isset($_POST['term']) && !empty($_POST['term'])) ? $_POST['term'] : null;
 

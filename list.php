@@ -145,6 +145,7 @@ if (isset($_SESSION['personnel']) || isset($_SESSION['admin']) || isset($_SESSIO
                       <th>Unit Value</th>
                       <th>Date Titled</th>
                       <th>Date Acquired</th>
+                      <th>Action</th>
              
               
                     </tr>

@@ -26,6 +26,7 @@
 	 <li class="nav-item d-none d-sm-inline-block">
         <a href="data_rpcppe.php" class="nav-link">RPCPPE</a>
       </li>
+    
     </ul>
 
 	 <!-- Right navbar links -->
@@ -43,6 +44,11 @@
                     ADD LAND ASSET <i class="fa fa-plus"></i>
                   </button>
        </li>
+       <li style="margin-right:2em">
+      <button  data-toggle="modal" data-target="#addModal" style="background-color:transparent; border:none; color:blue" class="btn btn-primary btn-sm">
+        <span><i class="fa fa-plus"></i></span>New Category
+      </button>
+    </li>
        <li style="margin-right:3em">
       <button id="notificationButton" style="background-color:transparent; border:none; color:blue" class="btn btn-primary btn-sm">
         <span><i class="fa fa-bell"></i></span>New
@@ -68,6 +74,16 @@
         <h5 class="modal-title" id="editModalLabel">Edit Data</h5>
       </div>
       <div class="modal-body">
+      <div class="row">
+          <div class="col-12 col-md-6">
+            <label for="asset_id" class="form-label">Asset Type</label>
+            <select class="form-control select2" id="asset" ></select>
+          </div>
+          <div class="col-12 col-md-6">
+            <label for="sub_id" class="form-label">Sub Asset</label>
+            <select class="form-control select2" id="subasset"></select>
+          </div>
+        </div>
         <div class="row">
           <div class="col-12 col-md-6">
           <label for="modal-input1" class="form-label">Description</label>
@@ -129,6 +145,35 @@
 </div>
 
 
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">Add Category</h5>
+      </div>
+      <div class="modal-body">
+      <form id="addcategory" action="" method="POST"  enctype="multipart/form-data">
+        <div class="row">
+          <div class="col-12 col-md-6">
+          <label for="modal-input1" class="form-label">Asset</label>
+          <input type="text" class="form-control" id="modal-input1" required>
+          </div>
+          <div class="col-12 col-md-6">
+          <label for="modal-input2" class="form-label">Sub-Asset</label>
+          <input type="text" class="form-control" id="modal-input2" required>
+          </div>
+        </div>
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary savecategory">SAVE</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
   
   <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -148,7 +193,7 @@
 						<input type="text" class="form-control mb-1" name="article" id="article" placeholder="Article" required>
 						<input type="text" class="form-control mb-1" name="sn" id="sn" placeholder="Serial No.">
 						<input type="text" class="form-control mb-1" name="property_no" id="property_no" placeholder="Property No." required>
-            <input type="text" class="form-control mb-1" name="stock" id="stock" placeholder="Stock No." required>
+            <input type="text" class="form-control mb-1" name="stock" id="stock" placeholder="Stock No.">
 						<input type="text" class="form-control mb-1" name="unit_value" id="unit_value" placeholder="Unit Value" required>
             <select class="form-control mb-1 " name="remarks" id="remarks" required>
             <option disabled selected>Remarks</option>
@@ -175,10 +220,10 @@
             <div class="col-md-6">
               <select class="form-control sub_asset_type mb-1" name="select2" required></select>
               <input type="text" class="form-control mt-2 mb-1" name="qty_card" id="qty_card" placeholder="Qty Card" required>
-						<input type="text" class="form-control mb-1" name="qty_count" id="qty_count" placeholder="Qty Count" required>
+						<input type="text" class="form-control mb-1" name="qty_count" id="qty_count" placeholder="Qty Count" >
 						<input type="text" class="form-control mb-1" name="useful_life" id="useful_life" placeholder="Usefull Life" required>
-						<input type="text" class="form-control mb-1" name="qty_short" id="qty_short" placeholder="qty_short " required>
-						<input type="text" class="form-control mb-1" name="value_short" id="value_short" placeholder="value_short" required>
+						<input type="text" class="form-control mb-1" name="qty_short" id="qty_short" placeholder="qty_short " >
+						<input type="text" class="form-control mb-1" name="value_short" id="value_short" placeholder="value_short" >
             <input type="text" class="form-control mb-1" name="measurement" id="measurement" placeholder="Unit of Measurement" required>
             
             <label>Acquisition Date</label>

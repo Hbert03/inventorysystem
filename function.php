@@ -18,6 +18,8 @@ if (isset($_POST['delete'])) {
 
 if (isset($_POST['update'])) {
     $dataid = $_POST['id'];
+    $asset = $_POST['asset'];
+    $assetid = $_POST['subasset'];
     $value1 = $_POST['description'];
     $value2 = $_POST['property_no'];
     $value3 = $_POST['unit_meas'];
@@ -29,7 +31,7 @@ if (isset($_POST['update'])) {
     $value9 = $_POST['account_officer'];
     $value10 = $_POST['remarks'];
     $query = "UPDATE asset
-    SET description = '$value1', property_no = '$value2', unit_meas = '$value3', 
+    SET asset_id='$asset', asset_subid='$assetid', description = '$value1', property_no = '$value2', unit_meas = '$value3', 
     unit_val = '$value4', qty_property_card = '$value5', qty_physical_count = '$value6',
     shortage_qty = '$value7', shortage_value = '$value8', account_officer = '$value9', remarks = '$value10'
     WHERE id = '$dataid'";
@@ -49,6 +51,8 @@ if (isset($_POST['update'])) {
     exit();
 } elseif (isset($_POST['update1'])) {
     $dataid = $_POST['id'];
+    $asset = $_POST['asset'];
+    $assetid = $_POST['subasset'];
     $value1 = $_POST['description'];
     $value2 = $_POST['property_no'];
     $value3 = $_POST['unit_meas'];
@@ -60,7 +64,7 @@ if (isset($_POST['update'])) {
     $value9 = $_POST['account_officer'];
     $value10 = $_POST['remarks'];
     $query = "UPDATE asset
-    SET description = '$value1', property_no = '$value2', unit_meas = '$value3', 
+    SET asset_id='$asset', asset_subid='$assetid', description = '$value1', property_no = '$value2', unit_meas = '$value3', 
     unit_val = '$value4', qty_property_card = '$value5', qty_physical_count = '$value6',
     shortage_qty = '$value7', shortage_value = '$value8', account_officer = '$value9', remarks = '$value10'
     WHERE id = '$dataid'";
@@ -80,6 +84,8 @@ elseif (isset($_POST['delete2'])) {
     exit();
 } elseif (isset($_POST['update2'])) {
     $dataid = $_POST['id'];
+    $asset = $_POST['asset'];
+    $assetid = $_POST['subasset'];
     $value1 = $_POST['description'];
     $value2 = $_POST['property_no'];
     $value3 = $_POST['unit_meas'];
@@ -91,7 +97,7 @@ elseif (isset($_POST['delete2'])) {
     $value9 = $_POST['account_officer'];
     $value10 = $_POST['remarks'];
     $query = "UPDATE asset
-    SET description = '$value1', property_no = '$value2', unit_meas = '$value3', 
+    SET asset_id='$asset', asset_subid='$assetid', description = '$value1', property_no = '$value2', unit_meas = '$value3', 
     unit_val = '$value4', qty_property_card = '$value5', qty_physical_count = '$value6',
     shortage_qty = '$value7', shortage_value = '$value8', account_officer = '$value9', remarks = '$value10'
     WHERE id = '$dataid'";
@@ -112,6 +118,8 @@ elseif (isset($_POST['delete3'])) {
     exit();
 } elseif (isset($_POST['update3'])) {
     $dataid = $_POST['id'];
+    $asset = $_POST['asset'];
+    $assetid = $_POST['subasset'];
     $value1 = $_POST['description'];
     $value2 = $_POST['property_no'];
     $value3 = $_POST['unit_meas'];
@@ -123,7 +131,7 @@ elseif (isset($_POST['delete3'])) {
     $value9 = $_POST['account_officer'];
     $value10 = $_POST['remarks'];
     $query = "UPDATE asset
-    SET description = '$value1', property_no = '$value2', unit_meas = '$value3', 
+    SET asset_id='$asset', asset_subid='$assetid', description = '$value1', property_no = '$value2', unit_meas = '$value3', 
     unit_val = '$value4', qty_property_card = '$value5', qty_physical_count = '$value6',
     shortage_qty = '$value7', shortage_value = '$value8', account_officer = '$value9', remarks = '$value10'
     WHERE id = '$dataid'";
@@ -143,7 +151,8 @@ elseif (isset($_POST['delete4'])) {
     }
     exit();
 } elseif (isset($_POST['update4'])) {
-    $dataid = $_POST['id'];
+    $asset = $_POST['asset'];
+    $assetid = $_POST['subasset'];
     $value1 = $_POST['description'];
     $value2 = $_POST['property_no'];
     $value3 = $_POST['unit_meas'];
@@ -155,7 +164,7 @@ elseif (isset($_POST['delete4'])) {
     $value9 = $_POST['account_officer'];
     $value10 = $_POST['remarks'];
     $query = "UPDATE asset
-    SET description = '$value1', property_no = '$value2', unit_meas = '$value3', 
+    SET asset_id='$asset', asset_subid='$assetid', description = '$value1', property_no = '$value2', unit_meas = '$value3', 
     unit_val = '$value4', qty_property_card = '$value5', qty_physical_count = '$value6',
     shortage_qty = '$value7', shortage_value = '$value8', account_officer = '$value9', remarks = '$value10'
     WHERE id = '$dataid'";
@@ -176,6 +185,8 @@ elseif (isset($_POST['delete5'])) {
     exit();
 } elseif (isset($_POST['update5'])) {
     $dataid = $_POST['id'];
+    $asset = $_POST['asset'];
+    $assetid = $_POST['subasset'];
     $value1 = $_POST['description'];
     $value2 = $_POST['property_no'];
     $value3 = $_POST['unit_meas'];
@@ -187,7 +198,7 @@ elseif (isset($_POST['delete5'])) {
     $value9 = $_POST['account_officer'];
     $value10 = $_POST['remarks'];
     $query = "UPDATE asset
-    SET description = '$value1', property_no = '$value2', unit_meas = '$value3', 
+    SET asset_id='$asset', asset_subid='$assetid', description = '$value1', property_no = '$value2', unit_meas = '$value3', 
     unit_val = '$value4', qty_property_card = '$value5', qty_physical_count = '$value6',
     shortage_qty = '$value7', shortage_value = '$value8', account_officer = '$value9', remarks = '$value10'
     WHERE id = '$dataid'";
@@ -242,6 +253,8 @@ elseif (isset($_POST['deletebuild1'])) {
     exit();
 } elseif (isset($_POST['updatebuild1'])) {
     $dataid = $_POST['id'];
+    $asset = $_POST['asset'];
+    $assetid = $_POST['subasset'];
     $value1 = $_POST['description'];
     $value2 = $_POST['property_no'];
     $value3 = $_POST['unit_meas'];
@@ -253,7 +266,7 @@ elseif (isset($_POST['deletebuild1'])) {
     $value9 = $_POST['account_officer'];
     $value10 = $_POST['remarks'];
     $query = "UPDATE asset
-    SET description = '$value1', property_no = '$value2', unit_meas = '$value3', 
+    SET asset_id='$asset', asset_subid='$assetid', description = '$value1', property_no = '$value2', unit_meas = '$value3', 
     unit_val = '$value4', qty_property_card = '$value5', qty_physical_count = '$value6',
     shortage_qty = '$value7', shortage_value = '$value8', account_officer = '$value9', remarks = '$value10'
     WHERE id = '$dataid'";
@@ -275,6 +288,8 @@ elseif (isset($_POST['deletebuild2'])) {
     exit();
 } elseif (isset($_POST['updatebuild2'])) {
     $dataid = $_POST['id'];
+    $asset = $_POST['asset'];
+    $assetid = $_POST['subasset'];
     $value1 = $_POST['description'];
     $value2 = $_POST['property_no'];
     $value3 = $_POST['unit_meas'];
@@ -286,7 +301,7 @@ elseif (isset($_POST['deletebuild2'])) {
     $value9 = $_POST['account_officer'];
     $value10 = $_POST['remarks'];
     $query = "UPDATE asset
-    SET description = '$value1', property_no = '$value2', unit_meas = '$value3', 
+    SET asset_id='$asset', asset_subid='$assetid', description = '$value1', property_no = '$value2', unit_meas = '$value3', 
     unit_val = '$value4', qty_property_card = '$value5', qty_physical_count = '$value6',
     shortage_qty = '$value7', shortage_value = '$value8', account_officer = '$value9', remarks = '$value10'
     WHERE id = '$dataid'";
@@ -308,6 +323,8 @@ elseif (isset($_POST['deletebuild3'])) {
     exit();
 } elseif (isset($_POST['updatebuild3'])) {
     $dataid = $_POST['id'];
+    $asset = $_POST['asset'];
+    $assetid = $_POST['subasset'];
     $value1 = $_POST['description'];
     $value2 = $_POST['property_no'];
     $value3 = $_POST['unit_meas'];
@@ -319,7 +336,7 @@ elseif (isset($_POST['deletebuild3'])) {
     $value9 = $_POST['account_officer'];
     $value10 = $_POST['remarks'];
     $query = "UPDATE asset
-    SET description = '$value1', property_no = '$value2', unit_meas = '$value3', 
+    SET asset_id='$asset', asset_subid='$assetid', description = '$value1', property_no = '$value2', unit_meas = '$value3', 
     unit_val = '$value4', qty_property_card = '$value5', qty_physical_count = '$value6',
     shortage_qty = '$value7', shortage_value = '$value8', account_officer = '$value9', remarks = '$value10'
     WHERE id = '$dataid'";
@@ -405,6 +422,8 @@ elseif (isset($_POST['transport1'])) {
     exit();
 } elseif (isset($_POST['transport'])) {
     $dataid = $_POST['id'];
+    $asset = $_POST['asset'];
+    $assetid = $_POST['subasset'];
     $value1 = $_POST['description'];
     $value2 = $_POST['property_no'];
     $value3 = $_POST['unit_meas'];
@@ -416,7 +435,7 @@ elseif (isset($_POST['transport1'])) {
     $value9 = $_POST['account_officer'];
     $value10 = $_POST['remarks'];
     $query = "UPDATE asset
-    SET description = '$value1', property_no = '$value2', unit_meas = '$value3', 
+    SET asset_id='$asset', asset_subid='$assetid', description = '$value1', property_no = '$value2', unit_meas = '$value3', 
     unit_val = '$value4', qty_property_card = '$value5', qty_physical_count = '$value6',
     shortage_qty = '$value7', shortage_value = '$value8', account_officer = '$value9', remarks = '$value10'
     WHERE id = '$dataid'";
@@ -438,6 +457,8 @@ elseif (isset($_POST['books1'])) {
     exit();
 } elseif (isset($_POST['books'])) {
     $dataid = $_POST['id'];
+    $asset = $_POST['asset'];
+    $assetid = $_POST['subasset'];
     $value1 = $_POST['description'];
     $value2 = $_POST['property_no'];
     $value3 = $_POST['unit_meas'];
@@ -449,7 +470,7 @@ elseif (isset($_POST['books1'])) {
     $value9 = $_POST['account_officer'];
     $value10 = $_POST['remarks'];
     $query = "UPDATE asset
-    SET description = '$value1', property_no = '$value2', unit_meas = '$value3', 
+    SET asset_id='$asset', asset_subid='$assetid', description = '$value1', property_no = '$value2', unit_meas = '$value3', 
     unit_val = '$value4', qty_property_card = '$value5', qty_physical_count = '$value6',
     shortage_qty = '$value7', shortage_value = '$value8', account_officer = '$value9', remarks = '$value10'
     WHERE id = '$dataid'";
@@ -471,6 +492,8 @@ elseif (isset($_POST['furniture1'])) {
     exit();
 } elseif (isset($_POST['furniture'])) {
     $dataid = $_POST['id'];
+    $asset = $_POST['asset'];
+    $assetid = $_POST['subasset'];
     $value1 = $_POST['description'];
     $value2 = $_POST['property_no'];
     $value3 = $_POST['unit_meas'];
@@ -482,7 +505,7 @@ elseif (isset($_POST['furniture1'])) {
     $value9 = $_POST['account_officer'];
     $value10 = $_POST['remarks'];
     $query = "UPDATE asset
-    SET description = '$value1', property_no = '$value2', unit_meas = '$value3', 
+    SET asset_id='$asset', asset_subid='$assetid', description = '$value1', property_no = '$value2', unit_meas = '$value3', 
     unit_val = '$value4', qty_property_card = '$value5', qty_physical_count = '$value6',
     shortage_qty = '$value7', shortage_value = '$value8', account_officer = '$value9', remarks = '$value10'
     WHERE id = '$dataid'";
@@ -504,6 +527,8 @@ elseif (isset($_POST['others1'])) {
     exit();
 } elseif (isset($_POST['others'])) {
     $dataid = $_POST['id'];
+    $asset = $_POST['asset'];
+    $assetid = $_POST['subasset'];
     $value1 = $_POST['description'];
     $value2 = $_POST['property_no'];
     $value3 = $_POST['unit_meas'];
@@ -515,7 +540,7 @@ elseif (isset($_POST['others1'])) {
     $value9 = $_POST['account_officer'];
     $value10 = $_POST['remarks'];
     $query = "UPDATE asset
-    SET description = '$value1', property_no = '$value2', unit_meas = '$value3', 
+    SET asset_id='$asset', asset_subid='$assetid', description = '$value1', property_no = '$value2', unit_meas = '$value3', 
     unit_val = '$value4', qty_property_card = '$value5', qty_physical_count = '$value6',
     shortage_qty = '$value7', shortage_value = '$value8', account_officer = '$value9', remarks = '$value10'
     WHERE id = '$dataid'";
@@ -536,6 +561,8 @@ elseif (isset($_POST['historicaldel'])) {
     exit();
 } elseif (isset($_POST['historicalget'])) {
     $dataid = $_POST['id'];
+    $asset = $_POST['asset'];
+    $assetid = $_POST['subasset'];
     $value1 = $_POST['description'];
     $value2 = $_POST['property_no'];
     $value3 = $_POST['unit_meas'];
@@ -547,7 +574,7 @@ elseif (isset($_POST['historicaldel'])) {
     $value9 = $_POST['account_officer'];
     $value10 = $_POST['remarks'];
     $query = "UPDATE asset
-    SET description = '$value1', property_no = '$value2', unit_meas = '$value3', 
+    SET asset_id='$asset', asset_subid='$assetid', description = '$value1', property_no = '$value2', unit_meas = '$value3', 
     unit_val = '$value4', qty_property_card = '$value5', qty_physical_count = '$value6',
     shortage_qty = '$value7', shortage_value = '$value8', account_officer = '$value9', remarks = '$value10'
     WHERE id = '$dataid'";
@@ -561,6 +588,8 @@ echo "Failed to update file in the database.";
 
 if (isset($_POST['update_ao'])) {
     $dataid = $_POST['id'];
+    $asset1 = $_POST['asset_id'];
+    $asset2 = $_POST['asset_subid'];
     $value1 = $_POST['description'];
     $value2 = $_POST['property_no'];
     $value3 = $_POST['unit_meas'];
@@ -572,7 +601,7 @@ if (isset($_POST['update_ao'])) {
     $value9 = $_POST['account_officer'];
     $value10 = $_POST['remarks'];
     $query = "UPDATE asset
-    SET description = '$value1', property_no = '$value2', unit_meas = '$value3', 
+    SET asset_id = '$asset1', asset_subid = '$asset2', description = '$value1', property_no = '$value2', unit_meas = '$value3', 
     unit_val = '$value4', qty_property_card = '$value5', qty_physical_count = '$value6',
     shortage_qty = '$value7', shortage_value = '$value8', account_officer = '$value9', remarks = '$value10'
     WHERE id = '$dataid'";

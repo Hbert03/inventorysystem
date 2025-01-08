@@ -107,6 +107,11 @@ $('#showTable').on('click', '.update-btn', function() {
                     var data = JSON.parse(response);
                     
                     // Populate the modal with the data
+                    
+                    var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                    $("#asset").append(assetOption).trigger("change");
+                    var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                    $("#subasset").append(subOption).trigger("change");
                     $('#modal-input1').val(data[0].description);
                     $('#modal-input2').val(data[0].property_no);
                     $('#modal-input3').val(data[0].unit_meas);
@@ -115,8 +120,10 @@ $('#showTable').on('click', '.update-btn', function() {
                     $('#modal-input6').val(data[0].qty_physical_count);
                     $('#modal-input7').val(data[0].shortage_qty);
                     $('#modal-input8').val(data[0].shortage_value);
-                    $('select.edit_personnel').val(data[0].fullname);
+                    var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                    $('select.edit_personnel').append(officerOption).trigger('change');
                     $('#modal-input10').val(data[0].remarks);
+    
     
                    
                     $('#editmodalbuild1').modal('show');
@@ -128,6 +135,8 @@ $('#showTable').on('click', '.update-btn', function() {
                             data: {
                                 updatebuild1: true,
                                 id: id,
+                                asset: $('#asset').val(),
+                                subasset: $('#subasset').val(),
                                 description: $('#modal-input1').val(),
                                 property_no: $('#modal-input2').val(),
                                 unit_meas: $('#modal-input3').val(),
@@ -314,7 +323,10 @@ $('#showTable1').on('click', '.update-btn', function() {
             if (response.trim() !== "") {
                 var data = JSON.parse(response);
                 
-                // Populate the modal with the data
+                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                $("#asset").append(assetOption).trigger("change");
+                var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                $("#subasset").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -323,8 +335,11 @@ $('#showTable1').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('select.edit_personnel').val(data[0].fullname);
+                var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                $('select.edit_personnel').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
+
+
 
                
                 $('#editmodalbuild1').modal('show');
@@ -336,6 +351,8 @@ $('#showTable1').on('click', '.update-btn', function() {
                         data: {
                             updatebuild1: true,
                             id: id,
+                            asset: $('#asset').val(),
+                                subasset: $('#subasset').val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -521,8 +538,11 @@ $('#showTable2').on('click', '.update-btn', function() {
         success: function(response) {
             if (response.trim() !== "") {
                 var data = JSON.parse(response);
-                
-                // Populate the modal with the data
+
+                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                $("#asset").append(assetOption).trigger("change");
+                var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                $("#subasset").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -531,7 +551,8 @@ $('#showTable2').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('select.edit_personnel').val(data[0].fullname);
+                var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                $('select.edit_personnel').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
 
                
@@ -544,6 +565,8 @@ $('#showTable2').on('click', '.update-btn', function() {
                         data: {
                             updatebuild1: true,
                             id: id,
+                            asset: $('#asset').val(),
+                                subasset: $('#subasset').val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -730,16 +753,23 @@ $('#showTable3').on('click', '.update-btn', function() {
                 var data = JSON.parse(response);
                 
 
-                $('#modal-input1').val(data[0].description);
-                $('#modal-input2').val(data[0].property_no);
-                $('#modal-input3').val(data[0].unit_meas);
-                $('#modal-input4').val(data[0].unit_val);
-                $('#modal-input5').val(data[0].qty_property_card);
-                $('#modal-input6').val(data[0].qty_physical_count);
-                $('#modal-input7').val(data[0].shortage_qty);
-                $('#modal-input8').val(data[0].shortage_value);
-                $('select.edit_personnel').val(data[0].fullname);
-                $('#modal-input10').val(data[0].remarks);
+                 var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                    $("#asset").append(assetOption).trigger("change");
+                    var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                    $("#subasset").append(subOption).trigger("change");
+                    $('#modal-input1').val(data[0].description);
+                    $('#modal-input2').val(data[0].property_no);
+                    $('#modal-input3').val(data[0].unit_meas);
+                    $('#modal-input4').val(data[0].unit_val);
+                    $('#modal-input5').val(data[0].qty_property_card);
+                    $('#modal-input6').val(data[0].qty_physical_count);
+                    $('#modal-input7').val(data[0].shortage_qty);
+                    $('#modal-input8').val(data[0].shortage_value);
+                    var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                    $('select.edit_personnel').append(officerOption).trigger('change');
+                    $('#modal-input10').val(data[0].remarks);
+    
+
 
                
                 $('#editmodalbuild1').modal('show');
@@ -751,6 +781,8 @@ $('#showTable3').on('click', '.update-btn', function() {
                         data: {
                             updatebuild1: true,
                             id: id,
+                            asset: $('#asset').val(),
+                                subasset: $('#subasset').val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -935,7 +967,10 @@ $('#showTable4').on('click', '.update-btn', function() {
             if (response.trim() !== "") {
                 var data = JSON.parse(response);
                 
-                // Populate the modal with the data
+                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                $("#asset").append(assetOption).trigger("change");
+                var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                $("#subasset").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -944,8 +979,11 @@ $('#showTable4').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('select.edit_personnel').val(data[0].fullname);
+                var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                $('select.edit_personnel').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
+
+
 
                
                 $('#editmodalbuild1').modal('show');
@@ -957,6 +995,8 @@ $('#showTable4').on('click', '.update-btn', function() {
                         data: {
                             updatebuild1: true,
                             id: id,
+                            asset: $('#asset').val(),
+                                subasset: $('#subasset').val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -1141,7 +1181,10 @@ $('#showTable5').on('click', '.update-btn', function() {
             if (response.trim() !== "") {
                 var data = JSON.parse(response);
                 
-                // Populate the modal with the data
+                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                $("#asset").append(assetOption).trigger("change");
+                var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                $("#subasset").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -1150,8 +1193,11 @@ $('#showTable5').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('select.edit_personnel').val(data[0].fullname);
+                var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                $('select.edit_personnel').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
+
+
 
                
                 $('#editmodalbuild1').modal('show');
@@ -1163,6 +1209,8 @@ $('#showTable5').on('click', '.update-btn', function() {
                         data: {
                             updatebuild1: true,
                             id: id,
+                            asset: $('#asset').val(),
+                                subasset: $('#subasset').val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -1727,7 +1775,10 @@ $(document).ready(function() {
                 if (response.trim() !== "") {
                     var data = JSON.parse(response);
                     
-                    // Populate the modal with the data
+                    var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                    $("#asset").append(assetOption).trigger("change");
+                    var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                    $("#subasset").append(subOption).trigger("change");
                     $('#modal-input1').val(data[0].description);
                     $('#modal-input2').val(data[0].property_no);
                     $('#modal-input3').val(data[0].unit_meas);
@@ -1736,7 +1787,8 @@ $(document).ready(function() {
                     $('#modal-input6').val(data[0].qty_physical_count);
                     $('#modal-input7').val(data[0].shortage_qty);
                     $('#modal-input8').val(data[0].shortage_value);
-                    $('select.edit_personnel').val(data[0].fullname);
+                    var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                    $('select.edit_personnel').append(officerOption).trigger('change');
                     $('#modal-input10').val(data[0].remarks);
     
                    
@@ -1749,6 +1801,8 @@ $(document).ready(function() {
                             data: {
                                 updatebuild1: true,
                                 id: id,
+                                asset: $('#asset').val(),
+                                subasset: $('#subasset').val(),
                                 description: $('#modal-input1').val(),
                                 property_no: $('#modal-input2').val(),
                                 unit_meas: $('#modal-input3').val(),
@@ -1994,7 +2048,10 @@ $('#showBuild3').on('click', '.update-btn', function() {
             if (response.trim() !== "") {
                 var data = JSON.parse(response);
                 
-                // Populate the modal with the data
+                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                $("#asset").append(assetOption).trigger("change");
+                var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                $("#subasset").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -2003,8 +2060,10 @@ $('#showBuild3').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('select.edit_personnel').val(data[0].fullname);
+                var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                $('select.edit_personnel').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
+
 
                
                 $('#editmodalbuild1').modal('show');
@@ -2016,6 +2075,8 @@ $('#showBuild3').on('click', '.update-btn', function() {
                         data: {
                             updatebuild1: true,
                             id: id,
+                            asset: $('#asset').val(),
+                                subasset: $('#subasset').val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -2258,7 +2319,10 @@ $('#showBuild2').on('click', '.update-btn', function() {
             if (response.trim() !== "") {
                 var data = JSON.parse(response);
                 
-                // Populate the modal with the data
+                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                $("#asset").append(assetOption).trigger("change");
+                var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                $("#subasset").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -2267,8 +2331,10 @@ $('#showBuild2').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('select.accountable_edit').val(data[0].fullname);
+                var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                $('select.edit_personnel').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
+
 
                
                 $('#editmodalbuild1').modal('show');
@@ -2280,6 +2346,8 @@ $('#showBuild2').on('click', '.update-btn', function() {
                         data: {
                             updatebuild2: true,
                             id: id,
+                            asset: $('#asset').val(),
+                                subasset: $('#subasset').val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -2955,17 +3023,22 @@ $('#showTable_transport').on('click', '.update-btn', function() {
             if (response.trim() !== "") {
                 var data = JSON.parse(response);
                 
-                // Populate the modal with the data
-                $('#modal-input1').val(data[0].description);
-                $('#modal-input2').val(data[0].property_no);
-                $('#modal-input3').val(data[0].unit_meas);
-                $('#modal-input4').val(data[0].unit_val);
-                $('#modal-input5').val(data[0].qty_property_card);
-                $('#modal-input6').val(data[0].qty_physical_count);
-                $('#modal-input7').val(data[0].shortage_qty);
-                $('#modal-input8').val(data[0].shortage_value);
-                $('select.edit_personnel').val(data[0].fullname);
-                $('#modal-input10').val(data[0].remarks);
+                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                    $("#asset").append(assetOption).trigger("change");
+                    var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                    $("#subasset").append(subOption).trigger("change");
+                    $('#modal-input1').val(data[0].description);
+                    $('#modal-input2').val(data[0].property_no);
+                    $('#modal-input3').val(data[0].unit_meas);
+                    $('#modal-input4').val(data[0].unit_val);
+                    $('#modal-input5').val(data[0].qty_property_card);
+                    $('#modal-input6').val(data[0].qty_physical_count);
+                    $('#modal-input7').val(data[0].shortage_qty);
+                    $('#modal-input8').val(data[0].shortage_value);
+                    var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                    $('select.edit_personnel').append(officerOption).trigger('change');
+                    $('#modal-input10').val(data[0].remarks);
+    
 
                
                 $('#editmodalbuild1').modal('show');
@@ -2977,6 +3050,8 @@ $('#showTable_transport').on('click', '.update-btn', function() {
                         data: {
                             updatebuild1: true,
                             id: id,
+                            asset: $('#asset').val(),
+                                subasset: $('#subasset').val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -3157,7 +3232,10 @@ $('#showTable_books').on('click', '.update-btn', function() {
             if (response.trim() !== "") {
                 var data = JSON.parse(response);
                 
-                // Populate the modal with the data
+                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                $("#asset").append(assetOption).trigger("change");
+                var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                $("#subasset").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -3166,8 +3244,10 @@ $('#showTable_books').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('select.edit_personnel').val(data[0].fullname);
+                var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                $('select.edit_personnel').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
+
 
                
                 $('#editmodalbuild1').modal('show');
@@ -3179,6 +3259,8 @@ $('#showTable_books').on('click', '.update-btn', function() {
                         data: {
                             updatebuild1: true,
                             id: id,
+                            asset: $('#asset').val(),
+                                subasset: $('#subasset').val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -3359,17 +3441,22 @@ $('#showTable_furniture').on('click', '.update-btn', function() {
             if (response.trim() !== "") {
                 var data = JSON.parse(response);
                 
-                // Populate the modal with the data
-                $('#modal-input1').val(data[0].description);
-                $('#modal-input2').val(data[0].property_no);
-                $('#modal-input3').val(data[0].unit_meas);
-                $('#modal-input4').val(data[0].unit_val);
-                $('#modal-input5').val(data[0].qty_property_card);
-                $('#modal-input6').val(data[0].qty_physical_count);
-                $('#modal-input7').val(data[0].shortage_qty);
-                $('#modal-input8').val(data[0].shortage_value);
-                $('select.edit_personnel').val(data[0].fullname);
-                $('#modal-input10').val(data[0].remarks);
+                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                    $("#asset").append(assetOption).trigger("change");
+                    var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                    $("#subasset").append(subOption).trigger("change");
+                    $('#modal-input1').val(data[0].description);
+                    $('#modal-input2').val(data[0].property_no);
+                    $('#modal-input3').val(data[0].unit_meas);
+                    $('#modal-input4').val(data[0].unit_val);
+                    $('#modal-input5').val(data[0].qty_property_card);
+                    $('#modal-input6').val(data[0].qty_physical_count);
+                    $('#modal-input7').val(data[0].shortage_qty);
+                    $('#modal-input8').val(data[0].shortage_value);
+                    var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                    $('select.edit_personnel').append(officerOption).trigger('change');
+                    $('#modal-input10').val(data[0].remarks);
+    
 
                
                 $('#editmodalbuild1').modal('show');
@@ -3381,6 +3468,8 @@ $('#showTable_furniture').on('click', '.update-btn', function() {
                         data: {
                             updatebuild1: true,
                             id: id,
+                            asset: $('#asset').val(),
+                                subasset: $('#subasset').val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -3562,7 +3651,10 @@ $('#showTable_others').on('click', '.update-btn', function() {
             if (response.trim() !== "") {
                 var data = JSON.parse(response);
                 
-                // Populate the modal with the data
+                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                $("#asset").append(assetOption).trigger("change");
+                var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                $("#subasset").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -3571,8 +3663,10 @@ $('#showTable_others').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('select.edit_personnel').val(data[0].fullname);
+                var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                $('select.edit_personnel').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
+
 
                
                 $('#editmodalbuild1').modal('show');
@@ -3584,6 +3678,8 @@ $('#showTable_others').on('click', '.update-btn', function() {
                         data: {
                             updatebuild1: true,
                             id: id,
+                            asset: $('#asset').val(),
+                                subasset: $('#subasset').val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -3868,6 +3964,7 @@ $("select.asset_type").select2({
 $("select.sub_asset_type").select2({
     placeholder: "Sub Asset",
     theme: "bootstrap4",
+    dropdownParent: $("#exampleModal1"),
     ajax: {
         url: 'fetch1.php',
         dataType: 'json',
@@ -4585,6 +4682,62 @@ $(document).ready(function() {
 });
 
 
+
+$(document).ready(function() {
+    $("button.savecategory").on("click", function(event) {
+        event.preventDefault();
+        var requiredFilled = true;
+        $("#addcategory input").each(function() {
+            if ($(this).prop("required")) {
+                if ($(this).is('select') && $(this).val() === null) {
+                    requiredFilled = false;
+                    $(this).addClass("is-invalid");
+                } else if ($(this).val() === "") {
+                    requiredFilled = false;
+                    $(this).addClass("is-invalid");
+                } else {
+                    $(this).removeClass("is-invalid");
+                }
+            }
+        });
+  
+        if (requiredFilled) {
+            $.ajax({
+                url: "../save_function.php",
+                type: "POST",
+                data: $("#addcategory").serialize() + "&save_category=true",
+                success: function(response) {
+                    try {
+                        response = JSON.parse(response);
+                        if (response.success = 1) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Asset Successfully Saved!",
+                                showConfirmButton: true
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Error!",
+                                text: response.error || "An unknown error occurred."
+                            });
+                        }
+                    } catch (e) {
+                        Swal.fire({
+                            title: "Error!",
+                            text: "Failed to parse JSON response: " + e,
+                            icon: "error"
+                        });
+                    }
+                },
+            });
+        }
+    });
+});
+
+
 $(document).ready(function() {
     $("button.save_asset1").on("click", function(event) {
         event.preventDefault();
@@ -4662,7 +4815,7 @@ $(document).ready(function() {
                 var mappedData = $.map(returnedData.results, function(fetch) {
                     return {
                         id: fetch.id,
-                        text: fetch.office_name
+                        text: fetch.office_name +' '+ ('(' + fetch.office_id +')')
                     };
                 });
                 return {
@@ -4901,7 +5054,10 @@ $('#historical').on('click', '.update-btn', function() {
             if (response.trim() !== "") {
                 var data = JSON.parse(response);
                 
-                // Populate the modal with the data
+                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                $("#asset").append(assetOption).trigger("change");
+                var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                $("#subasset").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -4910,8 +5066,10 @@ $('#historical').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('select.edit_personnel').val(data[0].fullname);
+                var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                $('select.edit_personnel').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
+
 
                
                 $('#editmodalbuild1').modal('show');
@@ -4923,6 +5081,8 @@ $('#historical').on('click', '.update-btn', function() {
                         data: {
                             updatebuild1: true,
                             id: id,
+                            asset: $('#asset').val(),
+                                subasset: $('#subasset').val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -5021,7 +5181,7 @@ $("select.select_account").select2({
             var mappedData = $.map(returned.result, function(fetch) {
                 return {
                     id: fetch.hris_code,
-                    text: fetch.employee
+                    text: fetch.employee + " - (" + fetch.office_name + ")"
                 };
             });
             return {
@@ -5086,7 +5246,7 @@ $("select.edit_personnel").select2({
             var mappedData = $.map(returnedData.result, function(fetch) {
                 return {
                     id: fetch.hris_code, 
-                    text: fetch.employee 
+                    text: fetch.employee + ' - (' + fetch.office_name + ')',
                 };
             });
        
@@ -5510,6 +5670,13 @@ $(document).ready(function() {
                   } },
                     {"data": "date_titled"},
                     {"data": "date_acquired"},
+                    {
+                        "data": null,
+                        "render": function(data, type, row) {
+                            return '<button class="btn btn-primary btn-sm ml-2 ms-1 update-btn" name="update" data-update="' + row.id + '"><span>Edit<i class="fa fa-pen" style="color:yellow"></i></span></button>'+ 
+                    '<button class="btn btn-danger btn-sm ml-2 ms-1 delete-btn" name="delete" data-delete="' + row.id + '"><span>Delete <i class="fa fa-trash" style="color:skyblue"></i></span></button>';
+                }   
+            },
                 ],
                 // lengthMenu: [
                 //     [10, 25, 50, 100000000],
@@ -5586,7 +5753,7 @@ $(document).ready(function() {
                                             } else {
                                                 Swal.fire(
                                                     'Failed!',
-                                                    'Select Accountable Officer First! Failed to update file.',
+                                                    'Failed to update file.',
                                                     'error'
                                                 );
                                             }
@@ -5762,6 +5929,11 @@ $(document).ready(function() {
                         if (response.trim() !== "") {
                             var data = JSON.parse(response);
 
+                            var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                            $("#asset_id").append(assetOption).trigger("change");
+                        
+                            var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                            $("#sub_id").append(subOption).trigger("change");
                             $('#modal-input1').val(data[0].description);
                             $('#modal-input2').val(data[0].property_no);
                             $('#modal-input3').val(data[0].unit_meas);
@@ -5770,7 +5942,8 @@ $(document).ready(function() {
                             $('#modal-input6').val(data[0].qty_physical_count);
                             $('#modal-input7').val(data[0].shortage_qty);
                             $('#modal-input8').val(data[0].shortage_value);
-                            $('select.accountable_edit').val(data[0].fullname).trigger('change');
+                            var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                            $('select.accountable_edit').append(officerOption).trigger('change');
                             $('#modal-input10').val(data[0].remarks);
             
                            
@@ -5783,6 +5956,9 @@ $(document).ready(function() {
                                     data: {
                                         update_ao: true,
                                         id: id,
+                                        asset_id: $("#asset_id").val(), 
+                                        asset_subid: $("#sub_id").val(), 
+                                        sub_id: $("#sub_id").val(),
                                         description: $('#modal-input1').val(),
                                         property_no: $('#modal-input2').val(),
                                         unit_meas: $('#modal-input3').val(),
@@ -5885,7 +6061,7 @@ $(document).ready(function() {
                         var mappedData = $.map(returnedData.results, function(fetch) {
                             return {
                                 id: fetch.hris_code,
-                                text: fetch.employee
+                                text: fetch.employee + ' -(' + fetch.office_name + ')'
                             };
                         });
                         return {
@@ -5898,6 +6074,158 @@ $(document).ready(function() {
         });
 
 
+
+        $(document).ready(function () {
+            $("#asset_id").select2({
+              placeholder: "Select Asset Type",
+              theme: "bootstrap4",
+                dropdownParent: $("#editModalAo"),
+                ajax: {
+                    url: 'fetch1.php',
+                    dataType: 'json',
+                    type: 'POST',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            term: params.term,
+                            asset1: true,
+                            category_id: params.term 
+                        };
+                    },
+                    processResults: function(returnedData) {
+                        var mappedData = $.map(returnedData.data, function(fetch) {
+                            return {
+                                id: fetch.id,
+                                text: fetch.category
+                            };
+                        });
+                        return {
+                            results: mappedData
+                        };
+                    },
+                    cache: true
+                },
+            });
+
+          
+
+            $("#sub_id").select2({
+              placeholder: "Select Sub Asset",
+              theme: "bootstrap4",
+              ajax: {
+                url: 'fetch1.php',
+                dataType: 'json',
+                type: 'POST',
+                delay: 250,
+                data: function(params) {
+                    var selectedCategoryId = $('#asset_id').val(); 
+                    return {
+                        term: params.term,
+                        asset2: true,
+                        category_id: selectedCategoryId 
+                    };
+                },
+                processResults: function(returnedData) {
+                    var mappedData = $.map(returnedData.data, function(fetch) {
+                        return {
+                            id: fetch.id,
+                            text: fetch.sub_category
+                        };
+                    });
+                    return {
+                        results: mappedData
+                    };
+                },
+                cache: true
+            },
+            minimumInputLength: 0,
+            templateResult: formatCategory,
+            templateSelection: formatCategorySelection
+        });
+          
+            $("#asset_id").on("change", function () {
+              $("#sub_id").val(null).trigger("change"); 
+            });
+          });
+
+
+
+
+
+          $(document).ready(function () {
+            $("#asset").select2({
+              placeholder: "Select Asset Type",
+              theme: "bootstrap4",
+                dropdownParent: $("#editmodalbuild1"),
+                ajax: {
+                    url: 'fetch1.php',
+                    dataType: 'json',
+                    type: 'POST',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            term: params.term,
+                            asset1: true,
+                            category_id: params.term 
+                        };
+                    },
+                    processResults: function(returnedData) {
+                        var mappedData = $.map(returnedData.data, function(fetch) {
+                            return {
+                                id: fetch.id,
+                                text: fetch.category
+                            };
+                        });
+                        return {
+                            results: mappedData
+                        };
+                    },
+                    cache: true
+                },
+            });
+
+          
+
+            $("#subasset").select2({
+              placeholder: "Select Sub Asset",
+              theme: "bootstrap4",
+              ajax: {
+                url: 'fetch1.php',
+                dataType: 'json',
+                type: 'POST',
+                delay: 250,
+                data: function(params) {
+                    var selectedCategoryId = $('#asset').val(); 
+                    return {
+                        term: params.term,
+                        asset2: true,
+                        category_id: selectedCategoryId 
+                    };
+                },
+                processResults: function(returnedData) {
+                    var mappedData = $.map(returnedData.data, function(fetch) {
+                        return {
+                            id: fetch.id,
+                            text: fetch.sub_category
+                        };
+                    });
+                    return {
+                        results: mappedData
+                    };
+                },
+                cache: true
+            },
+            minimumInputLength: 0,
+            templateResult: formatCategory,
+            templateSelection: formatCategorySelection
+        });
+          
+            $("#asset").on("change", function () {
+              $("#subasset").val(null).trigger("change"); 
+            });
+          });
+          
+          
 $(document).ready(function() {
     $("select.category").select2({
         placeholder: "Sort by:",
@@ -6591,7 +6919,12 @@ $('#school_building').on('click', '.update-btn', function() {
             if (response.trim() !== "") {
                 var data = JSON.parse(response);
                 
-               
+            
+             
+                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                $("#asset").append(assetOption).trigger("change");
+                var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                $("#subasset").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -6600,7 +6933,8 @@ $('#school_building').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('select.edit_personnel_school').val(data[0].fullname);
+                var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                $('select.edit_personnel_school').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
 
                
@@ -6798,6 +7132,10 @@ $('#office_building').on('click', '.update-btn', function() {
                 var data = JSON.parse(response);
                 
                
+                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                $("#asset").append(assetOption).trigger("change");
+                var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                $("#subasset").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -6806,7 +7144,8 @@ $('#office_building').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('select.edit_personnel_school').val(data[0].fullname);
+                var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                $('select.edit_personnel_school').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
 
                
@@ -7005,6 +7344,10 @@ $('#others_structure').on('click', '.update-btn', function() {
                 var data = JSON.parse(response);
                 
               
+                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                $("#asset").append(assetOption).trigger("change");
+                var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                $("#subasset").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -7013,9 +7356,9 @@ $('#others_structure').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('select.edit_personnel_school').val(data[0].fullname);
+                var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                $('select.edit_personnel_school').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
-
                
                 $('#editModal').modal('show');
 
@@ -7212,7 +7555,10 @@ $('#historical_building').on('click', '.update-btn', function() {
             if (response.trim() !== "") {
                 var data = JSON.parse(response);
                 
-                
+                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                $("#asset").append(assetOption).trigger("change");
+                var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                $("#subasset").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -7221,7 +7567,8 @@ $('#historical_building').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('select.edit_personnel_school').val(data[0].fullname);
+                var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                $('select.edit_personnel_school').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
 
                
@@ -7420,6 +7767,10 @@ $('#agricultural_equipment').on('click', '.update-btn', function() {
                 var data = JSON.parse(response);
                 
                
+                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                $("#asset").append(assetOption).trigger("change");
+                var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                $("#subasset").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -7428,9 +7779,9 @@ $('#agricultural_equipment').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('select.edit_personnel_school').val(data[0].fullname);
+                var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                $('select.edit_personnel_school').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
-
                
                 $('#editModal').modal('show');
 
@@ -7628,6 +7979,10 @@ $('#ict_equipment').on('click', '.update-btn', function() {
                 var data = JSON.parse(response);
                 
              
+                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                $("#asset").append(assetOption).trigger("change");
+                var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                $("#subasset").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -7636,7 +7991,8 @@ $('#ict_equipment').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('select.edit_personnel_school').val(data[0].fullname);
+                var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                $('select.edit_personnel_school').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
 
                
@@ -7836,6 +8192,10 @@ $('#machinery').on('click', '.update-btn', function() {
                 var data = JSON.parse(response);
                 
               
+                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                $("#asset").append(assetOption).trigger("change");
+                var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                $("#subasset").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -7844,9 +8204,9 @@ $('#machinery').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('select.edit_personnel_school').val(data[0].fullname);
+                var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                $('select.edit_personnel_school').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
-
                
                 $('#editModal').modal('show');
 
@@ -8042,6 +8402,10 @@ $('#office_equipment').on('click', '.update-btn', function() {
                 var data = JSON.parse(response);
                 
               
+                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                $("#asset").append(assetOption).trigger("change");
+                var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                $("#subasset").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -8050,7 +8414,8 @@ $('#office_equipment').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('select.edit_personnel_school').val(data[0].fullname);
+                var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                $('select.edit_personnel_school').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
 
                
@@ -8249,6 +8614,10 @@ $('#sports_equipment').on('click', '.update-btn', function() {
                 var data = JSON.parse(response);
                 
               
+                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                $("#asset").append(assetOption).trigger("change");
+                var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                $("#subasset").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -8257,7 +8626,8 @@ $('#sports_equipment').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('select.edit_personnel_school').val(data[0].fullname);
+                var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                $('select.edit_personnel_school').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
 
                
@@ -8456,6 +8826,10 @@ $('#technical_equipment').on('click', '.update-btn', function() {
                 var data = JSON.parse(response);
                 
               
+                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                $("#asset").append(assetOption).trigger("change");
+                var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                $("#subasset").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -8464,7 +8838,8 @@ $('#technical_equipment').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('select.edit_personnel_school').val(data[0].fullname);
+                var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                $('select.edit_personnel_school').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
 
                
@@ -8663,6 +9038,10 @@ $('#transportation').on('click', '.update-btn', function() {
                 var data = JSON.parse(response);
                 
               
+                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                $("#asset").append(assetOption).trigger("change");
+                var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                $("#subasset").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -8671,7 +9050,8 @@ $('#transportation').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('select.edit_personnel_school').val(data[0].fullname);
+                var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                $('select.edit_personnel_school').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
 
                
@@ -8871,6 +9251,10 @@ $('#Book').on('click', '.update-btn', function() {
                 var data = JSON.parse(response);
                 
               
+                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                $("#assetsch").append(assetOption).trigger("change");
+                var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                $("#subassetsch").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -8879,9 +9263,9 @@ $('#Book').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('select.edit_personnel_school').val(data[0].fullname);
+                var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                $('select.edit_personnel_school').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
-
                
                 $('#editModal').modal('show');
 
@@ -9078,7 +9462,10 @@ $('#furniture').on('click', '.update-btn', function() {
             if (response.trim() !== "") {
                 var data = JSON.parse(response);
                 
-              
+                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                $("#assetsch").append(assetOption).trigger("change");
+                var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                $("#subassetsch").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -9087,7 +9474,8 @@ $('#furniture').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('select.edit_personnel_school').val(data[0].fullname);
+                var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                $('select.edit_personnel_school').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
 
                
@@ -9285,6 +9673,10 @@ $('#others').on('click', '.update-btn', function() {
                 var data = JSON.parse(response);
                 
               
+                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                $("#assetsch").append(assetOption).trigger("change");
+                var subOption = new Option(data[0].sub_category, data[0].id, true, true);
+                $("#subassetsch").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -9293,9 +9685,9 @@ $('#others').on('click', '.update-btn', function() {
                 $('#modal-input6').val(data[0].qty_physical_count);
                 $('#modal-input7').val(data[0].shortage_qty);
                 $('#modal-input8').val(data[0].shortage_value);
-                $('select.edit_personnel_school').val(data[0].fullname);
+                var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
+                $('select.edit_personnel_school').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
-
                
                 $('#editModal').modal('show');
 
