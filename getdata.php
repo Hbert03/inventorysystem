@@ -1193,7 +1193,7 @@ if (isset($_POST['historical'])) {
 
 
 
-function getDataTable17($draw, $start, $length, $search, $fconn, $selectedOffice)
+function getDataTable17($draw, $start, $length, $search, $fconn, $selectedOffice, $sortby)
 {
     $sortableColumns = array('asset_id', 'description', 'property_no');
 
@@ -1217,6 +1217,9 @@ function getDataTable17($draw, $start, $length, $search, $fconn, $selectedOffice
     if (!empty($selectedOffice)) {
         $baseQuery .= " AND a.user_id = $selectedOffice"; 
     }
+    if (!empty($sortby)) {
+        $baseQuery .= " AND a.asset_subid = $sortby"; 
+    }
 
     $totalRecordsQuery = "SELECT COUNT(*) as count FROM depedldn_ams.asset a INNER JOIN
     depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE  user_id = '$selectedOffice'";
@@ -1224,7 +1227,10 @@ function getDataTable17($draw, $start, $length, $search, $fconn, $selectedOffice
         $totalRecordsQuery .= " AND (a.asset_id LIKE '%$search%' OR description LIKE '%$search%' OR a.property_no LIKE '%$search%')";
     }
     if (!empty($selectedOffice)) {
-        $selectedOffice .= " AND a.user_id = $selectedOffice"; 
+        $totalRecordsQuery .= " AND a.user_id = $selectedOffice"; 
+    }
+    if (!empty($sortby)) {
+        $totalRecordsQuery .= " AND a.asset_subid = $sortby"; 
     }
     $totalRecordsResult = $fconn->query($totalRecordsQuery);
     $totalRecords = $totalRecordsResult->fetch_assoc()['count'];
@@ -1260,10 +1266,11 @@ if (isset($_POST['ao_user_data'])) {
     $length = $_POST["length"];
     $search = $_POST["search"]["value"];
     $selectedOffice = $_POST["selectedOfficeId"];
+    $sortby = $_POST["sortby"];
     
     
 
-    echo getDataTable17($draw, $start, $length, $search, $fconn, $selectedOffice);
+    echo getDataTable17($draw, $start, $length, $search, $fconn, $selectedOffice, $sortby);
     exit();
 } 
 
@@ -1291,6 +1298,8 @@ function showAOLand($draw, $start, $length, $search, $fconn, $selectedOffice)
     if (!empty($selectedOffice)) {
         $baseQuery .= " AND user_id = $selectedOffice"; 
     }
+   
+
 
     $totalRecordsQuery = "SELECT COUNT(*) as count FROM asset WHERE user_id = '$selectedOffice' and asset_id=6";
     if (!empty($search)) {
@@ -1299,6 +1308,8 @@ function showAOLand($draw, $start, $length, $search, $fconn, $selectedOffice)
     if (!empty($selectedOffice)) {
         $selectedOffice .= " AND user_id = $selectedOffice"; 
     }
+
+
     $totalRecordsResult = $fconn->query($totalRecordsQuery);
     $totalRecords = $totalRecordsResult->fetch_assoc()['count'];
 
@@ -1346,6 +1357,28 @@ if (isset($_POST['getdata_ao'])) {
     $id = $_POST['id'];
     $query = "SELECT a.*, c.category, c.id as asset_id, sub.id, sub.sub_category, e.hris_code, CONCAT(e.firstname,' ', e.middlename, ' ', e.lastname) as fullname FROM depedldn_ams.asset a INNER JOIN depedldn.tbl_employee e ON a.account_officer = e.hris_code
     INNER JOIN category c ON a.asset_id = c.id INNER JOIN sub_category sub ON a.asset_subid = sub.id WHERE a.id=?";
+    $stmt = $fconn->prepare($query);
+    $stmt->bind_param("i", $id); 
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result) {
+        $data = array();
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+        echo json_encode($data);
+    } else {
+        echo "Error executing query: " . $fconn->error;
+    }
+    exit();
+}
+
+
+
+if (isset($_POST['getdata_ao_land'])) {
+    $id = $_POST['id'];
+    $query = "SELECT * FROM asset where id=?";
     $stmt = $fconn->prepare($query);
     $stmt->bind_param("i", $id); 
     $stmt->execute();
@@ -2492,6 +2525,239 @@ if (isset($_POST['others1'])) {
     echo others1($draw, $start, $length, $search, $fconn, $school_id);
     exit();
 }
+
+
+
+function ict_equipment($draw, $start, $length, $search, $fconn, $school_id)
+{
+    $sortableColumns = array('asset_id', 'description', 'property_no');
+
+    $orderBy = 'description';
+    $orderDir = 'DESC';
+
+    if (isset($_POST['order'][0]['column']) && isset($_POST['order'][0]['dir'])) {
+        $columnIdx = intval($_POST['order'][0]['column']);
+        $orderDir = $_POST['order'][0]['dir'];
+
+        if (isset($sortableColumns[$columnIdx])) {
+            $orderBy = $sortableColumns[$columnIdx];
+        }
+    }
+
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.asset_id = 2 AND a.asset_subid= 5 and a.user_id='$school_id'";
+    if (!empty($search)) {
+        $baseQuery .= " AND (asset_id LIKE '%$search%' OR description LIKE '%$search%' OR property_no LIKE '%$search%')";
+    }
+
+    $totalRecordsQuery = "SELECT COUNT(*) as count FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.asset_id = 2 AND a.asset_subid= 5 and a.user_id='$school_id'";
+    if (!empty($search)) {
+        $totalRecordsQuery .= " AND (asset_id LIKE '%$search%' OR description LIKE '%$search%' OR property_no LIKE '%$search%')";
+    }
+    $totalRecordsResult = $fconn->query($totalRecordsQuery);
+    $totalRecords = $totalRecordsResult->fetch_assoc()['count'];
+
+  
+    $query = "$baseQuery ORDER BY $orderBy $orderDir LIMIT $start, $length";
+
+    $result = $fconn->query($query);
+
+    if ($result) {
+        $data = array();
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+    } else {
+        $totalRecords = 0;
+        $data = array();
+        echo "Error executing query: " . $fconn->error;
+    }
+
+    $output = array(
+        "draw" => intval($draw),
+        "recordsTotal" => intval($totalRecords), 
+        "recordsFiltered" => intval($totalRecords), 
+        "data" => $data
+    );
+
+    return json_encode($output);
+}
+if (isset($_POST['ict_equipment'])) {
+   
+    $draw = $_POST["draw"];
+    $start = $_POST["start"];
+    $length = $_POST["length"];
+    $search = $_POST["search"]["value"];
+    $school_id = $_SESSION['user_id_sch'];
+
+    echo ict_equipment($draw, $start, $length, $search, $fconn, $school_id);
+    exit();
+}
+
+
+
+if (isset($_POST['rpcsp_school'])) {
+    $draw = $_POST["draw"];
+    $start = $_POST["start"];
+    $length = $_POST["length"];
+    $search = $_POST["search"]["value"];
+    $category = $_POST["category"]; 
+    $school_id = $_SESSION['user_id_sch'];
+
+    echo rpcsp_school($draw, $start, $length, $search, $fconn, $category, $_POST['value_range'],$school_id);
+    exit();
+}
+
+function rpcsp_school($draw, $start, $length, $search, $fconn, $category, $value_range, $school_id)
+{
+    $sortableColumns = array('asset_id', 'description', 'property_no');
+
+    $orderBy = 'description';
+    $orderDir = 'DESC';
+
+    if (isset($_POST['order'][0]['column']) && isset($_POST['order'][0]['dir'])) {
+        $columnIdx = intval($_POST['order'][0]['column']);
+        $orderDir = $_POST['order'][0]['dir'];
+
+        if (isset($sortableColumns[$columnIdx])) {
+            $orderBy = $sortableColumns[$columnIdx];
+        }
+    }
+
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id  WHERE a.user_id = '$school_id'";
+    if (!empty($category)) {
+        $baseQuery .= " AND a.asset_subid = $category"; 
+    }
+    if ($value_range == 'below_5000') {
+        $baseQuery .= " AND a.unit_val < 5000";
+    } elseif ($value_range == 'above_5000') {
+        $baseQuery .= " AND a.unit_val >= 5000";
+    }
+    if (!empty($search)) {
+        $baseQuery .= " AND (a.asset_id LIKE '%$search%' OR description LIKE '%$search%' OR a.property_no LIKE '%$search%')";
+    }
+
+    $totalRecordsQuery = "SELECT COUNT(*) as count FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.user_id = '$school_id'";
+    if (!empty($category)) {
+        $totalRecordsQuery .= " AND a.asset_subid = $category";
+    }
+    if ($value_range == 'below_5000') {
+        $totalRecordsQuery .= " AND unit_val < 5000";
+    } elseif ($value_range == 'above_5000') {
+        $totalRecordsQuery .= " AND a.unit_val >= 5000";
+    }
+    if (!empty($search)) {
+        $totalRecordsQuery .= " AND (a.asset_id LIKE '%$search%' OR description LIKE '%$search%' OR a.property_no LIKE '%$search%')";
+    }
+    $totalRecordsResult = $fconn->query($totalRecordsQuery);
+    $totalRecords = $totalRecordsResult->fetch_assoc()['count'];
+
+  
+    $query = "$baseQuery ORDER BY $orderBy $orderDir LIMIT $start, $length";
+
+    $result = $fconn->query($query);
+
+    if ($result) {
+        $data = array();
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+    } else {
+        $totalRecords = 0;
+        $data = array();
+        echo "Error executing query: " . $fconn->error;
+    }
+
+    $output = array(
+        "draw" => intval($draw),
+        "recordsTotal" => intval($totalRecords), 
+        "recordsFiltered" => intval($totalRecords), 
+        "data" => $data
+    );
+
+    return json_encode($output);
+}
+
+
+
+
+if (isset($_POST['rpcppe_school'])) {
+    $draw = $_POST["draw"];
+    $start = $_POST["start"];
+    $length = $_POST["length"];
+    $search = $_POST["search"]["value"];
+    $category = $_POST["category"]; 
+    $school_id = $_SESSION['user_id_sch'];
+
+    echo rpcppe_school($draw, $start, $length, $search, $fconn, $category, $school_id);
+    exit();
+}
+
+function rpcppe_school($draw, $start, $length, $search, $fconn, $category, $school_id) 
+{
+    $sortableColumns = array('asset_id', 'description', 'property_no');
+
+    $orderBy = 'description';
+    $orderDir = 'DESC';
+
+    if (isset($_POST['order'][0]['column']) && isset($_POST['order'][0]['dir'])) {
+        $columnIdx = intval($_POST['order'][0]['column']);
+        $orderDir = $_POST['order'][0]['dir'];
+
+        if (isset($sortableColumns[$columnIdx])) {
+            $orderBy = $sortableColumns[$columnIdx];
+        }
+    }
+
+    $baseQuery = "SELECT a.*, CONCAT(e.firstname, ' ', COALESCE(SUBSTRING(e.middlename, 1, 1), ''), '. ', e.lastname, ' ', e.ext_name, ' - (', o.office_name, ')') AS fullname FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer INNER JOIN depedldn.tbl_office o ON e.department_id = o.id WHERE a.unit_val > 49999 and a.user_id = '$school_id'";
+    if (!empty($category)) {
+        $baseQuery .= " AND a.asset_subid = $category"; 
+    }
+    if (!empty($search)) {
+        $baseQuery .= " AND (a.asset_id LIKE '%$search%' OR description LIKE '%$search%' OR a.property_no LIKE '%$search%')";
+    }
+
+    $totalRecordsQuery = "SELECT COUNT(*) as count FROM depedldn_ams.asset a INNER JOIN
+    depedldn.tbl_employee e ON e.hris_code = a.account_officer WHERE a.unit_val > 49999 and a.user_id = '$school_id'";
+    if (!empty($category)) {
+        $totalRecordsQuery .= " AND a.asset_subid = $category";
+    }
+    if (!empty($search)) {
+        $totalRecordsQuery .= " AND (a.asset_id LIKE '%$search%' OR description LIKE '%$search%' OR a.property_no LIKE '%$search%')";
+    }
+    $totalRecordsResult = $fconn->query($totalRecordsQuery);
+    $totalRecords = $totalRecordsResult->fetch_assoc()['count'];
+
+  
+    $query = "$baseQuery ORDER BY $orderBy $orderDir LIMIT $start, $length";
+
+    $result = $fconn->query($query);
+
+    if ($result) {
+        $data = array();
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+    } else {
+        $totalRecords = 0;
+        $data = array();
+        echo "Error executing query: " . $fconn->error;
+    }
+
+    $output = array(
+        "draw" => intval($draw),
+        "recordsTotal" => intval($totalRecords), 
+        "recordsFiltered" => intval($totalRecords), 
+        "data" => $data
+    );
+
+    return json_encode($output);
+}
+
 ?>
 
 

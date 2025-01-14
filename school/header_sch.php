@@ -21,10 +21,10 @@
 		// }
 	  ?>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="data_rpcsp.php" class="nav-link">RPCSP</a>
+        <a href="rpcsp_sch.php" class="nav-link">RPCSP</a>
       </li>
 	 <li class="nav-item d-none d-sm-inline-block">
-        <a href="data_rpcppe.php" class="nav-link">RPCPPE</a>
+        <a href="rpcppe_sch.php" class="nav-link">RPCPPE</a>
       </li>
     </ul>
 
@@ -62,7 +62,7 @@
   </nav>
 
 
-  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal fade" id="editModalschool" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -158,7 +158,7 @@
 						<input type="text" class="form-control mb-1" name="article" id="article" placeholder="Article" required>
 						<input type="text" class="form-control mb-1" name="sn" id="sn" placeholder="Serial No.">
 						<input type="text" class="form-control mb-1" name="property_no" id="property_no" placeholder="Property No." required>
-            <input type="text" class="form-control mb-1" name="stock" id="stock" placeholder="Stock No." required>
+            <input type="text" class="form-control mb-1" name="stock" id="stock" placeholder="Stock No." >
 						<input type="text" class="form-control mb-1" name="unit_value" id="unit_value" placeholder="Unit Value" required>
             <select class="form-control mb-1 " name="remarks" id="remarks" required>
             <option disabled selected>Remarks</option>
@@ -185,10 +185,10 @@
             <div class="col-md-6">
               <select class="form-control sub_asset_type_school mb-1" name="select2" required></select>
               <input type="text" class="form-control mt-2 mb-1" name="qty_card" id="qty_card" placeholder="Qty Card" required>
-						<input type="text" class="form-control mb-1" name="qty_count" id="qty_count" placeholder="Qty Count" required>
+						<input type="text" class="form-control mb-1" name="qty_count" id="qty_count" placeholder="Qty Count" >
 						<input type="text" class="form-control mb-1" name="useful_life" id="useful_life" placeholder="Usefull Life" required>
-						<input type="text" class="form-control mb-1" name="qty_short" id="qty_short" placeholder="qty_short " required>
-						<input type="text" class="form-control mb-1" name="value_short" id="value_short" placeholder="value_short" required>
+						<input type="text" class="form-control mb-1" name="qty_short" id="qty_short" placeholder="qty_short " >
+						<input type="text" class="form-control mb-1" name="value_short" id="value_short" placeholder="value_short" >
             <input type="text" class="form-control mb-1" name="measurement" id="measurement" placeholder="Unit of Measurement" required>
             
             <label>Acquisition Date</label>
@@ -217,7 +217,7 @@
       <div class="modal-body">
         <form id="addland" action="" method="POST"  enctype="multipart/form-data">
               <label for="examDropdown">Asset Type</label>
-              <select class="form-control land" name="select1" required></select>
+              <select class="form-control land_sch" name="select1" required></select>
               <input type="text" class="form-control mb-1 mt-1" name="description" id="description" placeholder="Description" required>
 						<input type="text" class="form-control mb-1" name="property_no" id="property_no" placeholder="Property No." required>
 						<input type="text" class="form-control mb-1" name="land_area" id="land_area" placeholder="Land Area" required>

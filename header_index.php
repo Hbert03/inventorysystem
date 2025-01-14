@@ -87,6 +87,16 @@
         </div>
         <div class="row">
           <div class="col-12 col-md-6">
+            <label for="" class="form-label">Article</label>
+            <input type="text" class="form-control" id="article" >
+          </div>
+          <div class="col-12 col-md-6">
+            <label for="" class="form-label">Type</label>
+            <input type="text" class="form-control" id="type">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 col-md-6">
           <label for="modal-input1" class="form-label">Description</label>
           <input type="text" class="form-control" id="modal-input1">
           </div>
@@ -128,12 +138,28 @@
         </div>
         <div class="row">
           <div class="col-12 col-md-6">
-          <label for="" class="form-label">Accountable Officer</label>
-          <select  class="form-control accountable_edit" id="account_officer"></select>
+            <label for="" class="form-label">Fund Source</label>
+            <input type="text" class="form-control" id="fund" >
+          </div>
+          <div class="col-12 col-md-6">
+            <label for="" class="form-label">Usefull Life</label>
+            <input type="text" class="form-control" id="useful_life">
+          </div>
+        </div>
+        <div class="row">
+        <div class="col-12 col-md-6">
+          <label for="" class="form-label">Date Acquired</label>
+          <input type="date"  class="form-control date_ao" id="date_ao"></input>
           </div>
           <div class="col-12 col-md-6">
           <label for="modal-input10" class="form-label">Remarks</label>
           <input type="text" class="form-control" id="modal-input10">
+          </div>
+        </div>
+        <div class="row">
+        <div class="col-12 col">
+          <label for="" class="form-label">Accountable Officer</label>
+          <select  class="form-control accountable_edit" id="account_officer"></select>
           </div>
         </div>
       </div>
@@ -271,5 +297,37 @@
   </div>
 </div>
 
+
+<div class="modal fade" id="editModallandAo" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">Update Data</h5>
+      </div>
+      <div class="modal-body">
+      <div class="row">
+          <div class="col-12 col-md-6">
+            <label for="asset_id" class="form-label">Asset Type</label>
+            <select class="form-control select2" id="asset_id" ></select>
+          </div>
+        <div class="row">
+          <div class="col-12 col-md-6">
+            <label for="" class="form-label">Description</label>
+            <input type="text" class="form-control" id="description" >
+          </div>
+          <div class="col-12 col-md-6">
+            <label for="" class="form-label">Property</label>
+            <input type="text" class="form-control" id="property_no">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="saveChanges">Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
 
 <script src="plugins/toastr/toastr.min.js"></script>

@@ -20,9 +20,9 @@ session_start();
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 </head>
 <body class="hold-transition login-page" >
->
-	<div class="login-box" >
-	<div class="card" style="margin-top:-4em">
+
+	<div class="login-box" style="width:345px" >
+	<div class="card" style="margin-top:1em; ">
 	<div class="card-header text-center">
     <h5><b>INVENTORY MANAGEMENT SYSTEM</b></h5>
 </div>

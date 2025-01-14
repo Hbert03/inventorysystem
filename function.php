@@ -590,6 +590,38 @@ if (isset($_POST['update_ao'])) {
     $dataid = $_POST['id'];
     $asset1 = $_POST['asset_id'];
     $asset2 = $_POST['asset_subid'];
+    $article = $_POST['article'];
+    $type = $_POST['type'];
+    $value1 = $_POST['description'];
+    $value2 = $_POST['property_no'];
+    $value3 = $_POST['unit_meas'];
+    $value4 = $_POST['unit_val'];
+    $value5 = $_POST['qty_property_card'];
+    $value6 = $_POST['qty_physical_count'];
+    $value7 = $_POST['shortage_qty'];
+    $value8 = $_POST['shortage_value'];
+    $fund_source = $_POST['fund_source'];
+    $useful_life = $_POST['useful_life'];
+    $value9 = $_POST['account_officer'];
+    $value10 = $_POST['remarks'];
+    $date_ao = $_POST['date_ao'];
+    $query = "UPDATE asset
+    SET asset_id = '$asset1', asset_subid = '$asset2', article_id = '$article', asset_type = '$type', description = '$value1', property_no = '$value2', unit_meas = '$value3', 
+    unit_val = '$value4', qty_property_card = '$value5', qty_physical_count = '$value6',
+    shortage_qty = '$value7', shortage_value = '$value8', fund_source = '$fund_source', useful_life = '$useful_life', account_officer = '$value9', remarks = '$value10', date_acquired = '$date_ao' 
+    WHERE id = '$dataid'";
+    if (mysqli_query($fconn, $query)) {
+        echo "Updated Successfully";
+    } else {
+        echo "Failed to update file in the database.";
+    }
+}
+
+
+if (isset($_POST['update_school'])) {
+    $dataid = $_POST['id'];
+    $asset1 = $_POST['asset_id'];
+    $asset2 = $_POST['sub_category'];
     $value1 = $_POST['description'];
     $value2 = $_POST['property_no'];
     $value3 = $_POST['unit_meas'];

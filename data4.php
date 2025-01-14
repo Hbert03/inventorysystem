@@ -180,6 +180,7 @@
     <!-- Include Select2 JavaScript -->
     <script src="plugins/select2/js/select2.min.js"></script>
 <script src="plugins/select2/js/select2.full.min.js"></script>
+<script src="dist/js/xlsx.full.min.js"></script>
 </head>
 <script src="dist/js/adminlte.min.js"></script>
 <script src="script1.js"></script>  

@@ -178,6 +178,7 @@
 <script src="plugins/sweetalert2/sweetalert2.all.min.js"></script>
 <script src="plugins/select2/js/select2.min.js"></script>
 <script src="plugins/select2/js/select2.full.min.js"></script>
+<script src="dist/js/xlsx.full.min.js"></script>
 <!-- AdminLTE App -->
 <script src="dist/js/adminlte.min.js"></script>
 <script src="script1.js"></script>  

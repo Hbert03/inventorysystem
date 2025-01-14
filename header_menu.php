@@ -46,7 +46,7 @@
        </li>
        <li style="margin-right:2em">
       <button  data-toggle="modal" data-target="#addModal" style="background-color:transparent; border:none; color:blue" class="btn btn-primary btn-sm">
-        <span><i class="fa fa-plus"></i></span>New Category
+        <span><i class="fa fa-plus"></i></span>New Asset
       </button>
     </li>
        <li style="margin-right:3em">
@@ -152,26 +152,26 @@
         <h5 class="modal-title" id="editModalLabel">Add Category</h5>
       </div>
       <div class="modal-body">
-      <form id="addcategory" action="" method="POST"  enctype="multipart/form-data">
-        <div class="row">
-          <div class="col-12 col-md-6">
-          <label for="modal-input1" class="form-label">Asset</label>
-          <input type="text" class="form-control" id="modal-input1" required>
-          </div>
-          <div class="col-12 col-md-6">
-          <label for="modal-input2" class="form-label">Sub-Asset</label>
-          <input type="text" class="form-control" id="modal-input2" required>
-          </div>
+      <form id="addcategory" action="" method="POST" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <label for="modal-input1" class="form-label">Asset</label>
+            <select class="form-control selectasset" name="asset" required></select>
         </div>
-       
-      </div>
-      <div class="modal-footer">
+        <div class="col-12 col-md-6">
+            <label for="modal-input2" class="form-label">Sub-Asset</label>
+            <input type="file" class="form-control" name="subasset" required>
+        </div>
+    </div>
+    <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary savecategory">SAVE</button>
-      </div>
-      </form>
+    </div>
+</form>
+
     </div>
   </div>
+</div>
 </div>
 
   

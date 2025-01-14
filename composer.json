@@ -21,5 +21,14 @@
   "license": "MIT",
   "support": {
     "issues": "https://github.com/ColorlibHQ/AdminLTE/issues"
+  },
+  "config": {
+    "platform": {
+      "php": "7.3.11"
+    }
+  },
+  "require": {
+    "php": "^7.3",
+    "phpoffice/phpspreadsheet": "^1.18"
   }
 }

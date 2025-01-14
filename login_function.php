@@ -1,5 +1,14 @@
 <?php
+session_set_cookie_params([
+    'lifetime' => 86400, 
+    'path' => '/',
+    'domain' => 'www1.depedldn.com',
+    'secure' => isset($_SERVER['HTTPS']),
+    'httponly' => true,
+    'samesite' => 'Strict',
+]);
 session_start();
+
 
 if (!defined('DB_PATH')) {
     define('DB_PATH', '../../config/');
@@ -37,13 +46,13 @@ if (!defined('DB_PATH')) {
 
         $_SESSION['personnel'] = $tmp_user_id;
         $_SESSION['school'] = $tmp_user_school;
-        header("Location: invent_home.php");
+        header("Location: invent_home.php?ocache=" . time());
         exit();
         } else {
             $_SESSION['personnel'] = $tmp_user_id;
             $_SESSION['school'] = $tmp_user_school;
             $_SESSION['user_id_sch'] = $tmp_user_id;
-            header("Location: school/invent_school.php");
+            header("Location: school/invent_school.php?ocache=" . time());
    
         exit();
         }
@@ -65,7 +74,7 @@ if (!defined('DB_PATH')) {
             $_SESSION['user_id'] = $aoRow['id']; 
             $_SESSION['account_id'] = $aoRow['id']; 
             $_SESSION['office_id'] = $aoRow['office_id']; 
-            header("Location: invent_index.php");
+            header("Location: invent_index.php?ocache=" . time());
             exit();
         } else {
             $_SESSION['login'] = "Wrong Username and Password!";

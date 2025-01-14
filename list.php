@@ -81,13 +81,14 @@ if (isset($_SESSION['personnel']) || isset($_SESSION['admin']) || isset($_SESSIO
               </h3>
               <h3 class="card-title" id="school_name2" style="color:red">(No Schools Selected)</h3>
               <button class="btn btn-info float-right" id="totalUnitMeas"></button>
+            
               <!-- <button type="button" class="btn btn-primary btn-sm float-right " data-toggle="modal" data-target="#exampleModal">
                     ADD ASSET <i class="fa fa-plus"></i>
                   </button> -->
               </div>
               <!-- /.card-header -->
               <div class="card-body w-100">
-          
+              <select class="form-control w-25 mb-3 sort_ao">Select</select>
                 <table id="show_ao_entry" class="table table-bordered table-striped">
                   <thead>
                     <tr>

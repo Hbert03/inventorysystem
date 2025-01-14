@@ -3757,37 +3757,39 @@ $('#showTable_others').on('click', '.update-btn', function() {
         });
     });
 });
-// $("select.asset1").select2({
-//     theme: "bootstrap4",
-//     placeholder: "Select Category",
-//     ajax: {
-//         url: 'fetch1.php',
-//         dataType: 'json',
-//         type: 'POST',
-//         delay: 250,
-//         data: function(params) {
-//             return {
-//                 term: params.term,
-//                 fetch1: true,
-//             };
-//         },
-//         processResults: function(returnedData) {
-//             var mappedData = $.map(returnedData.data, function(fetch) {
-//                 return {
-//                     id: fetch.id,
-//                     text: fetch.category
-//                 };
-//             });
-//             return {
-//                 results: mappedData
-//             };
-//         },
-//         cache: true
-//     },
-//     minimumInputLength: 0,
-//     templateResult: formatCategory,
-//     templateSelection: formatCategorySelection
-// });
+
+
+$("select.selectasset").select2({
+    theme: "bootstrap4",
+    placeholder: "Select Category",
+    ajax: {
+        url: 'fetch1.php',
+        dataType: 'json',
+        type: 'POST',
+        delay: 250,
+        data: function(params) {
+            return {
+                term: params.term,
+                asset1: true,
+            };
+        },
+        processResults: function(returnedData) {
+            var mappedData = $.map(returnedData.data, function(fetch) {
+                return {
+                    id: fetch.id,
+                    text: fetch.category
+                };
+            });
+            return {
+                results: mappedData
+            };
+        },
+        cache: true
+    },
+    minimumInputLength: 0,
+    templateResult: formatCategory,
+    templateSelection: formatCategorySelection
+});
 
 // function formatCategory(category) {
 //     if (!category.id) {
@@ -4010,6 +4012,41 @@ function formatCategorySelection(category) {
     return category.text;
 }
 //
+
+
+$("select.land_sch").select2({
+    theme:"bootstrap4",
+    placeholder: "Asset Type",
+    ajax: {
+        url: '../fetch1.php',
+        dataType: 'json',
+        type: 'POST',
+        delay: 250,
+        data: function(params) {
+            return {
+                term: params.term,
+                land: true,
+            };
+        },
+        processResults: function(returnedData) {
+            var mappedData = $.map(returnedData.data, function(fetch) {
+                return {
+                    id: fetch.id,
+                    text: fetch.category
+                };
+            });
+            return {
+                results: mappedData
+            };
+        },
+        cache: true
+    },
+    minimumInputLength: 0,
+    templateResult: formatCategory,
+    templateSelection: formatCategorySelection
+});
+
+
 $("select.land").select2({
     theme:"bootstrap4",
     placeholder: "Asset Type",
@@ -4683,33 +4720,41 @@ $(document).ready(function() {
 
 
 
-$(document).ready(function() {
-    $("button.savecategory").on("click", function(event) {
+$(document).ready(function () {
+    $("button.savecategory").on("click", function (event) {
         event.preventDefault();
-        var requiredFilled = true;
-        $("#addcategory input").each(function() {
-            if ($(this).prop("required")) {
-                if ($(this).is('select') && $(this).val() === null) {
-                    requiredFilled = false;
-                    $(this).addClass("is-invalid");
-                } else if ($(this).val() === "") {
-                    requiredFilled = false;
-                    $(this).addClass("is-invalid");
-                } else {
-                    $(this).removeClass("is-invalid");
-                }
-            }
-        });
-  
-        if (requiredFilled) {
+
+        let fileInput = document.querySelector("#addcategory input[type='file']");
+        if (fileInput.files.length === 0) {
+            Swal.fire({
+                icon: "error",
+                title: "Error!",
+                text: "Please select a file to upload."
+            });
+            return;
+        }
+
+        let file = fileInput.files[0];
+        let reader = new FileReader();
+
+        reader.onload = function (e) {
+            let data = new Uint8Array(e.target.result);
+            let workbook = XLSX.read(data, { type: 'array' });
+            let sheetName = workbook.SheetNames[0];
+            let worksheet = workbook.Sheets[sheetName];
+            let rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+     
+            let asset = $("select.selectasset").val();
+            let payload = { asset: asset, rows: rows };
             $.ajax({
-                url: "../save_function.php",
+                url: "save_cat.php",
                 type: "POST",
-                data: $("#addcategory").serialize() + "&save_category=true",
+                data: JSON.stringify(payload),
                 success: function(response) {
                     try {
-                        response = JSON.parse(response);
-                        if (response.success = 1) {
+                        response = typeof response === "string" ? JSON.parse(response) : response;
+                        if (response.success === 1){
                             Swal.fire({
                                 icon: "success",
                                 title: "Asset Successfully Saved!",
@@ -4726,16 +4771,27 @@ $(document).ready(function() {
                         }
                     } catch (e) {
                         Swal.fire({
-                            title: "Error!",
-                            text: "Failed to parse JSON response: " + e,
-                            icon: "error"
+                            icon: "error",
+                            title: "Error! " + e,
+                            showConfirmButton: true
                         });
                     }
                 },
             });
-        }
+        };
+
+        reader.onerror = function () {
+            Swal.fire({
+                icon: "error",
+                title: "Error!",
+                text: "Failed to read the file. Please try again."
+            });
+        };
+
+        reader.readAsArrayBuffer(file);
     });
 });
+
 
 
 $(document).ready(function() {
@@ -5213,7 +5269,7 @@ $("select.select_account_school").select2({
             var mappedData = $.map(returned.result, function(fetch) {
                 return {
                     id: fetch.hris_code,
-                    text: fetch.employee
+                    text: fetch.employee + ' - (' + fetch.office_name + ')'
                 };
             });
             return {
@@ -5281,7 +5337,7 @@ $("select.edit_personnel_school").select2({
             var mappedData = $.map(returnedData.result, function(fetch) {
                 return {
                     id: fetch.hris_code, 
-                    text: fetch.employee 
+                    text: fetch.employee + ' - (' + fetch.office_name + ')'
                 };
             });
        
@@ -5702,15 +5758,16 @@ $(document).ready(function() {
                     url: 'getdata.php',
                     type: 'POST',
                     data: {
-                        getdata_ao: true,
+                        getdata_ao_land: true,
                         id: id
                     },
                      success: function(response) {
                             if (response.trim() !== "") {
                                 var data = JSON.parse(response);
-    
-                                $('#modal-input1').val(data[0].description);
-                                $('#modal-input2').val(data[0].property_no);
+                                var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
+                                $("#asset_id").append(assetOption).trigger("change");
+                                $('#description').val(data[0].description);
+                                $('#property_no').val(data[0].property_no);
                                 $('#modal-input3').val(data[0].unit_meas);
                                 $('#modal-input4').val(data[0].unit_val);
                                 $('#modal-input5').val(data[0].qty_property_card);
@@ -5721,7 +5778,7 @@ $(document).ready(function() {
                                 $('#modal-input10').val(data[0].remarks);
                 
                                
-                                $('#editModalAo').modal('show');
+                                $('#editModallandAo').modal('show');
                                
                                 $('#saveChanges').off('click').on('click', function() {
                                     $.ajax({
@@ -5730,6 +5787,7 @@ $(document).ready(function() {
                                         data: {
                                             update_ao: true,
                                             id: id,
+                                       
                                             description: $('#modal-input1').val(),
                                             property_no: $('#modal-input2').val(),
                                             unit_meas: $('#modal-input3').val(),
@@ -5809,7 +5867,42 @@ $(document).ready(function() {
             });
 
 
-
+         
+            $(document).ready(function() {
+                $("select.sort_ao").select2({
+                    placeholder: "Sort by:",
+                    theme:"bootstrap4",
+                    
+                    ajax: {
+                        url: 'fetch1.php',
+                        dataType: 'json',
+                        type: 'POST',
+                        delay: 250,
+                        data: function(params) {
+                            return {
+                                term: params.term,
+                                category: true,
+                            };
+                        },
+                        processResults: function(returnedData) {
+                            var mappedData = $.map(returnedData.data, function(fetch) {
+                                return {
+                                    id: fetch.id,
+                                    text: fetch.sub_category
+                                };
+                            });
+                            return {
+                                results: mappedData
+                            };
+                        },
+                        cache: true
+                    },
+                    minimumInputLength: 0,
+                    templateResult: formatCategory,
+                    templateSelection: formatCategorySelection
+                });
+                });
+                
           $(document).ready(function() {
             var table = $('#show_ao_entry').DataTable({
                 dropdownParent: $("#editModalAo"),
@@ -5855,6 +5948,7 @@ $(document).ready(function() {
                     data: function (d) {
                         d.ao_user_data = true;
                         d.selectedOfficeId = $("select.schools").val(); 
+                        d.sortby = $("select.sort_ao").val(); 
                     },
                     error: function(thrown) {
                         console.log("Ajax request failed: " + thrown);
@@ -5908,11 +6002,12 @@ $(document).ready(function() {
                 },
             });
 
-            $("select.schools").on('change', function () {
+            $("select.schools, select.sort_ao").on('change', function () {
                 var selectedCategoryId = $('select.selectedCategoryId').val();
+                var sortby = $('select.sort_ao').val();
         
               
-                table.ajax.url('getdata.php?ao_user_data=true&selectedOfficeId=' + selectedCategoryId).load();
+                table.ajax.url('getdata.php?ao_user_data=true&selectedOfficeId=' + selectedCategoryId +  'sortby' + sortby).load();
             });
         
         
@@ -5934,6 +6029,8 @@ $(document).ready(function() {
                         
                             var subOption = new Option(data[0].sub_category, data[0].id, true, true);
                             $("#sub_id").append(subOption).trigger("change");
+                            $('#article').val(data[0].article_id);
+                            $('#type').val(data[0].asset_type);
                             $('#modal-input1').val(data[0].description);
                             $('#modal-input2').val(data[0].property_no);
                             $('#modal-input3').val(data[0].unit_meas);
@@ -5942,9 +6039,12 @@ $(document).ready(function() {
                             $('#modal-input6').val(data[0].qty_physical_count);
                             $('#modal-input7').val(data[0].shortage_qty);
                             $('#modal-input8').val(data[0].shortage_value);
+                            $('#fund').val(data[0].fund_source);
+                            $('#useful_life').val(data[0].useful_life);
                             var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
                             $('select.accountable_edit').append(officerOption).trigger('change');
                             $('#modal-input10').val(data[0].remarks);
+                            $('#date_ao').val(data[0].date_acquired);
             
                            
                             $('#editModalAo').modal('show');
@@ -5958,7 +6058,9 @@ $(document).ready(function() {
                                         id: id,
                                         asset_id: $("#asset_id").val(), 
                                         asset_subid: $("#sub_id").val(), 
-                                        sub_id: $("#sub_id").val(),
+                                        // sub_id: $("#sub_id").val(),
+                                        article: $('#article').val(),
+                                        type: $('#type').val(),
                                         description: $('#modal-input1').val(),
                                         property_no: $('#modal-input2').val(),
                                         unit_meas: $('#modal-input3').val(),
@@ -5967,8 +6069,11 @@ $(document).ready(function() {
                                         qty_physical_count: $('#modal-input6').val(),
                                         shortage_qty: $('#modal-input7').val(),
                                         shortage_value: $('#modal-input8').val(),
+                                        fund_source: $('#fund').val(),
+                                        useful_life: $('#useful_life').val(),
                                         account_officer: $('select.accountable_edit').val(),
                                         remarks: $('#modal-input10').val(),
+                                        date_ao: $('#date_ao').val(),
                                     },
                                     success: function(response) {
                                         if (response.trim() === "Updated Successfully") {
@@ -5982,7 +6087,7 @@ $(document).ready(function() {
                                         } else {
                                             Swal.fire(
                                                 'Failed!',
-                                                'Select Accountable Officer First! Failed to update file.',
+                                                'Failed to update file.',
                                                 'error'
                                             );
                                         }
@@ -6112,6 +6217,7 @@ $(document).ready(function() {
             $("#sub_id").select2({
               placeholder: "Select Sub Asset",
               theme: "bootstrap4",
+              dropdownParent: $("#editModalAo"),
               ajax: {
                 url: 'fetch1.php',
                 dataType: 'json',
@@ -6820,6 +6926,7 @@ $(document).ready(function() {
         responsive: true,
         lengthChange: false,
         autoWidth: true,
+        dropdownParent: $("#editModalschool"),
         dom: 'lBfrtip',
         buttons: [
         "copy",
@@ -6922,9 +7029,9 @@ $('#school_building').on('click', '.update-btn', function() {
             
              
                 var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
-                $("#asset").append(assetOption).trigger("change");
+                $("#assetsch").append(assetOption).trigger("change");
                 var subOption = new Option(data[0].sub_category, data[0].id, true, true);
-                $("#subasset").append(subOption).trigger("change");
+                $("#subassetsch").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -6938,15 +7045,17 @@ $('#school_building').on('click', '.update-btn', function() {
                 $('#modal-input10').val(data[0].remarks);
 
                
-                $('#editModal').modal('show');
+                $('#editModalschool').modal('show');
 
                 $('#saveChanges').off('click').on('click', function() {
                     $.ajax({
                         url: '../function.php',
                         type: 'POST',
                         data: {
-                            updatebuild2: true,
+                            update_school: true,
                             id: id,
+                            asset_id: $("#assetsch").val(),
+                            sub_category: $("#subassetsch").val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -6960,7 +7069,7 @@ $('#school_building').on('click', '.update-btn', function() {
                         },
                         success: function(response) {
                             if (response.trim() === "Updated Successfully") {
-                                $('#editModal').modal('hide');
+                                $('#editModalschool').modal('hide');
                                 Swal.fire(
                                     'Updated!',
                                     'File has been updated successfully.',
@@ -7032,6 +7141,7 @@ $(document).ready(function() {
         responsive: true,
         lengthChange: false,
         autoWidth: true,
+        dropdownParent: $("#editModalschool"),
         dom: 'lBfrtip',
         buttons: [
         "copy",
@@ -7132,10 +7242,11 @@ $('#office_building').on('click', '.update-btn', function() {
                 var data = JSON.parse(response);
                 
                
+            
                 var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
-                $("#asset").append(assetOption).trigger("change");
+                $("#assetsch").append(assetOption).trigger("change");
                 var subOption = new Option(data[0].sub_category, data[0].id, true, true);
-                $("#subasset").append(subOption).trigger("change");
+                $("#subassetsch").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -7149,15 +7260,17 @@ $('#office_building').on('click', '.update-btn', function() {
                 $('#modal-input10').val(data[0].remarks);
 
                
-                $('#editModal').modal('show');
+                $('#editModalschool').modal('show');
 
                 $('#saveChanges').off('click').on('click', function() {
                     $.ajax({
                         url: '../function.php',
                         type: 'POST',
                         data: {
-                            updatebuild2: true,
+                            update_school: true,
                             id: id,
+                            asset_id: $("#assetsch").val(),
+                            sub_category: $("#subassetsch").val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -7171,7 +7284,7 @@ $('#office_building').on('click', '.update-btn', function() {
                         },
                         success: function(response) {
                             if (response.trim() === "Updated Successfully") {
-                                $('#editModal').modal('hide');
+                                $('#editModalschool').modal('hide');
                                 Swal.fire(
                                     'Updated!',
                                     'File has been updated successfully.',
@@ -7244,6 +7357,7 @@ $(document).ready(function() {
         responsive: true,
         lengthChange: false,
         autoWidth: true,
+        dropdownParent: $("#editModalschool"),
         dom: 'lBfrtip',
         buttons: [
         "copy",
@@ -7344,10 +7458,11 @@ $('#others_structure').on('click', '.update-btn', function() {
                 var data = JSON.parse(response);
                 
               
+             
                 var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
-                $("#asset").append(assetOption).trigger("change");
+                $("#assetsch").append(assetOption).trigger("change");
                 var subOption = new Option(data[0].sub_category, data[0].id, true, true);
-                $("#subasset").append(subOption).trigger("change");
+                $("#subassetsch").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -7359,16 +7474,19 @@ $('#others_structure').on('click', '.update-btn', function() {
                 var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
                 $('select.edit_personnel_school').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
+
                
-                $('#editModal').modal('show');
+                $('#editModalschool').modal('show');
 
                 $('#saveChanges').off('click').on('click', function() {
                     $.ajax({
                         url: '../function.php',
                         type: 'POST',
                         data: {
-                            updatebuild2: true,
+                            update_school: true,
                             id: id,
+                            asset_id: $("#assetsch").val(),
+                            sub_category: $("#subassetsch").val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -7382,7 +7500,7 @@ $('#others_structure').on('click', '.update-btn', function() {
                         },
                         success: function(response) {
                             if (response.trim() === "Updated Successfully") {
-                                $('#editModal').modal('hide');
+                                $('#editModalschool').modal('hide');
                                 Swal.fire(
                                     'Updated!',
                                     'File has been updated successfully.',
@@ -7456,6 +7574,7 @@ $(document).ready(function() {
         responsive: true,
         lengthChange: false,
         autoWidth: true,
+        dropdownParent: $("#editModalschool"),
         dom: 'lBfrtip',
         buttons: [
         "copy",
@@ -7555,10 +7674,11 @@ $('#historical_building').on('click', '.update-btn', function() {
             if (response.trim() !== "") {
                 var data = JSON.parse(response);
                 
+             
                 var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
-                $("#asset").append(assetOption).trigger("change");
+                $("#assetsch").append(assetOption).trigger("change");
                 var subOption = new Option(data[0].sub_category, data[0].id, true, true);
-                $("#subasset").append(subOption).trigger("change");
+                $("#subassetsch").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -7572,15 +7692,17 @@ $('#historical_building').on('click', '.update-btn', function() {
                 $('#modal-input10').val(data[0].remarks);
 
                
-                $('#editModal').modal('show');
+                $('#editModalschool').modal('show');
 
                 $('#saveChanges').off('click').on('click', function() {
                     $.ajax({
                         url: '../function.php',
                         type: 'POST',
                         data: {
-                            updatebuild2: true,
+                            update_school: true,
                             id: id,
+                            asset_id: $("#assetsch").val(),
+                            sub_category: $("#subassetsch").val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -7594,7 +7716,7 @@ $('#historical_building').on('click', '.update-btn', function() {
                         },
                         success: function(response) {
                             if (response.trim() === "Updated Successfully") {
-                                $('#editModal').modal('hide');
+                                $('#editModalschool').modal('hide');
                                 Swal.fire(
                                     'Updated!',
                                     'File has been updated successfully.',
@@ -7667,6 +7789,7 @@ $(document).ready(function() {
         responsive: true,
         lengthChange: false,
         autoWidth: true,
+        dropdownParent: $("#editModalschool"),
         dom: 'lBfrtip',
         buttons: [
         "copy",
@@ -7767,10 +7890,11 @@ $('#agricultural_equipment').on('click', '.update-btn', function() {
                 var data = JSON.parse(response);
                 
                
+             
                 var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
-                $("#asset").append(assetOption).trigger("change");
+                $("#assetsch").append(assetOption).trigger("change");
                 var subOption = new Option(data[0].sub_category, data[0].id, true, true);
-                $("#subasset").append(subOption).trigger("change");
+                $("#subassetsch").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -7782,16 +7906,19 @@ $('#agricultural_equipment').on('click', '.update-btn', function() {
                 var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
                 $('select.edit_personnel_school').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
+
                
-                $('#editModal').modal('show');
+                $('#editModalschool').modal('show');
 
                 $('#saveChanges').off('click').on('click', function() {
                     $.ajax({
                         url: '../function.php',
                         type: 'POST',
                         data: {
-                            updatebuild2: true,
+                            update_school: true,
                             id: id,
+                            asset_id: $("#assetsch").val(),
+                            sub_category: $("#subassetsch").val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -7805,7 +7932,7 @@ $('#agricultural_equipment').on('click', '.update-btn', function() {
                         },
                         success: function(response) {
                             if (response.trim() === "Updated Successfully") {
-                                $('#editModal').modal('hide');
+                                $('#editModalschool').modal('hide');
                                 Swal.fire(
                                     'Updated!',
                                     'File has been updated successfully.',
@@ -7879,6 +8006,7 @@ $(document).ready(function() {
         responsive: true,
         lengthChange: false,
         autoWidth: true,
+        dropdownParent: $("#editModalschool"),
         dom: 'lBfrtip',
         buttons: [
         "copy",
@@ -7979,10 +8107,11 @@ $('#ict_equipment').on('click', '.update-btn', function() {
                 var data = JSON.parse(response);
                 
              
+               
                 var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
-                $("#asset").append(assetOption).trigger("change");
+                $("#assetsch").append(assetOption).trigger("change");
                 var subOption = new Option(data[0].sub_category, data[0].id, true, true);
-                $("#subasset").append(subOption).trigger("change");
+                $("#subassetsch").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -7996,15 +8125,17 @@ $('#ict_equipment').on('click', '.update-btn', function() {
                 $('#modal-input10').val(data[0].remarks);
 
                
-                $('#editModal').modal('show');
+                $('#editModalschool').modal('show');
 
                 $('#saveChanges').off('click').on('click', function() {
                     $.ajax({
                         url: '../function.php',
                         type: 'POST',
                         data: {
-                            updatebuild2: true,
+                            update_school: true,
                             id: id,
+                            asset_id: $("#assetsch").val(),
+                            sub_category: $("#subassetsch").val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -8018,7 +8149,7 @@ $('#ict_equipment').on('click', '.update-btn', function() {
                         },
                         success: function(response) {
                             if (response.trim() === "Updated Successfully") {
-                                $('#editModal').modal('hide');
+                                $('#editModalschool').modal('hide');
                                 Swal.fire(
                                     'Updated!',
                                     'File has been updated successfully.',
@@ -8092,6 +8223,7 @@ $(document).ready(function() {
         responsive: true,
         lengthChange: false,
         autoWidth: true,
+        dropdownParent: $("#editModalschool"),
         dom: 'lBfrtip',
         buttons: [
         "copy",
@@ -8192,10 +8324,11 @@ $('#machinery').on('click', '.update-btn', function() {
                 var data = JSON.parse(response);
                 
               
+              
                 var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
-                $("#asset").append(assetOption).trigger("change");
+                $("#assetsch").append(assetOption).trigger("change");
                 var subOption = new Option(data[0].sub_category, data[0].id, true, true);
-                $("#subasset").append(subOption).trigger("change");
+                $("#subassetsch").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -8207,16 +8340,19 @@ $('#machinery').on('click', '.update-btn', function() {
                 var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
                 $('select.edit_personnel_school').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
+
                
-                $('#editModal').modal('show');
+                $('#editModalschool').modal('show');
 
                 $('#saveChanges').off('click').on('click', function() {
                     $.ajax({
                         url: '../function.php',
                         type: 'POST',
                         data: {
-                            updatebuild2: true,
+                            update_school: true,
                             id: id,
+                            asset_id: $("#assetsch").val(),
+                            sub_category: $("#subassetsch").val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -8230,7 +8366,7 @@ $('#machinery').on('click', '.update-btn', function() {
                         },
                         success: function(response) {
                             if (response.trim() === "Updated Successfully") {
-                                $('#editModal').modal('hide');
+                                $('#editModalschool').modal('hide');
                                 Swal.fire(
                                     'Updated!',
                                     'File has been updated successfully.',
@@ -8302,6 +8438,7 @@ $(document).ready(function() {
         responsive: true,
         lengthChange: false,
         autoWidth: true,
+        dropdownParent: $("#editModalschool"),
         dom: 'lBfrtip',
         buttons: [
         "copy",
@@ -8402,10 +8539,11 @@ $('#office_equipment').on('click', '.update-btn', function() {
                 var data = JSON.parse(response);
                 
               
+              
                 var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
-                $("#asset").append(assetOption).trigger("change");
+                $("#assetsch").append(assetOption).trigger("change");
                 var subOption = new Option(data[0].sub_category, data[0].id, true, true);
-                $("#subasset").append(subOption).trigger("change");
+                $("#subassetsch").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -8419,15 +8557,17 @@ $('#office_equipment').on('click', '.update-btn', function() {
                 $('#modal-input10').val(data[0].remarks);
 
                
-                $('#editModal').modal('show');
+                $('#editModalschool').modal('show');
 
                 $('#saveChanges').off('click').on('click', function() {
                     $.ajax({
                         url: '../function.php',
                         type: 'POST',
                         data: {
-                            updatebuild2: true,
+                            update_school: true,
                             id: id,
+                            asset_id: $("#assetsch").val(),
+                            sub_category: $("#subassetsch").val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -8441,7 +8581,7 @@ $('#office_equipment').on('click', '.update-btn', function() {
                         },
                         success: function(response) {
                             if (response.trim() === "Updated Successfully") {
-                                $('#editModal').modal('hide');
+                                $('#editModalschool').modal('hide');
                                 Swal.fire(
                                     'Updated!',
                                     'File has been updated successfully.',
@@ -8514,6 +8654,7 @@ $(document).ready(function() {
         responsive: true,
         lengthChange: false,
         autoWidth: true,
+        dropdownParent: $("#editModalschool"),
         dom: 'lBfrtip',
         buttons: [
         "copy",
@@ -8614,10 +8755,11 @@ $('#sports_equipment').on('click', '.update-btn', function() {
                 var data = JSON.parse(response);
                 
               
+              
                 var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
-                $("#asset").append(assetOption).trigger("change");
+                $("#assetsch").append(assetOption).trigger("change");
                 var subOption = new Option(data[0].sub_category, data[0].id, true, true);
-                $("#subasset").append(subOption).trigger("change");
+                $("#subassetsch").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -8631,15 +8773,17 @@ $('#sports_equipment').on('click', '.update-btn', function() {
                 $('#modal-input10').val(data[0].remarks);
 
                
-                $('#editModal').modal('show');
+                $('#editModalschool').modal('show');
 
                 $('#saveChanges').off('click').on('click', function() {
                     $.ajax({
                         url: '../function.php',
                         type: 'POST',
                         data: {
-                            updatebuild2: true,
+                            update_school: true,
                             id: id,
+                            asset_id: $("#assetsch").val(),
+                            sub_category: $("#subassetsch").val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -8653,7 +8797,7 @@ $('#sports_equipment').on('click', '.update-btn', function() {
                         },
                         success: function(response) {
                             if (response.trim() === "Updated Successfully") {
-                                $('#editModal').modal('hide');
+                                $('#editModalschool').modal('hide');
                                 Swal.fire(
                                     'Updated!',
                                     'File has been updated successfully.',
@@ -8726,6 +8870,7 @@ $(document).ready(function() {
         responsive: true,
         lengthChange: false,
         autoWidth: true,
+        dropdownParent: $("#editModalschool"),
         dom: 'lBfrtip',
         buttons: [
         "copy",
@@ -8826,10 +8971,11 @@ $('#technical_equipment').on('click', '.update-btn', function() {
                 var data = JSON.parse(response);
                 
               
+             
                 var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
-                $("#asset").append(assetOption).trigger("change");
+                $("#assetsch").append(assetOption).trigger("change");
                 var subOption = new Option(data[0].sub_category, data[0].id, true, true);
-                $("#subasset").append(subOption).trigger("change");
+                $("#subassetsch").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -8843,15 +8989,17 @@ $('#technical_equipment').on('click', '.update-btn', function() {
                 $('#modal-input10').val(data[0].remarks);
 
                
-                $('#editModal').modal('show');
+                $('#editModalschool').modal('show');
 
                 $('#saveChanges').off('click').on('click', function() {
                     $.ajax({
                         url: '../function.php',
                         type: 'POST',
                         data: {
-                            updatebuild2: true,
+                            update_school: true,
                             id: id,
+                            asset_id: $("#assetsch").val(),
+                            sub_category: $("#subassetsch").val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -8865,7 +9013,7 @@ $('#technical_equipment').on('click', '.update-btn', function() {
                         },
                         success: function(response) {
                             if (response.trim() === "Updated Successfully") {
-                                $('#editModal').modal('hide');
+                                $('#editModalschool').modal('hide');
                                 Swal.fire(
                                     'Updated!',
                                     'File has been updated successfully.',
@@ -8938,6 +9086,7 @@ $(document).ready(function() {
         responsive: true,
         lengthChange: false,
         autoWidth: true,
+        dropdownParent: $("#editModalschool"),
         dom: 'lBfrtip',
         buttons: [
         "copy",
@@ -9038,10 +9187,11 @@ $('#transportation').on('click', '.update-btn', function() {
                 var data = JSON.parse(response);
                 
               
+              
                 var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
-                $("#asset").append(assetOption).trigger("change");
+                $("#assetsch").append(assetOption).trigger("change");
                 var subOption = new Option(data[0].sub_category, data[0].id, true, true);
-                $("#subasset").append(subOption).trigger("change");
+                $("#subassetsch").append(subOption).trigger("change");
                 $('#modal-input1').val(data[0].description);
                 $('#modal-input2').val(data[0].property_no);
                 $('#modal-input3').val(data[0].unit_meas);
@@ -9055,15 +9205,17 @@ $('#transportation').on('click', '.update-btn', function() {
                 $('#modal-input10').val(data[0].remarks);
 
                
-                $('#editModal').modal('show');
+                $('#editModalschool').modal('show');
 
                 $('#saveChanges').off('click').on('click', function() {
                     $.ajax({
                         url: '../function.php',
                         type: 'POST',
                         data: {
-                            updatebuild2: true,
+                            update_school: true,
                             id: id,
+                            asset_id: $("#assetsch").val(),
+                            sub_category: $("#subassetsch").val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -9077,7 +9229,7 @@ $('#transportation').on('click', '.update-btn', function() {
                         },
                         success: function(response) {
                             if (response.trim() === "Updated Successfully") {
-                                $('#editModal').modal('hide');
+                                $('#editModalschool').modal('hide');
                                 Swal.fire(
                                     'Updated!',
                                     'File has been updated successfully.',
@@ -9151,6 +9303,7 @@ $(document).ready(function() {
         responsive: true,
         lengthChange: false,
         autoWidth: true,
+        dropdownParent: $("#editModalschool"),
         dom: 'lBfrtip',
         buttons: [
         "copy",
@@ -9250,7 +9403,7 @@ $('#Book').on('click', '.update-btn', function() {
             if (response.trim() !== "") {
                 var data = JSON.parse(response);
                 
-              
+             
                 var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
                 $("#assetsch").append(assetOption).trigger("change");
                 var subOption = new Option(data[0].sub_category, data[0].id, true, true);
@@ -9266,16 +9419,19 @@ $('#Book').on('click', '.update-btn', function() {
                 var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
                 $('select.edit_personnel_school').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
+
                
-                $('#editModal').modal('show');
+                $('#editModalschool').modal('show');
 
                 $('#saveChanges').off('click').on('click', function() {
                     $.ajax({
                         url: '../function.php',
                         type: 'POST',
                         data: {
-                            updatebuild2: true,
+                            update_school: true,
                             id: id,
+                            asset_id: $("#assetsch").val(),
+                            sub_category: $("#subassetsch").val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -9289,7 +9445,7 @@ $('#Book').on('click', '.update-btn', function() {
                         },
                         success: function(response) {
                             if (response.trim() === "Updated Successfully") {
-                                $('#editModal').modal('hide');
+                                $('#editModalschool').modal('hide');
                                 Swal.fire(
                                     'Updated!',
                                     'File has been updated successfully.',
@@ -9363,6 +9519,7 @@ $(document).ready(function() {
         responsive: true,
         lengthChange: false,
         autoWidth: true,
+        dropdownParent: $("#editModalschool"),
         dom: 'lBfrtip',
         buttons: [
         "copy",
@@ -9462,6 +9619,7 @@ $('#furniture').on('click', '.update-btn', function() {
             if (response.trim() !== "") {
                 var data = JSON.parse(response);
                 
+            
                 var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
                 $("#assetsch").append(assetOption).trigger("change");
                 var subOption = new Option(data[0].sub_category, data[0].id, true, true);
@@ -9479,15 +9637,17 @@ $('#furniture').on('click', '.update-btn', function() {
                 $('#modal-input10').val(data[0].remarks);
 
                
-                $('#editModal').modal('show');
+                $('#editModalschool').modal('show');
 
                 $('#saveChanges').off('click').on('click', function() {
                     $.ajax({
                         url: '../function.php',
                         type: 'POST',
                         data: {
-                            updatebuild2: true,
+                            update_school: true,
                             id: id,
+                            asset_id: $("#assetsch").val(),
+                            sub_category: $("#subassetsch").val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -9501,7 +9661,7 @@ $('#furniture').on('click', '.update-btn', function() {
                         },
                         success: function(response) {
                             if (response.trim() === "Updated Successfully") {
-                                $('#editModal').modal('hide');
+                                $('#editModalschool').modal('hide');
                                 Swal.fire(
                                     'Updated!',
                                     'File has been updated successfully.',
@@ -9573,6 +9733,7 @@ $(document).ready(function() {
         responsive: true,
         lengthChange: false,
         autoWidth: true,
+        dropdownParent: $("#editModalschool"),
         dom: 'lBfrtip',
         buttons: [
         "copy",
@@ -9673,6 +9834,7 @@ $('#others').on('click', '.update-btn', function() {
                 var data = JSON.parse(response);
                 
               
+              
                 var assetOption = new Option(data[0].category, data[0].asset_id, true, true);
                 $("#assetsch").append(assetOption).trigger("change");
                 var subOption = new Option(data[0].sub_category, data[0].id, true, true);
@@ -9688,16 +9850,19 @@ $('#others').on('click', '.update-btn', function() {
                 var officerOption = new Option(data[0].fullname, data[0].hris_code, true, true);
                 $('select.edit_personnel_school').append(officerOption).trigger('change');
                 $('#modal-input10').val(data[0].remarks);
+
                
-                $('#editModal').modal('show');
+                $('#editModalschool').modal('show');
 
                 $('#saveChanges').off('click').on('click', function() {
                     $.ajax({
                         url: '../function.php',
                         type: 'POST',
                         data: {
-                            updatebuild2: true,
+                            update_school: true,
                             id: id,
+                            asset_id: $("#assetsch").val(),
+                            sub_category: $("#subassetsch").val(),
                             description: $('#modal-input1').val(),
                             property_no: $('#modal-input2').val(),
                             unit_meas: $('#modal-input3').val(),
@@ -9711,7 +9876,7 @@ $('#others').on('click', '.update-btn', function() {
                         },
                         success: function(response) {
                             if (response.trim() === "Updated Successfully") {
-                                $('#editModal').modal('hide');
+                                $('#editModalschool').modal('hide');
                                 Swal.fire(
                                     'Updated!',
                                     'File has been updated successfully.',
@@ -9774,3 +9939,395 @@ $('#others').on('click', '.update-btn', function() {
         });
     });
 });
+
+
+
+$(document).ready(function() {
+    $("select.category_school").select2({
+        placeholder: "Sort by:",
+        theme:"bootstrap4",
+        
+        ajax: {
+            url: '../fetch1.php',
+            dataType: 'json',
+            type: 'POST',
+            delay: 250,
+            data: function(params) {
+                return {
+                    term: params.term,
+                    category: true,
+                };
+            },
+            processResults: function(returnedData) {
+                var mappedData = $.map(returnedData.data, function(fetch) {
+                    return {
+                        id: fetch.id,
+                        text: fetch.sub_category
+                    };
+                });
+                return {
+                    results: mappedData
+                };
+            },
+            cache: true
+        },
+        minimumInputLength: 0,
+        templateResult: formatCategory,
+        templateSelection: formatCategorySelection
+    });
+    
+    function formatCategory(category) {
+        if (!category.id) {
+            return category.text;
+        }
+        var $category = $(
+            '<span>' + category.text + '</span>'
+        );
+        return $category;
+    }
+    
+    function formatCategorySelection(category) {
+        return category.text;
+    }
+    $(".select2-container").css("margin-bottom", "10px");
+    var table = $('#rpcsp_school').DataTable({
+        serverSide: true,
+        responsive: true,
+        lengthChange: true,
+        autoWidth: true,
+        dom: 'lBfrtip',
+        buttons: [
+            "copy", 
+            "csv", 
+            "excel", 
+            {
+                extend: 'print',
+                customize: function(win) {
+                    var sub_category = $('select.category_school').find(':selected').text();
+                    $(win.document.body).css('font-size', '10pt');
+                    var formattedTotal = new Intl.NumberFormat('en-US', {
+                        style: 'currency',
+                        currency: 'PHP',
+                        minimumFractionDigits: 2
+                    }).format(totalUnitVal);
+                
+                    $(win.document.body).find('table')
+                        .before('<h1 style="text-align:center;">REPORT ON THE PHYSICAL COUNT OF SEMI EXPENDABLE PROPERTY</h1>'+
+                               '<p style="text-align:center;">'+'<b>'+ sub_category +'</b>' + '</p>' +
+                                '<p style="text-align:center; margin-top:-1em">(Type of Inventory Item)</p>'+
+                                '<p style="text-align:center; margin-top:-1em">As at June, 2023</p>'+
+                                '<p><b>Fund Cluster:</b> <span>_________________</span></p>'+
+                                '<p><b>For which _______________________________,_______________________________,_______________________________is accountable, having assumed such accountability on (_____________________)</b></p>');
+                
+                                $(win.document.body).find('table tbody').append(
+                                    '<tr>' +
+                                    '<td colspan="4" style="text-align:right; font-weight:bold;">Total Unit Value:</td>' +
+                                    '<td style="font-weight:bold;">' + formattedTotal + '</td>' +
+                                    '<td colspan="7"></td>' +
+                                    '</tr>'
+                                );
+
+                        $(win.document.body).find('table')
+                        .after('<table style="margin-top:80px; width:100%; text-align:center;">' +
+                            '<tr>' +
+                            '<td style="width:30%;">Certified Corrected by:____________________________<br><span style="font-weight:bold; margin-top:-1em; margin-left:5.5em;"><b>Signature over Printed Name of Inventory <span style="margin-left:5.5em;"> Commitee Chair and Members</b></span></span></td>' +
+                            '<td style="width:30%;">Approved by:_____________________________<br><span style="font-weight:bold; margin-top:-1em; margin-left:5.5em;"><b>Signature over Printed Name of Head of <span style="margin-left:5.5em;">Agency/Entity or Authorized Representative</span></b></span></td>' +
+                            '<td style="width:30%;">Verified by:____________________________<br><span style="font-weight:bold; margin-top:-1em; margin-left:6em; justify-content:center; align-items:center;"><b>Signature over Printed Name of COA <span  style="margin-left:5.5em;">Representative</span></b></span></td>' +
+                            '</tr>' +
+                            '</table>');
+                },
+                orientation: 'landscape',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8,9]
+                }
+            }
+        ],
+        ajax: {
+            url: "../getdata.php",
+            type: "post",
+            data: function(r) {
+                r.rpcsp_school = true;
+                r.category = $('select.category_school').val();
+                r.value_range = $('select.value').val();
+                return r;
+            },
+            error: function(thrown) {
+                console.log("Ajax request failed: " + thrown);
+            }
+        },
+        columns: [  
+            {"data": "article_id"},
+            {
+                "data": null,
+                "render": function(data, type, row) {
+                    return '<div class="row">' + 
+                            '<div class="col">' + row.description + "  " +
+                                '<strong>Model:</strong> ' + row.model +
+                            '</div>' +
+                            '<div class="col">' +
+                                '<strong>SN:</strong> ' + row.asset_sn +
+                            '</div>' +
+                        '</div>';
+                }
+            },
+            {"data": "property_no"},
+            {"data": "unit_meas"},
+            {
+                "data": "unit_val",
+                "render": function(data, type, row) {
+                    var formattedValue = new Intl.NumberFormat('en-US', {
+                        style: 'currency',
+                        currency: 'PHP',
+                        minimumFractionDigits: 2
+                    }).format(data);
+                    
+                    return formattedValue;
+                }
+            }, 
+            {"data": "qty_property_card"},
+            {"data": "qty_physical_count"},
+            {"data": "shortage_qty"},
+            {"data": "shortage_value"},
+            {"data": "remarks"},
+            {"data": "fullname"},
+        ],
+        drawCallback: function () {
+            var api = this.api();
+            
+            totalUnitVal = api.column(4, { page: 'current' }).data().reduce(function (a, b) {
+                return a + parseFloat(b);
+            }, 0);
+        
+            var formattedTotal = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'PHP',
+                minimumFractionDigits: 2
+            }).format(totalUnitVal);
+        
+            $('#totalUnitMeas').html('Total: ' + formattedTotal);
+        },
+        
+        lengthMenu: [[10, 25, 50, 100000000], [10, 25, 50, "All"]] 
+        });
+
+        table.on('length.dt', function (e, settings, len) {
+        console.log('New page length: '+len);
+    });
+
+    $("select.category_school, select.value").on('change', function () {
+        var selectedCategory = $('select.category_school').val();
+        var value_range = $('select.value').val();
+
+        table.ajax.url('../getdata.php?rpcsp_school=true&category=' + selectedCategory + 'value_range=' + value_range).load();
+    });
+    });
+
+
+
+    //rpcppe school
+$(document).ready(function () {
+    var totalUnitVal = 0;
+    var table = $('#rpcppe_school').DataTable({
+        serverSide: true,
+        responsive: true,
+        lengthChange: true,
+        autoWidth: true,
+        dom: 'lBfrtip',
+        buttons: [
+            "copy",
+            "csv",
+            "excel", {
+                extend: 'print',
+                customize: function (win) {
+                    $(win.document.body).css('font-size', '10pt');
+                    var formattedTotal = new Intl.NumberFormat('en-US', {
+                        style: 'currency',
+                        currency: 'PHP',
+                        minimumFractionDigits: 2
+                    }).format(totalUnitVal);
+
+                    $(win.document.body).find('table')
+                        .before('<h1 style="text-align:center;">REPORT ON THE PHYSICAL COUNT OF SEMI EXPENDABLE PROPERTY</h1>' +
+                            '<p style="text-align:center;">___________________________________</p>' +
+                            '<p style="text-align:center; margin-top:-1em">(Type of Property, Plant and Equipment)</p>' +
+                            '<p><b>Fund Cluster:</b> <span>_________________</span></p>' +
+                            '<p><b>For which ________________________,_________________________,_______________________is accountable, having assumed such accountability on (_____________________)</b></p>');
+
+                    $(win.document.body).find('table tbody').append(
+                        '<tr>' +
+                        '<td colspan="4" style="text-align:right; font-weight:bold;">Total Unit Value:</td>' +
+                        '<td style="font-weight:bold;">' + formattedTotal + '</td>' +
+                        '<td colspan="7"></td>' +
+                        '</tr>'
+                    );
+
+                    $(win.document.body).find('table').after(
+                        '<table style="margin-top:80px; width:100%; text-align:center;">' +
+                        '<tr>' +
+                        '<td style="text-align:center;">Certified Corrected by:____________________<br>' +
+                        '<span style="font-weight:bold; font-size:14px;">Signature over Printed Name of Inventory Committee Chair and Members</span></td>' +
+                        '<td style="text-align:center;">Approved by:_____________________________<br>' +
+                        '<span style="font-weight:bold; font-size:14px;">Signature over Printed Name of Head of Agency/Entity or Authorized Representative</span></td>' +
+                        '<td style="text-align:center;">Verified by:_______________________<br>' +
+                        '<span style="font-weight:bold; font-size:14px;">Signature over Printed Name of COA Representative</span></td>' +
+                        '</tr>' +
+                        '</table>'
+                    );
+                },
+                orientation: 'landscape',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10]
+                }
+            }
+        ],
+        ajax: {
+            url: "../getdata.php",
+            type: "POST",
+            data: function (e) {
+                e.rpcppe_school = true;
+                e.category = $('select.category_school').val();
+                return e;
+            },
+            error: function (xhr, status, error) {
+                console.log("Ajax request failed: " + xhr.responseText);
+            }
+        },
+        columns: [
+            { "data": "article_id" },
+            {
+                "data": null,
+                "render": function (data, type, row) {
+                    return '<div class="row">' +
+                        '<div class="col">' + row.description + "  " +
+                        '<strong>Model:</strong> ' + row.model +
+                        '</div>' +
+                        '<div class="col">' +
+                        '<strong>SN:</strong> ' + row.asset_sn +
+                        '</div>' +
+                        '</div>';
+                }
+            },
+            { "data": "property_no" },
+            { "data": "unit_meas" },
+            {
+                "data": "unit_val",
+                "render": function (data, type, row) {
+                    var formattedValue = new Intl.NumberFormat('en-US', {
+                        style: 'currency',
+                        currency: 'PHP',
+                        minimumFractionDigits: 2
+                    }).format(data);
+
+                    return formattedValue;
+                }
+            },
+            { "data": "qty_property_card" },
+            { "data": "qty_physical_count" },
+            { "data": "shortage_qty" },
+            { "data": "shortage_value" },
+            { "data": "date_acquired" },
+            { "data": "remarks" },
+            { "data": "fullname" },
+        ],
+        lengthMenu: [
+            [10, 25, 50, 100000000],
+            [10, 25, 50, 'ALL']
+        ],
+        drawCallback: function () {
+            var api = this.api();
+
+            totalUnitVal = api.column(4, { page: 'current' }).data().reduce(function (a, b) {
+                return a + parseFloat(b);
+            }, 0);
+
+            var formattedTotal = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'PHP',
+                minimumFractionDigits: 2
+            }).format(totalUnitVal);
+
+            $('#totalUnitMeas').html('Total: ' + formattedTotal);
+        }
+    });
+
+   
+    $("select.category_school, select.value").on('change', function () {
+        var selectedCategory = $('select.category_school').val();
+
+      
+        table.ajax.url('../getdata.php?rpcsp=true&category=' + selectedCategory).load();
+    });
+    });
+
+
+    $("#assetsch").select2({
+        theme: "bootstrap4",
+        placeholder: "Asset Type",
+        ajax: {
+            url: '../fetch1.php',
+            dataType: 'json',
+            type: 'POST',
+            delay: 250,
+            data: function(params) {
+                return {
+                    term: params.term,
+                    asset1: true,
+                    category_id: params.term 
+                };
+            },
+            processResults: function(returnedData) {
+                var mappedData = $.map(returnedData.data, function(fetch) {
+                    return {
+                        id: fetch.id,
+                        text: fetch.category
+                    };
+                });
+                return {
+                    results: mappedData
+                };
+            },
+            cache: true
+        },
+        minimumInputLength: 0,
+        templateResult: formatCategory,
+        templateSelection: formatCategorySelection
+    });
+    
+    
+    $("#subassetsch").select2({
+        placeholder: "Sub Asset",
+        theme: "bootstrap4",
+        dropdownParent: $("#editModalschool"),
+        ajax: {
+            url: '../fetch1.php',
+            dataType: 'json',
+            type: 'POST',
+            delay: 250,
+            data: function(params) {
+                var selectedCategoryId = $('#assetsch').val(); 
+                return {
+                    term: params.term,
+                    asset2: true,
+                    category_id: selectedCategoryId 
+                };
+            },
+            processResults: function(returnedData) {
+                var mappedData = $.map(returnedData.data, function(fetch) {
+                    return {
+                        id: fetch.id,
+                        text: fetch.sub_category
+                    };
+                });
+                return {
+                    results: mappedData
+                };
+            },
+            cache: true
+        },
+        minimumInputLength: 0,
+        templateResult: formatCategory,
+        templateSelection: formatCategorySelection
+    });
+
+
+

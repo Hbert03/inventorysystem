@@ -57,10 +57,12 @@
 	<script src="dist/"></script>
 	<script src="plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
-<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="dist/js/xlsx.full.min.js"></script>
 <!-- DataTables  & Plugins -->
 
 <!-- AdminLTE App -->
 <script src="dist/js/adminlte.min.js"></script>
 <script src="script1.js"></script>
 <script src="school/graph.js"></script>
+

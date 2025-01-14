@@ -4,6 +4,7 @@
 
 
 
+ 
  if(isset($_POST['save_land'])){
 
    $nowDate = date("Y-m-d H:i:s");
@@ -41,9 +42,6 @@
        echo json_encode(['success' => 0, 'error' => 'Failed to insert data into database.']);
      }
    }
-
- 
- 
 
  
 
@@ -98,28 +96,6 @@
   }
 }
 
-
-
-if (isset($_POST['save_category'])) {
-  $select1 = $_POST['select1'];
-  $select2 = $_POST['select2'];
-
-  $check_query = "SELECT * FROM asset WHERE description = '$description' AND unit_val = '$unit_value' AND property_no = '$property_no' AND remarks = '$remarks'";
-  $result = mysqli_query($fconn, $check_query);
-
-  if (mysqli_num_rows($result) == 0) {
-      $query = "INSERT INTO asset(asset_id, user_id) 
-                VALUES ('$select1', '$user_id',)";
-
-      if (mysqli_query($fconn, $query)) {
-          echo json_encode(['success' => 1]);
-      } else {
-          echo json_encode(['success' => 0, 'error' => 'Failed to insert data into database.']);
-      }
-  } else {
-      echo json_encode(['success' => 0, 'error' => 'Asset already exists.']);
-  }
-}
 
 
 ?>
